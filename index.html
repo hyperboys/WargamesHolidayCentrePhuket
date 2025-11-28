@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wargames Holiday Centre Phuket - ศูนย์พักผ่อนเกมสงครามภูเก็ต</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="translations.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h2>WARGAMES HOLIDAY CENTRE</h2>
+                <p>Phuket, Thailand</p>
+            </div>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" data-en="Home" data-th="หน้าแรก">หน้าแรก</a></li>
+                <li><a href="#about" data-en="About Us" data-th="เกี่ยวกับเรา">เกี่ยวกับเรา</a></li>
+                <li><a href="#events" data-en="Events" data-th="กิจกรรม">กิจกรรม</a></li>
+                <li><a href="#games" data-en="Game Types" data-th="ประเภทเกม">ประเภทเกม</a></li>
+                <li><a href="#gallery" data-en="Gallery" data-th="แกลเลอรี่">แกลเลอรี่</a></li>
+                <li><a href="#pricing" data-en="Pricing" data-th="ราคา">ราคา</a></li>
+                <li><a href="#testimonials" data-en="Reviews" data-th="รีวิว">รีวิว</a></li>
+                <li><a href="#contact" data-en="Contact" data-th="ติดต่อเรา">ติดต่อเรา</a></li>
+            </ul>
+            <div class="language-switcher">
+                <button class="lang-btn" id="langSwitch">
+                    <span class="lang-text" data-en="EN" data-th="TH">TH</span>
+                    <span class="lang-separator">|</span>
+                    <span class="lang-alt" data-en="TH" data-th="EN">EN</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">WELCOME TO</p>
+            <h1 class="hero-title">WARGAMES HOLIDAY CENTRE</h1>
+            <p class="hero-location">Phuket, Thailand</p>
+            <p class="hero-description" data-en="Experience the ultimate wargaming retreat in Asia's premier facility<br>Featuring massive battle tables, diverse period models, and professional atmosphere" data-th="สัมผัสประสบการณ์สุดพิเศษกับศูนย์พักผ่อนเกมสงครามที่ใหญ่ที่สุดในเอเชีย<br>พร้อมสนามรบขนาดใหญ่ โมเดลหลากหลายยุคสมัย และบรรยากาศแบบมืออาชีพ">
+                สัมผัสประสบการณ์สุดพิเศษกับศูนย์พักผ่อนเกมสงครามที่ใหญ่ที่สุดในเอเชีย<br>
+                พร้อมสนามรบขนาดใหญ่ โมเดลหลากหลายยุคสมัย และบรรยากาศแบบมืออาชีพ
+            </p>
+            <button class="btn btn-primary" data-en="Book Now" data-th="จองเลย">จองเลย</button>
+        </div>
+        <div class="scroll-indicator">
+            <span data-en="Scroll Down" data-th="เลื่อนลง">เลื่อนลง</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="About Us" data-th="เกี่ยวกับเรา">เกี่ยวกับเรา</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p data-en="Welcome to Wargames Holiday Centre Phuket, Thailand's first and largest wargaming retreat center. If you're interested in recreating battles with miniature soldiers, measuring distances, and rolling dice... or even shouting 'Hurrah!!!' occasionally... you've come to the right place!" data-th="ยินดีต้อนรับสู่ Wargames Holiday Centre Phuket ศูนย์พักผ่อนเกมสงครามแห่งแรกและใหญ่ที่สุดในประเทศไทย หากคุณสนใจการจำลองสงครามด้วยโมเดลทหารจิ๋ว การวัดระยะ และการทอยลูกเต๋า... หรือแม้แต่การตะโกน 'ไชโย!!!' เป็นครั้งคราว... นี่คือสถานที่ที่เหมาะสมที่สุดสำหรับคุณ!">
+                        ยินดีต้อนรับสู่ Wargames Holiday Centre Phuket ศูนย์พักผ่อนเกมสงครามแห่งแรกและใหญ่ที่สุดในประเทศไทย 
+                        หากคุณสนใจการจำลองสงครามด้วยโมเดลทหารจิ๋ว การวัดระยะ และการทอยลูกเต๋า... 
+                        หรือแม้แต่การตะโกน "ไชโย!!!" เป็นครั้งคราว... นี่คือสถานที่ที่เหมาะสมที่สุดสำหรับคุณ!
+                    </p>
+                    <p data-en="We have massive battle tables, over 50,000 miniature soldiers covering all periods from ancient to modern times, and professional staff ready to advise and assist throughout your gaming experience." data-th="เรามีสนามรบขนาดใหญ่ โมเดลทหารมากกว่า 50,000 ตัว ครอบคลุมทุกยุคสมัยตั้งแต่สมัยโบราณจนถึงสมัยใหม่ พร้อมด้วยทีมงานมืออาชีพที่พร้อมให้คำแนะนำและช่วยเหลือตลอดการเล่น">
+                        เรามีสนามรบขนาดใหญ่ โมเดลทหารมากกว่า 50,000 ตัว ครอบคลุมทุกยุคสมัยตั้งแต่สมัยโบราณจนถึงสมัยใหม่ 
+                        พร้อมด้วยทีมงานมืออาชีพที่พร้อมให้คำแนะนำและช่วยเหลือตลอดการเล่น
+                    </p>
+                    <ul class="features-list">
+                        <li data-en="Massive battle tables spanning over 500 square meters" data-th="สนามรบขนาดใหญ่ พื้นที่กว่า 500 ตารางเมตร">สนามรบขนาดใหญ่ พื้นที่กว่า 500 ตารางเมตร</li>
+                        <li data-en="High-quality models and terrain" data-th="โมเดลและฉากจำลองคุณภาพสูง">โมเดลและฉากจำลองคุณภาพสูง</li>
+                        <li data-en="Comfortable accommodation on-site" data-th="ที่พักสะดวกสบายในบริเวณศูนย์">ที่พักสะดวกสบายในบริเวณศูนย์</li>
+                        <li data-en="Food and beverages throughout the day" data-th="อาหารและเครื่องดื่มตลอดวัน">อาหารและเครื่องดื่มตลอดวัน</li>
+                        <li data-en="Expert guidance and support" data-th="ผู้เชี่ยวชาญคอยให้คำแนะนำ">ผู้เชี่ยวชาญคอยให้คำแนะนำ</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <div class="image-placeholder">
+                        <p data-en="Battle Table Image" data-th="รูปภาพสนามรบ">รูปภาพสนามรบ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="events">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="// Upcoming Events" data-th="// กิจกรรมที่กำลังจะมาถึง">// กิจกรรมที่กำลังจะมาถึง</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="events-grid">
+                <div class="event-card">
+                    <div class="event-date">
+                        <span class="day">15-17</span>
+                        <span class="month" data-en="Dec 2025" data-th="ธ.ค. 2025">ธ.ค. 2025</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 data-en="World War II - Pacific Theater" data-th="สงครามโลกครั้งที่ 2 - Pacific Theater">สงครามโลกครั้งที่ 2 - Pacific Theater</h3>
+                        <p data-en="Experience Pacific Theater battles with over 5,000 aircraft, naval vessels, and soldier miniatures" data-th="สัมผัสการต่อสู้ในสมรภูมิแปซิฟิก พร้อมโมเดลเครื่องบิน เรือรบ และทหารกว่า 5,000 ตัว">สัมผัสการต่อสู้ในสมรภูมิแปซิฟิก พร้อมโมเดลเครื่องบิน เรือรบ และทหารกว่า 5,000 ตัว</p>
+                        <p class="spaces-available" data-en="8 spaces available" data-th="เหลือที่ว่าง 8 ที่">เหลือที่ว่าง 8 ที่</p>
+                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-date">
+                        <span class="day">20-22</span>
+                        <span class="month" data-en="Jan 2026" data-th="ม.ค. 2026">ม.ค. 2026</span>
+                    </div>
+                    <div class="event-content">
+                        <h3>Napoleon Wars - Battle of Waterloo</h3>
+                        <p data-en="Recreate the pivotal Battle of Waterloo using ItGM rules" data-th="จำลองสงครามยุคนโปเลียน การรบครั้งสำคัญที่ Waterloo พร้อมกฎเกม ItGM">จำลองสงครามยุคนโปเลียน การรบครั้งสำคัญที่ Waterloo พร้อมกฎเกม ItGM</p>
+                        <p class="spaces-available" data-en="12 spaces available" data-th="เหลือที่ว่าง 12 ที่">เหลือที่ว่าง 12 ที่</p>
+                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-date">
+                        <span class="day">10-12</span>
+                        <span class="month" data-en="Feb 2026" data-th="ก.พ. 2026">ก.พ. 2026</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 data-en="Medieval Wars - Crusades" data-th="Medieval Wars - Crusades">Medieval Wars - Crusades</h3>
+                        <p data-en="Journey back to medieval times with crusade battles, knights, and castles" data-th="ย้อนกลับไปสู่ยุคกลาง สงครามครูเสด อัศวิน และปราสาท">ย้อนกลับไปสู่ยุคกลาง สงครามครูเสด อัศวิน และปราสาท</p>
+                        <p class="spaces-available" data-en="15 spaces available" data-th="เหลือที่ว่าง 15 ที่">เหลือที่ว่าง 15 ที่</p>
+                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                    </div>
+                </div>
+            </div>
+            <div class="view-more">
+                <a href="#events" class="btn btn-outline" data-en="View All Events" data-th="ดูกิจกรรมทั้งหมด">ดูกิจกรรมทั้งหมด</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Types Section -->
+    <section id="games" class="game-types">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="// Game Types" data-th="// ประเภทเกม">// ประเภทเกม</h2>
+                <div class="divider"></div>
+                <p class="section-description" data-en="We cover a huge range of periods from fantasy through to modern warfare" data-th="เราครอบคลุมยุคสมัยที่หลากหลาย ตั้งแต่แฟนตาซีไปจนถึงสงครามสมัยใหม่">
+                    เราครอบคลุมยุคสมัยที่หลากหลาย ตั้งแต่แฟนตาซีไปจนถึงสงครามสมัยใหม่
+                </p>
+            </div>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="image-placeholder">WWII</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 data-en="World War II" data-th="สงครามโลกครั้งที่ 2">สงครามโลกครั้งที่ 2</h3>
+                        <p data-en="A wide range of WWII games covering European, Pacific, and African theaters" data-th="เกมสงครามโลกครั้งที่ 2 หลากหลายรูปแบบ ครอบคลุมทั้งสมรภูมิยุโรป แปซิฟิก และแอฟริกา">เกมสงครามโลกครั้งที่ 2 หลากหลายรูปแบบ ครอบคลุมทั้งสมรภูมิยุโรป แปซิฟิก และแอฟริกา</p>
+                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="image-placeholder">Napoleon</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 data-en="Napoleonic Wars" data-th="สงครามยุคนโปเลียน">สงครามยุคนโปเลียน</h3>
+                        <p data-en="Enormous collection of Napoleonic era figures covering all European theaters" data-th="โมเดลทหารจำนวนมหาศาลสำหรับยุคนโปเลียน ครอบคลุมสมรภูมิทั่วยุโรป">โมเดลทหารจำนวนมหาศาลสำหรับยุคนโปเลียน ครอบคลุมสมรภูมิทั่วยุโรป</p>
+                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="image-placeholder">Medieval</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 data-en="Medieval" data-th="ยุคกลาง">ยุคกลาง</h3>
+                        <p data-en="Medieval warfare, knights, castles, and crusades" data-th="สงครามยุคกลาง อัศวิน ปราสาท และสงครามครูเสด">สงครามยุคกลาง อัศวิน ปราสาท และสงครามครูเสด</p>
+                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="image-placeholder">Ancient</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 data-en="Ancient" data-th="สมัยโบราณ">สมัยโบราณ</h3>
+                        <p data-en="Roman, Greek, Persian, and other ancient civilization battles" data-th="สงครามโรมัน กรีก เปอร์เซีย และอารยธรรมโบราณอื่นๆ">สงครามโรมัน กรีก เปอร์เซีย และอารยธรรมโบราณอื่นๆ</p>
+                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="image-placeholder">Modern</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 data-en="Modern" data-th="สมัยใหม่">สมัยใหม่</h3>
+                        <p data-en="Modern warfare from Vietnam War to current conflicts" data-th="สงครามสมัยใหม่ ตั้งแต่ Vietnam War ไปจนถึง Modern Warfare">สงครามสมัยใหม่ ตั้งแต่ Vietnam War ไปจนถึง Modern Warfare</p>
+                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-image">
+                        <div class="image-placeholder">Fantasy</div>
+                    </div>
+                    <div class="game-content">
+                        <h3 data-en="Fantasy" data-th="แฟนตาซี">แฟนตาซี</h3>
+                        <p data-en="Fantasy games including Warhammer and other fantasy worlds" data-th="เกมแฟนตาซี Warhammer และโลกแฟนตาซีอื่นๆ">เกมแฟนตาซี Warhammer และโลกแฟนตาซีอื่นๆ</p>
+                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="view-more">
+                <a href="#games" class="btn btn-outline" data-en="View All" data-th="ดูทั้งหมด">ดูทั้งหมด</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="Gallery" data-th="แกลเลอรี่">แกลเลอรี่</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="image-placeholder" data-en="Image 1" data-th="ภาพ 1">ภาพ 1</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="image-placeholder" data-en="Image 2" data-th="ภาพ 2">ภาพ 2</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="image-placeholder" data-en="Image 3" data-th="ภาพ 3">ภาพ 3</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="image-placeholder" data-en="Image 4" data-th="ภาพ 4">ภาพ 4</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="image-placeholder" data-en="Image 5" data-th="ภาพ 5">ภาพ 5</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="image-placeholder" data-en="Image 6" data-th="ภาพ 6">ภาพ 6</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="Packages & Pricing" data-th="แพ็คเกจและราคา">แพ็คเกจและราคา</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Day Pass</h3>
+                    <div class="price">
+                        <span class="currency">฿</span>
+                        <span class="amount">1,500</span>
+                        <span class="period" data-en="/day" data-th="/วัน">/วัน</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li data-en="Full day battle table access" data-th="เข้าใช้สนามรบตลอดวัน">เข้าใช้สนามรบตลอดวัน</li>
+                        <li data-en="Free equipment and models" data-th="อุปกรณ์และโมเดลให้ใช้ฟรี">อุปกรณ์และโมเดลให้ใช้ฟรี</li>
+                        <li data-en="Coffee and snacks" data-th="กาแฟและขนมว่าง">กาแฟและขนมว่าง</li>
+                        <li data-en="Expert guidance" data-th="คำแนะนำจากผู้เชี่ยวชาญ">คำแนะนำจากผู้เชี่ยวชาญ</li>
+                    </ul>
+                    <button class="btn btn-secondary" data-en="Select Package" data-th="เลือกแพ็คเกจ">เลือกแพ็คเกจ</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="badge" data-en="Recommended" data-th="แนะนำ">แนะนำ</div>
+                    <h3>Weekend Package</h3>
+                    <div class="price">
+                        <span class="currency">฿</span>
+                        <span class="amount">3,500</span>
+                        <span class="period" data-en="/2 days 1 night" data-th="/2วัน1คืน">/2วัน1คืน</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li data-en="Everything in Day Pass" data-th="ทุกอย่างใน Day Pass">ทุกอย่างใน Day Pass</li>
+                        <li data-en="1 night accommodation" data-th="ที่พัก 1 คืน">ที่พัก 1 คืน</li>
+                        <li data-en="3 meals included" data-th="อาหาร 3 มื้อ">อาหาร 3 มื้อ</li>
+                        <li data-en="Special event access" data-th="เข้าร่วมอีเวนท์พิเศษ">เข้าร่วมอีเวนท์พิเศษ</li>
+                        <li data-en="Free souvenir" data-th="ของที่ระลึกฟรี">ของที่ระลึกฟรี</li>
+                    </ul>
+                    <button class="btn btn-primary" data-en="Select Package" data-th="เลือกแพ็คเกจ">เลือกแพ็คเกจ</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Extended Stay</h3>
+                    <div class="price">
+                        <span class="currency">฿</span>
+                        <span class="amount">6,500</span>
+                        <span class="period" data-en="/3 days 2 nights" data-th="/3วัน2คืน">/3วัน2คืน</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li data-en="Everything in Weekend Package" data-th="ทุกอย่างใน Weekend Package">ทุกอย่างใน Weekend Package</li>
+                        <li data-en="2 nights accommodation" data-th="ที่พัก 2 คืน">ที่พัก 2 คืน</li>
+                        <li data-en="All meals included" data-th="อาหารครบทุกมื้อ">อาหารครบทุกมื้อ</li>
+                        <li>Private gaming session</li>
+                        <li data-en="10% discount on next visit" data-th="รับส่วนลด 10% สำหรับครั้งถัดไป">รับส่วนลด 10% สำหรับครั้งถัดไป</li>
+                    </ul>
+                    <button class="btn btn-secondary" data-en="Select Package" data-th="เลือกแพ็คเกจ">เลือกแพ็คเกจ</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="// Customer Reviews" data-th="// รีวิวจากลูกค้า">// รีวิวจากลูกค้า</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text" data-en="Amazing experience! The battle tables are huge and the models are beautiful. I'll definitely come back and bring my friends along." data-th="ประสบการณ์ที่ยอดเยี่ยมมาก! สนามรบใหญ่และโมเดลสวยงามมาก ผมจะกลับมาเล่นอีกแน่นอน และจะชวนเพื่อนๆ มาด้วย">
+                        ประสบการณ์ที่ยอดเยี่ยมมาก! สนามรบใหญ่และโมเดลสวยงามมาก 
+                        ผมจะกลับมาเล่นอีกแน่นอน และจะชวนเพื่อนๆ มาด้วย
+                    </p>
+                    <div class="testimonial-author">
+                        <h4 data-en="Somchai Jaidee" data-th="สมชาย ใจดี">สมชาย ใจดี</h4>
+                        <p data-en="Bangkok" data-th="กรุงเทพฯ">กรุงเทพฯ</p>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text" data-en="Perfect place for wargaming enthusiasts. Great atmosphere, friendly staff, and comfortable accommodation." data-th="เป็นสถานที่ที่เหมาะสำหรับผู้ที่รักเกมสงครามจริงๆ บรรยากาศดี ทีมงานเป็นมิตร และที่พักก็สะดวกสบาย">
+                        เป็นสถานที่ที่เหมาะสำหรับผู้ที่รักเกมสงครามจริงๆ 
+                        บรรยากาศดี ทีมงานเป็นมิตร และที่พักก็สะดวกสบาย
+                    </p>
+                    <div class="testimonial-author">
+                        <h4>John Smith</h4>
+                        <p>Singapore</p>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text" data-en="Stumbled upon this place while visiting Phuket. It was the highlight of my trip! Amazing collection of high-quality models." data-th="มาเที่ยวภูเก็ตและได้มาเจอที่นี่โดยบังเอิญ เป็นไฮไลท์ของการเดินทางเลย! โมเดลเยอะมากและมีคุณภาพสูง">
+                        มาเที่ยวภูเก็ตและได้มาเจอที่นี่โดยบังเอิญ เป็นไฮไลท์ของการเดินทางเลย! 
+                        โมเดลเยอะมากและมีคุณภาพสูง
+                    </p>
+                    <div class="testimonial-author">
+                        <h4 data-en="Wichai Prasit" data-th="วิชัย ประสิทธิ์">วิชัย ประสิทธิ์</h4>
+                        <p data-en="Chiang Mai" data-th="เชียงใหม่">เชียงใหม่</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-en="Contact Us" data-th="ติดต่อเรา">ติดต่อเรา</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <h3 data-en="📍 Address" data-th="📍 ที่อยู่">📍 ที่อยู่</h3>
+                        <p data-en="123 Phuket Road<br>Talad Yai, Mueang<br>Phuket 83000, Thailand" data-th="123 ถนนภูเก็ต<br>ตำบลตลาดใหญ่ อำเภอเมือง<br>ภูเก็ต 83000">123 ถนนภูเก็ต<br>ตำบลตลาดใหญ่ อำเภอเมือง<br>ภูเก็ต 83000</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-en="📞 Phone" data-th="📞 โทรศัพท์">📞 โทรศัพท์</h3>
+                        <p>+66 (0) 76-123-456<br>+66 (0) 89-123-4567</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-en="✉️ Email" data-th="✉️ อีเมล">✉️ อีเมล</h3>
+                        <p>info@wargamesphuket.com<br>booking@wargamesphuket.com</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-en="🕒 Opening Hours" data-th="🕒 เวลาทำการ">🕒 เวลาทำการ</h3>
+                        <p data-en="Wednesday - Sunday: 09:00 - 20:00<br>Monday - Tuesday: Closed" data-th="พุธ - อาทิตย์: 09:00 - 20:00<br>จันทร์ - อังคาร: ปิดทำการ">พุธ - อาทิตย์: 09:00 - 20:00<br>จันทร์ - อังคาร: ปิดทำการ</p>
+                    </div>
+                    <div class="social-links">
+                        <h3 data-en="Follow Us" data-th="ติดตามเรา">ติดตามเรา</h3>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon">Facebook</a>
+                            <a href="#" class="social-icon">Instagram</a>
+                            <a href="#" class="social-icon">YouTube</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" placeholder="ชื่อ-นามสกุล" data-placeholder-en="Full Name" data-placeholder-th="ชื่อ-นามสกุล" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="อีเมล" data-placeholder-en="Email" data-placeholder-th="อีเมล" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" placeholder="เบอร์โทรศัพท์" data-placeholder-en="Phone Number" data-placeholder-th="เบอร์โทรศัพท์" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="ข้อความ" data-placeholder-en="Message" data-placeholder-th="ข้อความ" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-en="Send Message" data-th="ส่งข้อความ">ส่งข้อความ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>WARGAMES HOLIDAY CENTRE</h3>
+                    <p>Phuket, Thailand</p>
+                    <p data-en="Thailand's First Wargaming Holiday Centre" data-th="ศูนย์พักผ่อนเกมสงครามแห่งแรกในประเทศไทย">ศูนย์พักผ่อนเกมสงครามแห่งแรกในประเทศไทย</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Quick Links" data-th="ลิงก์ด่วน">ลิงก์ด่วน</h4>
+                    <ul>
+                        <li><a href="#about" data-en="About Us" data-th="เกี่ยวกับเรา">เกี่ยวกับเรา</a></li>
+                        <li><a href="#events" data-en="Events" data-th="กิจกรรม">กิจกรรม</a></li>
+                        <li><a href="#pricing" data-en="Pricing" data-th="ราคา">ราคา</a></li>
+                        <li><a href="#contact" data-en="Contact" data-th="ติดต่อเรา">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Game Types" data-th="ประเภทเกม">ประเภทเกม</h4>
+                    <ul>
+                        <li><a href="#games">WWII</a></li>
+                        <li><a href="#games">Napoleon Wars</a></li>
+                        <li><a href="#games">Medieval</a></li>
+                        <li><a href="#games">Ancient</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-en="Contact" data-th="ติดต่อ">ติดต่อ</h4>
+                    <ul>
+                        <li>📞 +66 (0) 76-123-456</li>
+                        <li>✉️ info@wargamesphuket.com</li>
+                        <li data-en="📍 Phuket, Thailand" data-th="📍 ภูเก็ต, ประเทศไทย">📍 ภูเก็ต, ประเทศไทย</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Wargames Holiday Centre Phuket. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
