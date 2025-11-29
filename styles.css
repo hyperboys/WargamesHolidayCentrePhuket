@@ -44,8 +44,19 @@ html {
     background: rgba(26, 26, 26, 0.95);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     box-shadow: var(--shadow);
+    transition: padding 0.3s ease, background 0.3s ease;
+}
+
+.navbar.scrolled {
+    padding: 0.3rem 0;
+    background: rgba(26, 26, 26, 0.98);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.navbar.scrolled .nav-brand .logo {
+    height: 80px;
 }
 
 .navbar .container {
@@ -61,8 +72,15 @@ html {
 }
 
 .nav-brand .logo {
-    height: 90px;
+    height: 110px;
     width: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 2px 8px rgba(144, 169, 85, 0.3));
+}
+
+.nav-brand .logo:hover {
+    transform: scale(1.05) rotate(2deg);
+    filter: drop-shadow(0 4px 12px rgba(144, 169, 85, 0.5));
 }
 
 .brand-text h2 {
@@ -71,12 +89,22 @@ html {
     font-weight: 700;
     letter-spacing: 1px;
     margin: 0;
+    transition: color 0.3s ease;
+}
+
+.nav-brand:hover .brand-text h2 {
+    color: var(--accent-color);
 }
 
 .brand-text p {
     color: var(--accent-color);
     font-size: 0.75rem;
     margin: 0;
+    transition: color 0.3s ease;
+}
+
+.nav-brand:hover .brand-text p {
+    color: var(--text-light);
 }
 
 .nav-menu {
@@ -954,7 +982,11 @@ section {
 /* Responsive Design */
 @media (max-width: 968px) {
     .nav-brand .logo {
-        height: 65px;
+        height: 75px;
+    }
+    
+    .nav-brand .logo:hover {
+        transform: scale(1.03);
     }
     
     .brand-text h2 {
