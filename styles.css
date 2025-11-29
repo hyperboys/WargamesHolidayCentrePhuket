@@ -54,17 +54,29 @@ html {
     align-items: center;
 }
 
-.nav-brand h2 {
-    color: var(--text-light);
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 1px;
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.nav-brand p {
+.nav-brand .logo {
+    height: 90px;
+    width: auto;
+}
+
+.brand-text h2 {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.brand-text p {
     color: var(--accent-color);
-    font-size: 0.9rem;
-    margin-top: -5px;
+    font-size: 0.75rem;
+    margin: 0;
 }
 
 .nav-menu {
@@ -941,6 +953,18 @@ section {
 
 /* Responsive Design */
 @media (max-width: 968px) {
+    .nav-brand .logo {
+        height: 65px;
+    }
+    
+    .brand-text h2 {
+        font-size: 0.85rem;
+    }
+    
+    .brand-text p {
+        font-size: 0.65rem;
+    }
+    
     .nav-menu {
         position: fixed;
         top: 70px;
