@@ -3,7 +3,7 @@ const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 
 // Language Management
-let currentLanguage = 'th'; // Default language
+let currentLanguage = 'en'; // Default language
 
 // Language Switch Handler
 const langSwitch = document.getElementById('langSwitch');
