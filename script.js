@@ -6,17 +6,42 @@ const navMenu = document.getElementById('navMenu');
 let currentLanguage = 'en'; // Default language
 
 // Language Switch Handler
-const langSwitch = document.getElementById('langSwitch');
-if (langSwitch) {
-    langSwitch.addEventListener('click', () => {
-        currentLanguage = currentLanguage === 'th' ? 'en' : 'th';
-        updateLanguage();
+const flagEn = document.getElementById('flagEn');
+const flagTh = document.getElementById('flagTh');
+
+if (flagEn && flagTh) {
+    flagEn.addEventListener('click', () => {
+        if (currentLanguage !== 'en') {
+            currentLanguage = 'en';
+            updateLanguage();
+        }
+    });
+    
+    flagTh.addEventListener('click', () => {
+        if (currentLanguage !== 'th') {
+            currentLanguage = 'th';
+            updateLanguage();
+        }
     });
 }
 
 // Update all text content based on current language
 function updateLanguage() {
     const lang = currentLanguage;
+    
+    // Update active flag button
+    const flagEn = document.getElementById('flagEn');
+    const flagTh = document.getElementById('flagTh');
+    
+    if (flagEn && flagTh) {
+        if (lang === 'en') {
+            flagEn.classList.add('active');
+            flagTh.classList.remove('active');
+        } else {
+            flagTh.classList.add('active');
+            flagEn.classList.remove('active');
+        }
+    }
     
     // Update all elements with data-th and data-en attributes
     document.querySelectorAll('[data-th][data-en]').forEach(element => {
@@ -245,6 +270,41 @@ window.addEventListener('scroll', () => {
         }
     });
 });
+
+// Image Slider for Battle Tables
+let currentSlideIndex = 1;
+showSlide(currentSlideIndex);
+
+function moveSlide(n) {
+    showSlide(currentSlideIndex += n);
+}
+
+function currentSlide(n) {
+    showSlide(currentSlideIndex = n);
+}
+
+function showSlide(n) {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    
+    if (n > slides.length) { currentSlideIndex = 1; }
+    if (n < 1) { currentSlideIndex = slides.length; }
+    
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    if (slides[currentSlideIndex - 1]) {
+        slides[currentSlideIndex - 1].classList.add('active');
+    }
+    if (dots[currentSlideIndex - 1]) {
+        dots[currentSlideIndex - 1].classList.add('active');
+    }
+}
+
+// Auto-advance slider every 5 seconds
+setInterval(() => {
+    moveSlide(1);
+}, 5000);
 
 // Print welcome message to console
 console.log('%c🎲 Welcome to Wargames Holiday Centre Phuket! 🎲', 

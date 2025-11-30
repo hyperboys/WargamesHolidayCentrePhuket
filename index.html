@@ -37,10 +37,11 @@
                 <li><a href="#contact" data-en="Contact" data-th="ติดต่อเรา">ติดต่อเรา</a></li>
             </ul>
             <div class="language-switcher">
-                <button class="lang-btn" id="langSwitch">
-                    <span class="lang-text" data-en="EN" data-th="TH">TH</span>
-                    <span class="lang-separator">|</span>
-                    <span class="lang-alt" data-en="TH" data-th="EN">EN</span>
+                <button class="flag-btn active" id="flagEn" data-lang="en" title="English">
+                    <img src="image/icon/united-kingdom.png" alt="English Flag" class="flag-icon">
+                </button>
+                <button class="flag-btn" id="flagTh" data-lang="th" title="ไทย">
+                    <img src="image/icon/thailand-flag.png" alt="Thai Flag" class="flag-icon">
                 </button>
             </div>
         </div>
@@ -74,26 +75,63 @@
             </div>
             <div class="about-content">
                 <div class="about-text">
-                    <p data-en="Welcome to Wargames Holiday Centre Phuket, Thailand's first and largest wargaming retreat center. If you're interested in recreating battles with miniature soldiers, measuring distances, and rolling dice... or even shouting 'Hurrah!!!' occasionally... you've come to the right place!" data-th="ยินดีต้อนรับสู่ Wargames Holiday Centre Phuket ศูนย์พักผ่อนเกมสงครามแห่งแรกและใหญ่ที่สุดในประเทศไทย หากคุณสนใจการจำลองสงครามด้วยโมเดลทหารจิ๋ว การวัดระยะ และการทอยลูกเต๋า... หรือแม้แต่การตะโกน 'ไชโย!!!' เป็นครั้งคราว... นี่คือสถานที่ที่เหมาะสมที่สุดสำหรับคุณ!">
-                        ยินดีต้อนรับสู่ Wargames Holiday Centre Phuket ศูนย์พักผ่อนเกมสงครามแห่งแรกและใหญ่ที่สุดในประเทศไทย 
-                        หากคุณสนใจการจำลองสงครามด้วยโมเดลทหารจิ๋ว การวัดระยะ และการทอยลูกเต๋า... 
-                        หรือแม้แต่การตะโกน "ไชโย!!!" เป็นครั้งคราว... นี่คือสถานที่ที่เหมาะสมที่สุดสำหรับคุณ!
+                    <p data-en="Welcome to Wargames Holiday Centre Phuket Thailand's First and Largest Wargaming Retreat Center" 
+                    data-th="ยินดีต้อนรับสู่ Wargames Holiday Centre Phuket ศูนย์พักผ่อนสำหรับการเล่นวอร์เกมแห่งแรกและใหญ่ที่สุดในประเทศไทย">
                     </p>
-                    <p data-en="We have massive battle tables, over 50,000 miniature soldiers covering all periods from ancient to modern times, and professional staff ready to advise and assist throughout your gaming experience." data-th="เรามีสนามรบขนาดใหญ่ โมเดลทหารมากกว่า 50,000 ตัว ครอบคลุมทุกยุคสมัยตั้งแต่สมัยโบราณจนถึงสมัยใหม่ พร้อมด้วยทีมงานมืออาชีพที่พร้อมให้คำแนะนำและช่วยเหลือตลอดการเล่น">
-                        เรามีสนามรบขนาดใหญ่ โมเดลทหารมากกว่า 50,000 ตัว ครอบคลุมทุกยุคสมัยตั้งแต่สมัยโบราณจนถึงสมัยใหม่ 
-                        พร้อมด้วยทีมงานมืออาชีพที่พร้อมให้คำแนะนำและช่วยเหลือตลอดการเล่น
+                    <p data-en="If you love recreating epic battles with miniature soldiers, measuring distances, rolling dice… or even shouting “Hurrah!!!” once in a while, you’ve found the perfect place!" 
+                    data-th="ถ้าคุณหลงใหลการจำลองศึกครั้งยิ่งใหญ่ด้วยทหารจำลอง การวัดระยะ และการทอยลูกเต๋า… หรือแม้กระทั่งตะโกนว่า “เฮ้!!!” อย่างสะใจ ที่นี่คือจุดหมายปลายทางที่ใช่สำหรับคุณ!">
                     </p>
+                    <p data-en="Why Choose Us?" 
+                    data-th="ทำไมต้องเลือกเรา?">
+                    </p>
+                    
                     <ul class="features-list">
-                        <li data-en="Massive battle tables spanning over 500 square meters" data-th="สนามรบขนาดใหญ่ พื้นที่กว่า 500 ตารางเมตร">สนามรบขนาดใหญ่ พื้นที่กว่า 500 ตารางเมตร</li>
-                        <li data-en="High-quality models and terrain" data-th="โมเดลและฉากจำลองคุณภาพสูง">โมเดลและฉากจำลองคุณภาพสูง</li>
-                        <li data-en="Comfortable accommodation on-site" data-th="ที่พักสะดวกสบายในบริเวณศูนย์">ที่พักสะดวกสบายในบริเวณศูนย์</li>
-                        <li data-en="Food and beverages throughout the day" data-th="อาหารและเครื่องดื่มตลอดวัน">อาหารและเครื่องดื่มตลอดวัน</li>
-                        <li data-en="Expert guidance and support" data-th="ผู้เชี่ยวชาญคอยให้คำแนะนำ">ผู้เชี่ยวชาญคอยให้คำแนะนำ</li>
+                        <li data-en="Massive Battle Tables spanning several square meters" 
+                        data-th="สนามรบขนาดใหญ่ ครอบคลุมพื้นที่หลายตารางเมตร"></li>
+                        <li data-en="Over 21,000 Miniature Soldiers from ancient to modern eras" 
+                        data-th="กองทัพทหารจำลองกว่า 21,000 ตัว ครอบคลุมทุกยุคสมัย ตั้งแต่โบราณจนถึงยุคปัจจุบัน"></li>
+                        <li data-en="High-Quality Models & Terrain for an immersive experience" 
+                        data-th="โมเดลและฉากคุณภาพสูง เพื่อประสบการณ์การเล่นที่สมจริง"></li>
+                        <li data-en="Expert Guidance & Support from our professional team" 
+                        data-th="คำแนะนำและการสนับสนุนจากทีมงานมืออาชีพ"></li>
                     </ul>
                 </div>
                 <div class="about-image">
-                    <div class="image-placeholder">
-                        <p data-en="Battle Table Image" data-th="รูปภาพสนามรบ">รูปภาพสนามรบ</p>
+                    <div class="image-slider">
+                        <div class="slider-container">
+                            <div class="slide active">
+                                <img src="image/about/1.jpg" alt="Battle Table 1">
+                            </div>
+                            <div class="slide">
+                                <img src="image/about/2.jpg" alt="Battle Table 2">
+                            </div>
+                            <div class="slide">
+                                <img src="image/about/3.jpg" alt="Battle Table 3">
+                            </div>
+                            <div class="slide">
+                                <img src="image/about/4.jpg" alt="Battle Table 4">
+                            </div>
+                            <div class="slide">
+                                <img src="image/about/5.jpg" alt="Battle Table 5">
+                            </div>
+                            <div class="slide">
+                                <img src="image/about/6.jpg" alt="Battle Table 6">
+                            </div>
+                            <div class="slide">
+                                <img src="image/about/7.jpg" alt="Battle Table 7">
+                            </div>
+                        </div>
+                        <button class="slider-btn prev" onclick="moveSlide(-1)">‹</button>
+                        <button class="slider-btn next" onclick="moveSlide(1)">›</button>
+                        <div class="slider-dots">
+                            <span class="dot active" onclick="currentSlide(1)"></span>
+                            <span class="dot" onclick="currentSlide(2)"></span>
+                            <span class="dot" onclick="currentSlide(3)"></span>
+                            <span class="dot" onclick="currentSlide(4)"></span>
+                            <span class="dot" onclick="currentSlide(5)"></span>
+                            <span class="dot" onclick="currentSlide(6)"></span>
+                            <span class="dot" onclick="currentSlide(7)"></span>
+                        </div>
                     </div>
                 </div>
             </div>
