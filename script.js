@@ -306,6 +306,78 @@ setInterval(() => {
     moveSlide(1);
 }, 5000);
 
+// Gallery Pagination System
+let currentGalleryPage = 1;
+
+function initGallery() {
+    const pages = document.querySelectorAll('.gallery-page');
+    const pagination = document.getElementById('galleryPagination');
+    
+    if (pages.length > 1) {
+        // Create pagination dots
+        pages.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.className = 'gallery-dot' + (index === 0 ? ' active' : '');
+            dot.onclick = () => goToGalleryPage(index + 1);
+            pagination.appendChild(dot);
+        });
+    }
+    
+    updateGalleryNav();
+}
+
+function moveGalleryPage(direction) {
+    const pages = document.querySelectorAll('.gallery-page');
+    const newPage = currentGalleryPage + direction;
+    
+    if (newPage >= 1 && newPage <= pages.length) {
+        goToGalleryPage(newPage);
+    }
+}
+
+function goToGalleryPage(pageNum) {
+    const pages = document.querySelectorAll('.gallery-page');
+    const dots = document.querySelectorAll('.gallery-dot');
+    
+    if (pageNum < 1 || pageNum > pages.length) return;
+    
+    currentGalleryPage = pageNum;
+    
+    // Update active page
+    pages.forEach((page, index) => {
+        page.classList.toggle('active', index === pageNum - 1);
+    });
+    
+    // Update active dot
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === pageNum - 1);
+    });
+    
+    updateGalleryNav();
+}
+
+function updateGalleryNav() {
+    const pages = document.querySelectorAll('.gallery-page');
+    const prevBtn = document.querySelector('.gallery-nav-btn.prev');
+    const nextBtn = document.querySelector('.gallery-nav-btn.next');
+    
+    if (prevBtn && nextBtn) {
+        prevBtn.disabled = currentGalleryPage === 1;
+        nextBtn.disabled = currentGalleryPage === pages.length;
+        
+        // Hide buttons if only one page
+        if (pages.length <= 1) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+    }
+}
+
+// Initialize gallery on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initGallery();
+});
+
 // Print welcome message to console
 console.log('%c🎲 Welcome to Wargames Holiday Centre Phuket! 🎲', 
     'color: #4f772d; font-size: 16px; font-weight: bold;');
