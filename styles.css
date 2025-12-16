@@ -206,9 +206,13 @@ html {
 }
 
 /* Hero Section */
+.hidden {
+    display: none;
+}
+
 .hero {
     position: relative;
-    height: 100vh;
+    min-height: 110vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -249,6 +253,7 @@ html {
     z-index: 1;
     max-width: 900px;
     padding: 0 20px;
+    margin-top: 0px;
 }
 
 .hero-subtitle {
@@ -284,7 +289,7 @@ html {
 
 .scroll-indicator {
     position: absolute;
-    bottom: 30px;
+    bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -771,7 +776,7 @@ section {
 
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     margin-bottom: 40px;
 }

@@ -2,6 +2,31 @@
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 
+// View All Events Toggle
+const viewAllEventsBtn = document.getElementById('viewAllEventsBtn');
+let eventsExpanded = false;
+
+if (viewAllEventsBtn) {
+    viewAllEventsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const hiddenEvent = document.getElementById('event-4');
+        
+        if (!eventsExpanded) {
+            hiddenEvent.classList.remove('hidden');
+            viewAllEventsBtn.setAttribute('data-en', 'Show Less');
+            viewAllEventsBtn.setAttribute('data-th', 'แสดงน้อยลง');
+            viewAllEventsBtn.textContent = currentLanguage === 'th' ? 'แสดงน้อยลง' : 'Show Less';
+            eventsExpanded = true;
+        } else {
+            hiddenEvent.classList.add('hidden');
+            viewAllEventsBtn.setAttribute('data-en', 'View All Events');
+            viewAllEventsBtn.setAttribute('data-th', 'ดูกิจกรรมทั้งหมด');
+            viewAllEventsBtn.textContent = currentLanguage === 'th' ? 'ดูกิจกรรมทั้งหมด' : 'View All Events';
+            eventsExpanded = false;
+        }
+    });
+}
+
 // Language Management
 let currentLanguage = 'en'; // Default language
 
