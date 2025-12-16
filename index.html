@@ -168,7 +168,7 @@
     <section id="events" class="events">
         <div class="container">
             <div class="section-header">
-                <h2 data-en="// Upcoming Events" data-th="// กิจกรรมที่กำลังจะมาถึง">// กิจกรรมที่กำลังจะมาถึง</h2>
+                <h2 data-en="Upcoming Events" data-th="กิจกรรมที่กำลังจะมาถึง">กิจกรรมที่กำลังจะมาถึง</h2>
                 <div class="divider"></div>
                 <p class="section-description" data-en="Grand Opening Month March 2026" data-th="เดือนเปิดตัวอย่างยิ่งใหญ่ มีนาคม 2026">
                     เดือนเปิดตัวอย่างยิ่งใหญ่ มีนาคม 2026
@@ -183,7 +183,7 @@
                     <div class="event-content">
                         <h3 data-en="Waterloo Campaign" data-th="Waterloo Campaign">Waterloo Campaign</h3>
                         <p data-en="Recreate the legendary Waterloo campaign with detailed miniatures and terrain" data-th="จำลองแคมเปญ Waterloo อันเป็นตำนาน พร้อมโมเดลและฉากที่ละเอียด">จำลองแคมเปญ Waterloo อันเป็นตำนาน พร้อมโมเดลและฉากที่ละเอียด</p>
-                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                        <button class="btn btn-secondary event-modal-btn" data-event="waterloo" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
                     </div>
                 </div>
                 <div class="event-card">
@@ -194,7 +194,7 @@
                     <div class="event-content">
                         <h3 data-en="Break-out from Normandy" data-th="Break-out from Normandy">Break-out from Normandy</h3>
                         <p data-en="Experience the intense battles of the Normandy breakout in WWII" data-th="สัมผัสการรบอันดุเดือดในการยึดนอร์มังดีในสงครามโลกครั้งที่ 2">สัมผัสการรบอันดุเดือดในการยึดนอร์มังดีในสงครามโลกครั้งที่ 2</p>
-                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                        <button class="btn btn-secondary event-modal-btn" data-event="normandy" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
                     </div>
                 </div>
                 <div class="event-card">
@@ -205,7 +205,7 @@
                     <div class="event-content">
                         <h3 data-en="Agincourt" data-th="Agincourt">Agincourt</h3>
                         <p data-en="Relive the famous Battle of Agincourt from the Hundred Years' War" data-th="จำลองสงครามที่มีชื่อเสียง Agincourt จากสงครามร้อยปี">จำลองสงครามที่มีชื่อเสียง Agincourt จากสงครามร้อยปี</p>
-                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                        <button class="btn btn-secondary event-modal-btn" data-event="agincourt" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
                     </div>
                 </div>
                 <div class="event-card hidden" id="event-4">
@@ -216,7 +216,7 @@
                     <div class="event-content">
                         <h3 data-en="Glory Of Rome 64AD" data-th="Glory Of Rome 64AD">Glory Of Rome 64AD</h3>
                         <p data-en="Command Roman legions in the glory days of the Roman Empire" data-th="บัญชาการกองทหารโรมันในยุครุ่งเรืองของจักรวรรดิโรมัน">บัญชาการกองทหารโรมันในยุครุ่งเรืองของจักรวรรดิโรมัน</p>
-                        <button class="btn btn-secondary" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
+                        <button class="btn btn-secondary event-modal-btn" data-event="rome" data-en="View Details" data-th="ดูรายละเอียด">ดูรายละเอียด</button>
                     </div>
                 </div>
             </div>
@@ -244,7 +244,7 @@
                     <div class="game-content">
                         <h3 data-en="Ancient" data-th="สมัยโบราณ">สมัยโบราณ</h3>
                         <p data-en="Roman, Greek, Persian, and other ancient civilization battles" data-th="สงครามโรมัน กรีก เปอร์เซีย และอารยธรรมโบราณอื่นๆ">สงครามโรมัน กรีก เปอร์เซีย และอารยธรรมโบราณอื่นๆ</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="ancient" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -254,7 +254,7 @@
                     <div class="game-content">
                         <h3 data-en="Medieval" data-th="ยุคกลาง">ยุคกลาง</h3>
                         <p data-en="Medieval warfare, knights, castles, and crusades" data-th="สงครามยุคกลาง อัศวิน ปราสาท และสงครามครูเสด">สงครามยุคกลาง อัศวิน ปราสาท และสงครามครูเสด</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="medieval" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -264,7 +264,7 @@
                     <div class="game-content">
                         <h3 data-en="Renaissance" data-th="ยุคฟื้นฟูศิลปวิทยา">ยุคฟื้นฟูศิลปวิทยา</h3>
                         <p data-en="Renaissance period battles with pike and shot formations" data-th="สงครามยุค Renaissance ด้วยกองกำลังหอกและปืน">สงครามยุค Renaissance ด้วยกองกำลังหอกและปืน</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="renaissance" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -274,7 +274,7 @@
                     <div class="game-content">
                         <h3 data-en="Seven Years' War" data-th="สงครามเจ็ดปี">สงครามเจ็ดปี</h3>
                         <p data-en="Seven Years' War era battles and campaigns" data-th="สงครามและการรณรงค์ในยุคสงครามเจ็ดปี">สงครามและการรณรงค์ในยุคสงครามเจ็ดปี</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="syw" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -284,7 +284,7 @@
                     <div class="game-content">
                         <h3 data-en="Napoleonic Wars" data-th="สงครามยุคนโปเลียน">สงครามยุคนโปเลียน</h3>
                         <p data-en="Enormous collection of Napoleonic era figures covering all European theaters" data-th="โมเดลทหารจำนวนมหาศาลสำหรับยุคนโปเลียน ครอบคลุมสมรภูมิทั่วยุโรป">โมเดลทหารจำนวนมหาศาลสำหรับยุคนโปเลียน ครอบคลุมสมรภูมิทั่วยุโรป</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="napoleon" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -294,7 +294,7 @@
                     <div class="game-content">
                         <h3 data-en="American Civil War" data-th="สงครามกลางเมืองอเมริกา">สงครามกลางเมืองอเมริกา</h3>
                         <p data-en="American Civil War battles between Union and Confederate forces" data-th="สงครามกลางเมืองอเมริการะหว่างกองทัพสหภาพและสมาพันธรัฐ">สงครามกลางเมืองอเมริการะหว่างกองทัพสหภาพและสมาพันธรัฐ</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="acw" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -304,7 +304,7 @@
                     <div class="game-content">
                         <h3 data-en="World War II" data-th="สงครามโลกครั้งที่ 2">สงครามโลกครั้งที่ 2</h3>
                         <p data-en="A wide range of WWII games covering European, Pacific, and African theaters" data-th="เกมสงครามโลกครั้งที่ 2 หลากหลายรูปแบบ ครอบคลุมทั้งสมรภูมิยุโรป แปซิฟิก และแอฟริกา">เกมสงครามโลกครั้งที่ 2 หลากหลายรูปแบบ ครอบคลุมทั้งสมรภูมิยุโรป แปซิฟิก และแอฟริกา</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="ww2" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
                 <div class="game-card">
@@ -314,7 +314,7 @@
                     <div class="game-content">
                         <h3 data-en="Dungeons and Dragons" data-th="Dungeons and Dragons">Dungeons and Dragons</h3>
                         <p data-en="Fantasy role-playing adventures in the world of D&D" data-th="การผจญภัยเกมสวมบทบาทแฟนตาซีในโลกของ D&D">การผจญภัยเกมสวมบทบาทแฟนตาซีในโลกของ D&D</p>
-                        <a href="#" class="btn btn-link" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</a>
+                        <button class="btn btn-link game-modal-btn" data-game="dnd" data-en="Learn More →" data-th="เรียนรู้เพิ่มเติม →">เรียนรู้เพิ่มเติม →</button>
                     </div>
                 </div>
             </div>
@@ -584,6 +584,70 @@
             </div>
         </div>
     </footer>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-body">
+                <h2 id="modalTitle"></h2>
+                <div class="modal-details">
+                    <div class="modal-info">
+                        <h3 data-en="About This Period" data-th="เกี่ยวกับยุคสมัยนี้">เกี่ยวกับยุคสมัยนี้</h3>
+                        <p id="modalDescription"></p>
+                        
+                        <h3 data-en="Game Rules Available" data-th="กฎเกมที่ใช้ได้">กฎเกมที่ใช้ได้</h3>
+                        <ul id="modalRules"></ul>
+                        
+                        <h3 data-en="Our Collection" data-th="คอลเล็คชันของเรา">คอลเล็คชันของเรา</h3>
+                        <p id="modalCollection"></p>
+                        
+                        <h3 data-en="Typical Scenarios" data-th="สถานการณ์ตัวอย่าง">สถานการณ์ตัวอย่าง</h3>
+                        <ul id="modalScenarios"></ul>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" data-en="Book Now" data-th="จองเลย">จองเลย</button>
+                    <button class="btn btn-secondary" id="modalCloseBtn" data-en="Close" data-th="ปิด">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="eventModalClose">&times;</button>
+            <div class="modal-body">
+                <h2 id="eventModalTitle"></h2>
+                <div class="modal-details">
+                    <div class="modal-info">
+                        <div class="event-meta">
+                            <p><strong data-en="📅 Date:" data-th="📅 วันที่:">📅 วันที่:</strong> <span id="eventModalDate"></span></p>
+                            <p><strong data-en="⏰ Duration:" data-th="⏰ ระยะเวลา:">⏰ ระยะเวลา:</strong> <span id="eventModalDuration"></span></p>
+                            <p><strong data-en="👥 Max Players:" data-th="👥 ผู้เล่นสูงสุด:">👥 ผู้เล่นสูงสุด:</strong> <span id="eventModalPlayers"></span></p>
+                        </div>
+                        
+                        <h3 data-en="About This Event" data-th="เกี่ยวกับอีเวนต์นี้">เกี่ยวกับอีเวนต์นี้</h3>
+                        <p id="eventModalDescription"></p>
+                        
+                        <h3 data-en="Historical Background" data-th="ประวัติศาสตร์">ประวัติศาสตร์</h3>
+                        <p id="eventModalHistory"></p>
+                        
+                        <h3 data-en="What's Included" data-th="สิ่งที่รวมอยู่ในแพ็คเกจ">สิ่งที่รวมอยู่ในแพ็คเกจ</h3>
+                        <ul id="eventModalIncludes"></ul>
+                        
+                        <h3 data-en="Game Rules Used" data-th="กฎเกมที่ใช้">กฎเกมที่ใช้</h3>
+                        <p id="eventModalRules"></p>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" data-en="Register Now" data-th="ลงทะเบียนเลย">ลงทะเบียนเลย</button>
+                    <button class="btn btn-secondary" id="eventModalCloseBtn" data-en="Close" data-th="ปิด">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

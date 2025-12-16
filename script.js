@@ -403,6 +403,428 @@ document.addEventListener('DOMContentLoaded', () => {
     initGallery();
 });
 
+// Event Modal Data
+const eventData = {
+    waterloo: {
+        title: { en: 'Waterloo Campaign', th: 'Waterloo Campaign' },
+        date: { en: '6-10 March 2026', th: '6-10 มีนาคม 2026' },
+        duration: { en: '5 Days / 4 Nights', th: '5 วัน 4 คืน' },
+        players: { en: '8-12 players', th: '8-12 คน' },
+        description: {
+            en: 'Join us for an epic recreation of the legendary Waterloo Campaign! This multi-day event will allow you to command armies and make the critical decisions that shaped European history.',
+            th: 'มาร่วมกับเราในการจำลองแคมเปญ Waterloo อันเป็นตำนาน! อีเวนต์หลายวันนี้จะให้คุณบัญชาการกองทัพและตัดสินใจสำคัญที่หล่อหลอมประวัติศาสตร์ยุโรป'
+        },
+        history: {
+            en: 'The Waterloo Campaign (June 1815) was Napoleon Bonaparte\'s final campaign. After escaping from Elba, Napoleon raised a new army and marched into Belgium, where he faced the combined forces of the Duke of Wellington and Field Marshal Blücher. The campaign culminated in the decisive Battle of Waterloo on June 18, 1815.',
+            th: 'แคมเปญ Waterloo (มิถุนายน 1815) เป็นแคมเปญสุดท้ายของนโปเลียน โบนาปาร์ต หลังจากหลบหนีจากเอลบา นโปเลียนได้ชุมนุมกองทัพใหม่และเดินทัพเข้าเบลเยียม ที่ซึ่งเขาเผชิญหน้ากับกองกำลังรวมของดยุกแห่งเวลลิงตันและจอมพลบลูเชอร์ แคมเปญสิ้นสุดด้วยการรบที่ Waterloo ใน 18 มิถุนายน 1815'
+        },
+        includes: [
+            { en: 'Accommodation for 4 nights', th: 'ที่พักสำหรับ 4 คืน' },
+            { en: 'All meals (breakfast, lunch, dinner)', th: 'อาหารทุกมื้อ (อาหารเช้า กลางวัน เย็น)' },
+            { en: 'Complete miniature armies and terrain', th: 'กองทัพโมเดลและฉากสมบูรณ์' },
+            { en: 'Expert game master guidance', th: 'คำแนะนำจาก Game Master ผู้เชี่ยวชาญ' },
+            { en: 'Historical reference materials', th: 'เอกสารอ้างอิงทางประวัติศาสตร์' },
+            { en: 'Event certificate and photos', th: 'ใบประกาศนียบัตรและรูปภาพจากอีเวนต์' }
+        ],
+        rules: { en: 'Black Powder / General de Brigade', th: 'Black Powder / General de Brigade' }
+    },
+    normandy: {
+        title: { en: 'Break-out from Normandy', th: 'Break-out from Normandy' },
+        date: { en: '13-16 March 2026', th: '13-16 มีนาคม 2026' },
+        duration: { en: '4 Days / 3 Nights', th: '4 วัน 3 คืน' },
+        players: { en: '10-16 players', th: '10-16 คน' },
+        description: {
+            en: 'Experience the intensity of Operation Cobra and the Normandy breakout! Command Allied or German forces in this pivotal WWII campaign that changed the course of the war in Western Europe.',
+            th: 'สัมผัสความเข้มข้นของปฏิบัติการโคบราและการยึดนอร์มังดี! บัญชาการกองกำลังฝ่ายสัมพันธมิตรหรือเยอรมันในแคมเปญ WWII สำคัญนี้ที่เปลี่ยนทิศทางสงครามในยุโรปตะวันตก'
+        },
+        history: {
+            en: 'Following D-Day, Allied forces were initially contained in Normandy. Operation Cobra, launched on July 25, 1944, was the American breakout from the Normandy beachhead. The operation shattered German defenses and led to the liberation of France.',
+            th: 'หลังจากวันดี-เดย์ กองกำลังสัมพันธมิตรถูกกักไว้ในนอร์มังดีในตอนแรก ปฏิบัติการโคบรา เริ่มเมื่อ 25 กรกฎาคม 1944 เป็นการยึดพื้นที่ของอเมริกาจากหาดนอร์มังดี ปฏิบัติการนี้ทำลายแนวป้องกันของเยอรมันและนำไปสู่การปลดปล่อยฝรั่งเศส'
+        },
+        includes: [
+            { en: 'Accommodation for 3 nights', th: 'ที่พักสำหรับ 3 คืน' },
+            { en: 'All meals included', th: 'อาหารทุกมื้อ' },
+            { en: 'Massive WWII miniature collection', th: 'คอลเล็กชันโมเดล WWII ขนาดใหญ่' },
+            { en: 'Detailed Normandy terrain boards', th: 'กระดานภูมิประเทศนอร์มังดีโดยละเอียด' },
+            { en: 'Tank and aircraft models', th: 'โมเดลรถถังและเครื่องบิน' },
+            { en: 'Campaign booklet and maps', th: 'หนังสือแคมเปญและแผนที่' }
+        ],
+        rules: { en: 'Bolt Action / Chain of Command', th: 'Bolt Action / Chain of Command' }
+    },
+    agincourt: {
+        title: { en: 'Battle of Agincourt', th: 'Battle of Agincourt' },
+        date: { en: '20-24 March 2026', th: '20-24 มีนาคม 2026' },
+        duration: { en: '5 Days / 4 Nights', th: '5 วัน 4 คืน' },
+        players: { en: '12-20 players', th: '12-20 คน' },
+        description: {
+            en: 'Relive one of history\'s most famous battles! The Battle of Agincourt (1415) where Henry V\'s outnumbered English army achieved a stunning victory against French nobility. Command knights, archers, and men-at-arms in this epic medieval showdown.',
+            th: 'จำลองหนึ่งในสงครามที่มีชื่อเสียงที่สุดในประวัติศาสตร์! สงคราม Agincourt (1415) ที่กองทัพอังกฤษของเฮนรี่ที่ 5 ซึ่งมีจำนวนน้อยกว่าได้รับชัยชนะอันน่าทึ่งเหนือชนชั้นสูงฝรั่งเศส บัญชาการอัศวิน นักธนู และทหารในการเผชิญหน้ายุคกลางอันยิ่งใหญ่นี้'
+        },
+        history: {
+            en: 'The Battle of Agincourt was fought on October 25, 1415, during the Hundred Years\' War. Despite being heavily outnumbered, the English longbowmen devastated the heavily armored French cavalry and infantry. The battle is famous for the effectiveness of the English longbow against French knights.',
+            th: 'สงคราม Agincourt เกิดขึ้นเมื่อวันที่ 25 ตุลาคม 1415 ในช่วงสงครามร้อยปี แม้จะมีกำลังน้อยกว่ามาก นักธนูคันยาวอังกฤษได้ทำลายล้างทหารม้าและทหารราบฝรั่งเศสที่สวมเกราะหนัก สงครามนี้มีชื่อเสียงจากประสิทธิภาพของคันธนูยาวอังกฤษต่ออัศวินฝรั่งเศส'
+        },
+        includes: [
+            { en: 'Accommodation for 4 nights', th: 'ที่พักสำหรับ 4 คืน' },
+            { en: 'All medieval-themed meals', th: 'อาหารธีมยุคกลางทุกมื้อ' },
+            { en: '1,500+ medieval miniatures', th: 'โมเดลยุคกลางกว่า 1,500 ตัว' },
+            { en: 'Authentic Agincourt terrain', th: 'ภูมิประเทศ Agincourt ที่สมจริง' },
+            { en: 'Historical costume option', th: 'ตัวเลือกเครื่องแต่งกายยุคกลาง' },
+            { en: 'Medieval banquet dinner', th: 'งานเลี้ยงอาหารยุคกลาง' }
+        ],
+        rules: { en: 'Lion Rampant / Hail Caesar', th: 'Lion Rampant / Hail Caesar' }
+    },
+    rome: {
+        title: { en: 'Glory of Rome 64 AD', th: 'Glory of Rome 64 AD' },
+        date: { en: '27-30 March 2026', th: '27-30 มีนาคม 2026' },
+        duration: { en: '4 Days / 3 Nights', th: '4 วัน 3 คืน' },
+        players: { en: '8-14 players', th: '8-14 คน' },
+        description: {
+            en: 'Command the legendary Roman legions at the height of their power! Experience ancient warfare with disciplined infantry, cavalry, and siege weapons. Relive the glory days of the Roman Empire in 64 AD.',
+            th: 'บัญชาการกองทหารโรมันในยุครุ่งเรือง! สัมผัสสงครามโบราณด้วยทหารราบที่มีวินัย ทหารม้า และอาวุธล้อมเมือง จำลองยุครุ่งเรืองของจักรวรรดิโรมันใน 64 คริสต์ศักราช'
+        },
+        history: {
+            en: '64 AD saw the Roman Empire at its peak under Emperor Nero. The Roman military machine was the most advanced in the world, with professional legions conquering territories from Britain to the Middle East. This period showcases the tactical brilliance and organizational superiority of Roman warfare.',
+            th: '64 คริสต์ศักราช จักรวรรดิโรมันอยู่ในจุดสูงสุดภายใต้จักรพรรดิเนโร เครื่องจักรทางทหารของโรมันเป็นระบบที่ทันสมัยที่สุดในโลก ด้วยกองทหารมืออาชีพที่พิชิตดินแดนตั้งแต่บริเตนไปจนถึงตะวันออกกลาง ยุคนี้แสดงให้เห็นความเฉลียวฉลาดทางยุทธวิธีและความเหนือกว่าทางองค์กรของสงครามโรมัน'
+        },
+        includes: [
+            { en: 'Accommodation for 3 nights', th: 'ที่พักสำหรับ 3 คืน' },
+            { en: 'All meals with Roman theme', th: 'อาหารทุกมื้อธีมโรมัน' },
+            { en: 'Complete Roman & enemy armies', th: 'กองทัพโรมันและกองทัพศัตรูครบชุด' },
+            { en: 'Ancient battlefield terrain', th: 'ภูมิประเทศสนามรบโบราณ' },
+            { en: 'Legion tactics workshop', th: 'การอบรมยุทธวิธีของกองทหาร' },
+            { en: 'Roman military demonstration', th: 'การสาธิตทหารโรมัน' }
+        ],
+        rules: { en: 'Hail Caesar / Impetus', th: 'Hail Caesar / Impetus' }
+    }
+};
+
+// Event Modal Management
+const eventModal = document.getElementById('eventModal');
+const eventModalClose = document.getElementById('eventModalClose');
+const eventModalCloseBtn = document.getElementById('eventModalCloseBtn');
+const eventModalBtns = document.querySelectorAll('.event-modal-btn');
+
+// Open Event Modal
+eventModalBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const eventType = btn.getAttribute('data-event');
+        openEventModal(eventType);
+    });
+});
+
+function openEventModal(eventType) {
+    const data = eventData[eventType];
+    if (!data) return;
+
+    const lang = currentLanguage;
+    
+    // Update modal content
+    document.getElementById('eventModalTitle').textContent = data.title[lang];
+    document.getElementById('eventModalDate').textContent = data.date[lang];
+    document.getElementById('eventModalDuration').textContent = data.duration[lang];
+    document.getElementById('eventModalPlayers').textContent = data.players[lang];
+    document.getElementById('eventModalDescription').textContent = data.description[lang];
+    document.getElementById('eventModalHistory').textContent = data.history[lang];
+    document.getElementById('eventModalRules').textContent = data.rules[lang];
+    
+    // Update includes list
+    const includesList = document.getElementById('eventModalIncludes');
+    includesList.innerHTML = '';
+    data.includes.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item[lang];
+        includesList.appendChild(li);
+    });
+    
+    // Show modal
+    eventModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Event Modal
+function closeEventModal() {
+    eventModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+if (eventModalClose) {
+    eventModalClose.addEventListener('click', closeEventModal);
+}
+
+if (eventModalCloseBtn) {
+    eventModalCloseBtn.addEventListener('click', closeEventModal);
+}
+
+// Close event modal when clicking outside
+eventModal.addEventListener('click', (e) => {
+    if (e.target === eventModal) {
+        closeEventModal();
+    }
+});
+
+// Update Escape key handler to close both modals
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (gameModal.classList.contains('active')) {
+            closeGameModal();
+        }
+        if (eventModal.classList.contains('active')) {
+            closeEventModal();
+        }
+    }
+});
+
+// Game Modal Data
+const gameData = {
+    ancient: {
+        title: { en: 'Ancient Warfare', th: 'สงครามสมัยโบราณ' },
+        description: {
+            en: 'Explore the epic battles of ancient civilizations including Roman legions, Greek phalanxes, Persian armies, and more. Experience the tactical brilliance of commanders like Alexander the Great, Julius Caesar, and Hannibal.',
+            th: 'สำรวจสงครามอันยิ่งใหญ่ของอารยธรรมโบราณ รวมถึงกองทัพโรมัน กองพลกรีก กองทัพเปอร์เซีย และอื่นๆ สัมผัสความเฉลียวฉลาดทางยุทธวิธีของแม่ทัพเช่น อเล็กซานเดอร์มหาราช จูเลียส ซีซาร์ และฮันนิบาล'
+        },
+        rules: [
+            { en: 'Hail Caesar', th: 'Hail Caesar' },
+            { en: 'Impetus', th: 'Impetus' },
+            { en: 'DBMM (De Bellis Magistrorum Militum)', th: 'DBMM (De Bellis Magistrorum Militum)' }
+        ],
+        collection: {
+            en: 'Over 3,000 beautifully painted miniatures representing various ancient armies from 3000 BC to 476 AD.',
+            th: 'โมเดลทหารที่ทาสีอย่างสวยงามกว่า 3,000 ตัว แทนกองทัพโบราณต่างๆ ตั้งแต่ 3000 ปีก่อนคริสตกาลถึง 476 คริสต์ศักราช'
+        },
+        scenarios: [
+            { en: 'Battle of Gaugamela (331 BC)', th: 'สงครามเกากาเมลา (331 ปีก่อนคริสตกาล)' },
+            { en: 'Cannae - Hannibal vs Rome', th: 'คานนาอี - ฮันนิบาล ปะทะโรม' },
+            { en: 'Thermopylae - Spartans Last Stand', th: 'เธอร์โมไพลี - การยืนหยัดครั้งสุดท้ายของสปาร์ตัน' }
+        ]
+    },
+    medieval: {
+        title: { en: 'Medieval Warfare', th: 'สงครามยุคกลาง' },
+        description: {
+            en: 'Journey through the age of knights, castles, and crusades. Command mighty armies featuring armored cavalry, archers, and siege engines in battles that shaped medieval Europe and beyond.',
+            th: 'เดินทางผ่านยุคของอัศวิน ปราสาท และสงครามครูเสด บัญชาการกองทัพอันทรงพลังที่มีทหารม้าเกราะเหล็ก นักธนู และเครื่องล้อมปราสาท ในสงครามที่หล่อหลอมยุโรปยุคกลาง'
+        },
+        rules: [
+            { en: 'Lion Rampant', th: 'Lion Rampant' },
+            { en: 'Hail Caesar (Medieval Variant)', th: 'Hail Caesar (Medieval Variant)' },
+            { en: 'Sword & Spear', th: 'Sword & Spear' }
+        ],
+        collection: {
+            en: 'Extensive collection of 2,500+ medieval miniatures covering the period from 500 AD to 1500 AD.',
+            th: 'คอลเล็กชันโมเดลยุคกลางที่ครอบคลุมกว่า 2,500 ตัว ครอบคลุมช่วงเวลาตั้งแต่ 500 ถึง 1500 คริสต์ศักราช'
+        },
+        scenarios: [
+            { en: 'Hastings 1066 - Norman Conquest', th: 'เฮสติงส์ 1066 - การยึดครองของนอร์แมน' },
+            { en: 'Agincourt 1415', th: 'อาฌินคูร์ 1415' },
+            { en: 'Crusader Sieges', th: 'การล้อมปราสาทในสมัยครูเสด' }
+        ]
+    },
+    renaissance: {
+        title: { en: 'Renaissance Period', th: 'ยุคฟื้นฟูศิลปวิทยา' },
+        description: {
+            en: 'The age of pike and shot! Experience the transformation of warfare with the introduction of gunpowder weapons alongside traditional pike formations.',
+            th: 'ยุคแห่งหอกและปืน! สัมผัสการเปลี่ยนแปลงของสงครามด้วยการนำอาวุธดินปืนมาใช้ควบคู่ไปกับรูปแบบการรบด้วยหอกแบบดั้งเดิม'
+        },
+        rules: [
+            { en: 'Pike & Shotte', th: 'Pike & Shotte' },
+            { en: 'Tercios', th: 'Tercios' },
+            { en: 'For King and Parliament', th: 'For King and Parliament' }
+        ],
+        collection: {
+            en: '1,800+ miniatures featuring Spanish Tercios, Swiss Pike, and early musket troops.',
+            th: 'โมเดลกว่า 1,800 ตัว ประกอบด้วย Spanish Tercios, Swiss Pike และทหารปืนสั้นยุคแรก'
+        },
+        scenarios: [
+            { en: 'Battle of Pavia 1525', th: 'สงครามปาเวีย 1525' },
+            { en: 'Dutch Revolt Campaigns', th: 'แคมเปญการกบฏของดัตช์' },
+            { en: 'Italian Wars', th: 'สงครามอิตาลี' }
+        ]
+    },
+    syw: {
+        title: { en: "Seven Years' War", th: 'สงครามเจ็ดปี' },
+        description: {
+            en: "The Seven Years' War (1756-1763) was a global conflict involving most of the great powers. Experience linear warfare at its finest with beautifully uniformed armies.",
+            th: 'สงครามเจ็ดปี (1756-1763) เป็นความขัดแย้งระดับโลกที่มีมหาอำนาจส่วนใหญ่เข้าร่วม สัมผัสสงครามแบบเส้นตรงที่ดีที่สุดพร้อมกองทัพที่มีเครื่องแบบสวยงาม'
+        },
+        rules: [
+            { en: 'Black Powder', th: 'Black Powder' },
+            { en: 'Maurice', th: 'Maurice' },
+            { en: 'Warfare in the Age of Reason', th: 'Warfare in the Age of Reason' }
+        ],
+        collection: {
+            en: '2,200+ miniatures including Prussian, Austrian, French, and British forces.',
+            th: 'โมเดลกว่า 2,200 ตัว รวมทั้งกองกำลังปรัสเซีย ออสเตรีย ฝรั่งเศส และอังกฤษ'
+        },
+        scenarios: [
+            { en: 'Battle of Rossbach 1757', th: 'สงครามรอสบัค 1757' },
+            { en: 'Leuthen - Frederick the Great', th: 'ลอยเทิน - เฟรเดอริกมหาราช' },
+            { en: 'Battle of Minden', th: 'สงครามมินเดน' }
+        ]
+    },
+    napoleon: {
+        title: { en: 'Napoleonic Wars', th: 'สงครามยุคนโปเลียน' },
+        description: {
+            en: 'Recreate the epic campaigns of Napoleon Bonaparte! From the pyramids of Egypt to the frozen steppes of Russia, command armies across all European theaters.',
+            th: 'จำลองแคมเปญอันยิ่งใหญ่ของนโปเลียน โบนาปาร์ต! ตั้งแต่พีระมิดแห่งอียิปต์ไปจนถึงที่ราบเยือกแข็งของรัสเซีย บัญชาการกองทัพทั่วทุกสมรภูมิในยุโรป'
+        },
+        rules: [
+            { en: 'Black Powder', th: 'Black Powder' },
+            { en: 'General de Brigade', th: 'General de Brigade' },
+            { en: 'Napoleon at War', th: 'Napoleon at War' }
+        ],
+        collection: {
+            en: 'Our largest collection! Over 5,000 miniatures representing French, British, Russian, Austrian, and Prussian armies.',
+            th: 'คอลเล็กชันที่ใหญ่ที่สุดของเรา! โมเดลกว่า 5,000 ตัว แทนกองทัพฝรั่งเศส อังกฤษ รัสเซีย ออสเตรีย และปรัสเซีย'
+        },
+        scenarios: [
+            { en: 'Waterloo 1815', th: 'วอเตอร์ลู 1815' },
+            { en: 'Austerlitz - The Battle of Three Emperors', th: 'ออสเตอร์ลิทซ์ - สงครามแห่งสามจักรพรรดิ' },
+            { en: 'Borodino - Invasion of Russia', th: 'โบโรดิโน - การบุกรัสเซีย' }
+        ]
+    },
+    acw: {
+        title: { en: 'American Civil War', th: 'สงครามกลางเมืองอเมริกา' },
+        description: {
+            en: 'Fight the battles that divided a nation! Command Union or Confederate forces in this pivotal conflict that transformed American history.',
+            th: 'สู้รบในสงครามที่แบ่งแยกประเทศ! บัญชาการกองกำลังสหภาพหรือสมาพันธรัฐในความขัดแย้งที่สำคัญนี้ที่เปลี่ยนประวัติศาสตร์อเมริกา'
+        },
+        rules: [
+            { en: 'Black Powder - Glory Hallelujah!', th: 'Black Powder - Glory Hallelujah!' },
+            { en: 'Fire and Fury', th: 'Fire and Fury' },
+            { en: 'Longstreet', th: 'Longstreet' }
+        ],
+        collection: {
+            en: '3,500+ miniatures covering both Union and Confederate armies, including cavalry and artillery.',
+            th: 'โมเดลกว่า 3,500 ตัว ครอบคลุมทั้งกองทัพสหภาพและสมาพันธรัฐ รวมทั้งทหารม้าและปืนใหญ่'
+        },
+        scenarios: [
+            { en: 'Gettysburg - The High Water Mark', th: 'เก็ตตีสเบิร์ก - จุดสูงสุดของสมาพันธรัฐ' },
+            { en: 'Battle of Antietam', th: 'สงครามแอนทีแทม' },
+            { en: "Pickett's Charge", th: 'การโจมตีของพิคเก็ตต์' }
+        ]
+    },
+    ww2: {
+        title: { en: 'World War II', th: 'สงครามโลกครั้งที่ 2' },
+        description: {
+            en: 'The largest conflict in human history! Command armies from all major powers across European, Pacific, and African theaters with tanks, aircraft, and infantry.',
+            th: 'ความขัดแย้งที่ยิ่งใหญ่ที่สุดในประวัติศาสตร์มนุษยชาติ! บัญชาการกองทัพจากมหาอำนาจหลักทั้งหมดทั่วสมรภูมิยุโรป แปซิฟิก และแอฟริกา พร้อมรถถัง เครื่องบิน และทหารราบ'
+        },
+        rules: [
+            { en: 'Bolt Action', th: 'Bolt Action' },
+            { en: 'Flames of War', th: 'Flames of War' },
+            { en: 'Chain of Command', th: 'Chain of Command' }
+        ],
+        collection: {
+            en: 'Massive collection of 6,000+ miniatures including German, American, British, Soviet, and Japanese forces, plus vehicles and aircraft.',
+            th: 'คอลเล็กชันขนาดใหญ่กว่า 6,000 ชิ้น รวมทั้งกองกำลังเยอรมัน อเมริกัน อังกฤษ โซเวียต และญี่ปุ่น บวกยานพาหนะและเครื่องบิน'
+        },
+        scenarios: [
+            { en: 'D-Day Normandy Landings', th: 'การยกพลขึ้นบกนอร์มังดี วันดีเดย์' },
+            { en: 'Battle of Stalingrad', th: 'สงครามสตาลินกราด' },
+            { en: 'El Alamein - Desert War', th: 'เอลอะลาเมน - สงครามทะเลทราย' }
+        ]
+    },
+    dnd: {
+        title: { en: 'Dungeons & Dragons', th: 'Dungeons & Dragons' },
+        description: {
+            en: 'Enter a world of fantasy and adventure! Create your character and embark on epic quests with magic, monsters, and treasure in the ultimate tabletop roleplaying game.',
+            th: 'เข้าสู่โลกแห่งแฟนตาซีและการผจญภัย! สร้างตัวละครของคุณและเริ่มต้นภารกิจอันยิ่งใหญ่พร้อมเวทมนตร์ สัตว์ประหลาด และสมบัติในเกมสวมบทบาทบนโต๊ะที่ดีที่สุด'
+        },
+        rules: [
+            { en: 'D&D 5th Edition', th: 'D&D 5th Edition' },
+            { en: 'Pathfinder', th: 'Pathfinder' },
+            { en: 'Adventure League', th: 'Adventure League' }
+        ],
+        collection: {
+            en: 'Extensive miniature collection, terrain pieces, dungeons, and accessories for immersive fantasy gaming.',
+            th: 'คอลเล็กชันโมเดลที่หลากหลาย ชิ้นส่วนภูมิประเทศ คุกใต้ดิน และอุปกรณ์เสริมสำหรับการเล่นเกมแฟนตาซีที่สมจริง'
+        },
+        scenarios: [
+            { en: 'Classic Adventure Modules', th: 'โมดูลการผจญภัยคลาสสิก' },
+            { en: 'Custom Campaigns', th: 'แคมเปญที่กำหนดเอง' },
+            { en: 'One-Shot Adventures', th: 'การผจญภัยแบบเล่นจบในครั้งเดียว' }
+        ]
+    }
+};
+
+// Game Modal Management
+const gameModal = document.getElementById('gameModal');
+const modalClose = document.getElementById('modalClose');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+const gameModalBtns = document.querySelectorAll('.game-modal-btn');
+
+// Open Modal
+gameModalBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const gameType = btn.getAttribute('data-game');
+        openGameModal(gameType);
+    });
+});
+
+function openGameModal(gameType) {
+    const data = gameData[gameType];
+    if (!data) return;
+
+    const lang = currentLanguage;
+    
+    // Update modal content
+    document.getElementById('modalTitle').textContent = data.title[lang];
+    document.getElementById('modalDescription').textContent = data.description[lang];
+    document.getElementById('modalCollection').textContent = data.collection[lang];
+    
+    // Update rules list
+    const rulesList = document.getElementById('modalRules');
+    rulesList.innerHTML = '';
+    data.rules.forEach(rule => {
+        const li = document.createElement('li');
+        li.textContent = rule[lang];
+        rulesList.appendChild(li);
+    });
+    
+    // Update scenarios list
+    const scenariosList = document.getElementById('modalScenarios');
+    scenariosList.innerHTML = '';
+    data.scenarios.forEach(scenario => {
+        const li = document.createElement('li');
+        li.textContent = scenario[lang];
+        scenariosList.appendChild(li);
+    });
+    
+    // Show modal
+    gameModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Modal
+function closeGameModal() {
+    gameModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+if (modalClose) {
+    modalClose.addEventListener('click', closeGameModal);
+}
+
+if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closeGameModal);
+}
+
+// Close modal when clicking outside
+gameModal.addEventListener('click', (e) => {
+    if (e.target === gameModal) {
+        closeGameModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && gameModal.classList.contains('active')) {
+        closeGameModal();
+    }
+});
+
 // Print welcome message to console
 console.log('%c🎲 Welcome to Wargames Holiday Centre Phuket! 🎲', 
     'color: #4f772d; font-size: 16px; font-weight: bold;');
