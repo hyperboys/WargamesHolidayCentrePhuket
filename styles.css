@@ -1395,12 +1395,12 @@ section {
     color: var(--accent-color);
 }
 
-/* Testimonials Section */
-.testimonials {
+/* review Section */
+.review {
     background: white;
 }
 
-.testimonials-grid {
+.review-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
@@ -1705,7 +1705,7 @@ section {
     .events-grid,
     .games-grid,
     .gallery-grid,
-    .testimonials-grid {
+    .review-grid {
         grid-template-columns: 1fr;
     }
     

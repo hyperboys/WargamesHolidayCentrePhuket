@@ -85,12 +85,12 @@ const translations = {
         selectPackage: "เลือกแพ็คเกจ",
         currency: "฿",
         
-        // Testimonials Section
-        testimonialsTitle: "// รีวิวจากลูกค้า",
-        testimonial1Text: "ประสบการณ์ที่ยอดเยี่ยมมาก! สนามรบใหญ่และโมเดลสวยงามมาก ผมจะกลับมาเล่นอีกแน่นอน และจะชวนเพื่อนๆ มาด้วย",
-        testimonial1Name: "สมชาย ใจดี",
-        testimonial1Location: "กรุงเทพฯ",
-        testimonial2Text: "เป็นสถานที่ที่เหมาะสำหรับผู้ที่รักเกมสงครามจริงๆ บรรยากาศดี ทีมงานเป็นมิตร และที่พักก็สะดวกสบาย",
+        // review Section
+        reviewTitle: "// รีวิวจากลูกค้า",
+        review1Text: "ประสบการณ์ที่ยอดเยี่ยมมาก! สนามรบใหญ่และโมเดลสวยงามมาก ผมจะกลับมาเล่นอีกแน่นอน และจะชวนเพื่อนๆ มาด้วย",
+        review1Name: "สมชาย ใจดี",
+        review1Location: "กรุงเทพฯ",
+        review2Text: "เป็นสถานที่ที่เหมาะสำหรับผู้ที่รักเกมสงครามจริงๆ บรรยากาศดี ทีมงานเป็นมิตร และที่พักก็สะดวกสบาย",
         testimonial2Name: "John Smith",
         testimonial2Location: "Singapore",
         testimonial3Text: "มาเที่ยวภูเก็ตและได้มาเจอที่นี่โดยบังเอิญ เป็นไฮไลท์ของการเดินทางเลย! โมเดลเยอะมากและมีคุณภาพสูง",
@@ -206,17 +206,17 @@ const translations = {
         selectPackage: "Select Package",
         currency: "฿",
         
-        // Testimonials Section
-        testimonialsTitle: "// Customer Reviews",
-        testimonial1Text: "Amazing experience! The battle tables are huge and the models are beautiful. I'll definitely come back and bring my friends along.",
-        testimonial1Name: "Somchai Jaidee",
-        testimonial1Location: "Bangkok",
-        testimonial2Text: "Perfect place for wargaming enthusiasts. Great atmosphere, friendly staff, and comfortable accommodation.",
-        testimonial2Name: "John Smith",
-        testimonial2Location: "Singapore",
-        testimonial3Text: "Stumbled upon this place while visiting Phuket. It was the highlight of my trip! Amazing collection of high-quality models.",
-        testimonial3Name: "Wichai Prasit",
-        testimonial3Location: "Chiang Mai",
+        // review Section
+        reviewTitle: "// Customer Reviews",
+        review1Text: "Amazing experience! The battle tables are huge and the models are beautiful. I'll definitely come back and bring my friends along.",
+        review1Name: "Somchai Jaidee",
+        review1Location: "Bangkok",
+        review2Text: "Perfect place for wargaming enthusiasts. Great atmosphere, friendly staff, and comfortable accommodation.",
+        review2Name: "John Smith",
+        review2Location: "Singapore",
+        review3Text: "Stumbled upon this place while visiting Phuket. It was the highlight of my trip! Amazing collection of high-quality models.",
+        review3Name: "Wichai Prasit",
+        review3Location: "Chiang Mai",
         
         // Contact Section
         contactTitle: "Contact Us",
