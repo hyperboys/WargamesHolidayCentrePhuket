@@ -35,23 +35,57 @@ html {
     padding: 0 20px;
 }
 
-/* Navigation */
-.navbar {
+/* Top Announcement Bar */
+.top-bar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(26, 26, 26, 0.95);
+    background: #000;
+    color: #fff;
+    z-index: 1001;
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-bar .announcement {
+    color: #ffd700;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation */
+.navbar {
+    position: fixed;
+    top: 2.1rem;
+    left: 0;
+    right: 0;
+    background: linear-gradient(rgba(26, 26, 26, 0.7), rgba(26, 26, 26, 0.8)), url('image/header.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     backdrop-filter: blur(10px);
     z-index: 1000;
-    padding: 0.5rem 0;
+    padding: 2rem 0;
     box-shadow: var(--shadow);
     transition: padding 0.3s ease, background 0.3s ease;
 }
 
 .navbar.scrolled {
     padding: 0.3rem 0;
-    background: rgba(26, 26, 26, 0.98);
+    background: linear-gradient(rgba(26, 26, 26, 0.85), rgba(26, 26, 26, 0.9)), url('image/header.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
