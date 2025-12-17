@@ -30,23 +30,38 @@ if (viewAllEventsBtn) {
 // Language Management
 let currentLanguage = 'en'; // Default language
 
-// Language Switch Handler
-const flagEn = document.getElementById('flagEn');
-const flagTh = document.getElementById('flagTh');
+// Language Dropdown Handler
+const languageBtn = document.getElementById('languageBtn');
+const languageMenu = document.getElementById('languageMenu');
+const currentFlagImg = document.getElementById('currentFlag');
+const languageOptions = document.querySelectorAll('.language-option');
 
-if (flagEn && flagTh) {
-    flagEn.addEventListener('click', () => {
-        if (currentLanguage !== 'en') {
-            currentLanguage = 'en';
-            updateLanguage();
-        }
+if (languageBtn && languageMenu) {
+    // Toggle dropdown menu
+    languageBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageBtn.classList.toggle('active');
+        languageMenu.classList.toggle('active');
     });
-    
-    flagTh.addEventListener('click', () => {
-        if (currentLanguage !== 'th') {
-            currentLanguage = 'th';
-            updateLanguage();
-        }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        languageBtn.classList.remove('active');
+        languageMenu.classList.remove('active');
+    });
+
+    // Language option click handlers
+    languageOptions.forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const lang = option.getAttribute('data-lang');
+            if (currentLanguage !== lang) {
+                currentLanguage = lang;
+                updateLanguage();
+            }
+            languageBtn.classList.remove('active');
+            languageMenu.classList.remove('active');
+        });
     });
 }
 
@@ -54,19 +69,17 @@ if (flagEn && flagTh) {
 function updateLanguage() {
     const lang = currentLanguage;
     
-    // Update active flag button
-    const flagEn = document.getElementById('flagEn');
-    const flagTh = document.getElementById('flagTh');
-    
-    if (flagEn && flagTh) {
-        if (lang === 'en') {
-            flagEn.classList.add('active');
-            flagTh.classList.remove('active');
-        } else {
-            flagTh.classList.add('active');
-            flagEn.classList.remove('active');
-        }
+    // Update current flag icon
+    if (currentFlagImg) {
+        const flagSrc = lang === 'en' ? 'image/icon/united-kingdom.png' : 'image/icon/thailand-flag.png';
+        currentFlagImg.src = flagSrc;
+        currentFlagImg.alt = lang === 'en' ? 'English' : 'ไทย';
     }
+
+    // Update active state for language options
+    languageOptions.forEach(option => {
+        option.classList.toggle('active', option.getAttribute('data-lang') === lang);
+    });
     
     // Update all elements with data-th and data-en attributes
     document.querySelectorAll('[data-th][data-en]').forEach(element => {
