@@ -423,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const eventData = {
     waterloo: {
         title: { en: 'Waterloo Campaign', th: 'Waterloo Campaign' },
+        image: 'image/event/Waterloo.jpg',
         date: { en: '6-10 March 2026', th: '6-10 มีนาคม 2026' },
         duration: { en: '5 Days / 4 Nights', th: '5 วัน 4 คืน' },
         players: { en: '8-12 players', th: '8-12 คน' },
@@ -446,6 +447,7 @@ const eventData = {
     },
     normandy: {
         title: { en: 'Break-out from Normandy', th: 'Break-out from Normandy' },
+        image: 'image/event/Normandy.jpg',
         date: { en: '13-16 March 2026', th: '13-16 มีนาคม 2026' },
         duration: { en: '4 Days / 3 Nights', th: '4 วัน 3 คืน' },
         players: { en: '10-16 players', th: '10-16 คน' },
@@ -469,6 +471,7 @@ const eventData = {
     },
     agincourt: {
         title: { en: 'Battle of Agincourt', th: 'Battle of Agincourt' },
+        image: 'image/event/Agincourt.jpg',
         date: { en: '20-24 March 2026', th: '20-24 มีนาคม 2026' },
         duration: { en: '5 Days / 4 Nights', th: '5 วัน 4 คืน' },
         players: { en: '12-20 players', th: '12-20 คน' },
@@ -492,6 +495,7 @@ const eventData = {
     },
     rome: {
         title: { en: 'Glory of Rome 64 AD', th: 'Glory of Rome 64 AD' },
+        image: 'image/event/GloryOfRome.jpg',
         date: { en: '27-30 March 2026', th: '27-30 มีนาคม 2026' },
         duration: { en: '4 Days / 3 Nights', th: '4 วัน 3 คืน' },
         players: { en: '8-14 players', th: '8-14 คน' },
@@ -530,11 +534,21 @@ eventModalBtns.forEach(btn => {
     });
 });
 
+let currentEventType = null; // Store current event type
+
 function openEventModal(eventType) {
     const data = eventData[eventType];
     if (!data) return;
 
     const lang = currentLanguage;
+    currentEventType = eventType; // Store for later use
+    
+    // Update modal image
+    const modalImage = document.getElementById('eventModalImage');
+    if (modalImage && data.image) {
+        modalImage.src = data.image;
+        modalImage.alt = data.title[lang];
+    }
     
     // Update modal content
     document.getElementById('eventModalTitle').textContent = data.title[lang];
@@ -545,7 +559,7 @@ function openEventModal(eventType) {
     document.getElementById('eventModalHistory').textContent = data.history[lang];
     document.getElementById('eventModalRules').textContent = data.rules[lang];
     
-    // Update includes list
+    // Update includes list (highlights in sidebar)
     const includesList = document.getElementById('eventModalIncludes');
     includesList.innerHTML = '';
     data.includes.forEach(item => {
@@ -881,16 +895,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Setup booking modal
 function setupBookingModal() {
-    // Use event delegation for booking buttons
+    // Handle event-specific registration button
+    const eventRegisterBtn = document.getElementById('eventRegisterBtn');
+    if (eventRegisterBtn) {
+        eventRegisterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Get current event data
+            const eventTitle = document.getElementById('eventModalTitle')?.textContent;
+            const eventDate = document.getElementById('eventModalDate')?.textContent;
+            const eventDuration = document.getElementById('eventModalDuration')?.textContent;
+            const eventPlayers = document.getElementById('eventModalPlayers')?.textContent;
+            
+            // Close event modal
+            closeEventModal();
+            
+            // Open booking modal with event info
+            openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, currentEventType);
+        });
+    }
+    
+    // Use event delegation for general booking buttons
     document.addEventListener('click', (e) => {
         const button = e.target.closest('.btn-primary, .btn-secondary');
         if (button) {
             const buttonText = button.textContent.trim();
-            if (buttonText.includes('Book Now') || buttonText.includes('จองเลย') || 
-                buttonText.includes('Contact Us') || buttonText.includes('ติดต่อเรา') ||
-                buttonText.includes('Select Package') || buttonText.includes('เลือกแพ็คเกจ')) {
-                e.preventDefault();
-                openBookingModal();
+            // Exclude event register button
+            if (!button.id || button.id !== 'eventRegisterBtn') {
+                if (buttonText.includes('Book Now') || buttonText.includes('จองเลย') || 
+                    buttonText.includes('Contact Us') || buttonText.includes('ติดต่อเรา') ||
+                    buttonText.includes('Select Package') || buttonText.includes('เลือกแพ็คเกจ')) {
+                    e.preventDefault();
+                    openBookingModal();
+                }
             }
         }
     });
@@ -955,6 +991,46 @@ function setupBookingModal() {
 }
 
 function openBookingModal() {
+    // Hide event info section for general bookings
+    const eventInfoSection = document.getElementById('eventInfoSection');
+    if (eventInfoSection) {
+        eventInfoSection.style.display = 'none';
+    }
+    
+    // Reset event selection
+    const eventSelect = document.getElementById('selectedEvent');
+    if (eventSelect) {
+        eventSelect.value = '';
+        eventSelect.disabled = false;
+    }
+    
+    bookingModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkIn').setAttribute('min', today);
+    document.getElementById('checkOut').setAttribute('min', today);
+}
+
+function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, eventType) {
+    // Show and populate event info section
+    const eventInfoSection = document.getElementById('eventInfoSection');
+    if (eventInfoSection) {
+        eventInfoSection.style.display = 'block';
+        document.getElementById('selectedEventTitle').textContent = eventTitle;
+        document.getElementById('selectedEventDate').textContent = eventDate;
+        document.getElementById('selectedEventDuration').textContent = eventDuration;
+        document.getElementById('selectedEventPlayers').textContent = eventPlayers;
+    }
+    
+    // Pre-select the event and make it readonly
+    const eventSelect = document.getElementById('selectedEvent');
+    if (eventSelect && eventType) {
+        eventSelect.value = eventType;
+        eventSelect.disabled = true; // Disable selection when coming from event modal
+    }
+    
     bookingModal.classList.add('active');
     document.body.style.overflow = 'hidden';
     

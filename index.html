@@ -935,35 +935,93 @@
     </div>
 
     <!-- Event Modal -->
-    <div id="eventModal" class="modal">
-        <div class="modal-content">
+    <div id="eventModal" class="modal event-modal">
+        <div class="modal-content event-modal-content">
             <button class="modal-close" id="eventModalClose">&times;</button>
-            <div class="modal-body">
-                <h2 id="eventModalTitle"></h2>
-                <div class="modal-details">
-                    <div class="modal-info">
-                        <div class="event-meta">
-                            <p><strong data-en="📅 Date:" data-th="📅 วันที่:">📅 วันที่:</strong> <span id="eventModalDate"></span></p>
-                            <p><strong data-en="⏰ Duration:" data-th="⏰ ระยะเวลา:">⏰ ระยะเวลา:</strong> <span id="eventModalDuration"></span></p>
-                            <p><strong data-en="👥 Max Players:" data-th="👥 ผู้เล่นสูงสุด:">👥 ผู้เล่นสูงสุด:</strong> <span id="eventModalPlayers"></span></p>
+            <div class="event-modal-header">
+                <img id="eventModalImage" src="" alt="Event Image" class="event-modal-image">
+                <div class="event-modal-overlay">
+                    <div class="event-badge-container">
+                        <span class="event-availability-badge" id="eventAvailabilityBadge" data-en="Available" data-th="ว่าง">ว่าง</span>
+                    </div>
+                    <h2 id="eventModalTitle" class="event-modal-title"></h2>
+                </div>
+            </div>
+            <div class="modal-body event-modal-body">
+                <div class="event-timeline-bar">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">📅</div>
+                        <div class="timeline-content">
+                            <span class="timeline-label" data-en="Date" data-th="วันที่">วันที่</span>
+                            <span class="timeline-value" id="eventModalDate"></span>
                         </div>
-                        
-                        <h3 data-en="About This Event" data-th="เกี่ยวกับอีเวนต์นี้">เกี่ยวกับอีเวนต์นี้</h3>
-                        <p id="eventModalDescription"></p>
-                        
-                        <h3 data-en="Historical Background" data-th="ประวัติศาสตร์">ประวัติศาสตร์</h3>
-                        <p id="eventModalHistory"></p>
-                        
-                        <h3 data-en="What's Included" data-th="สิ่งที่รวมอยู่ในแพ็คเกจ">สิ่งที่รวมอยู่ในแพ็คเกจ</h3>
-                        <ul id="eventModalIncludes"></ul>
-                        
-                        <h3 data-en="Game Rules Used" data-th="กฎเกมที่ใช้">กฎเกมที่ใช้</h3>
-                        <p id="eventModalRules"></p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">⏰</div>
+                        <div class="timeline-content">
+                            <span class="timeline-label" data-en="Duration" data-th="ระยะเวลา">ระยะเวลา</span>
+                            <span class="timeline-value" id="eventModalDuration"></span>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">👥</div>
+                        <div class="timeline-content">
+                            <span class="timeline-label" data-en="Players" data-th="ผู้เล่น">ผู้เล่น</span>
+                            <span class="timeline-value" id="eventModalPlayers"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-actions">
-                    <button class="btn btn-primary" data-en="Register Now" data-th="ลงทะเบียนเลย">ลงทะเบียนเลย</button>
-                    <button class="btn btn-secondary" id="eventModalCloseBtn" data-en="Close" data-th="ปิด">ปิด</button>
+
+                <div class="event-content-grid">
+                    <div class="event-main-content">
+                        <div class="event-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">📖</span>
+                                <span data-en="About This Event" data-th="เกี่ยวกับอีเวนต์นี้">เกี่ยวกับอีเวนต์นี้</span>
+                            </h3>
+                            <p id="eventModalDescription" class="section-text"></p>
+                        </div>
+                        
+                        <div class="event-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">📜</span>
+                                <span data-en="Historical Background" data-th="ประวัติศาสตร์">ประวัติศาสตร์</span>
+                            </h3>
+                            <p id="eventModalHistory" class="section-text"></p>
+                        </div>
+                    </div>
+
+                    <div class="event-sidebar">
+                        <div class="event-highlights">
+                            <h3 class="sidebar-title" data-en="✨ Highlights" data-th="✨ จุดเด่น">✨ จุดเด่น</h3>
+                            <ul id="eventModalIncludes" class="highlights-list"></ul>
+                        </div>
+
+                        <div class="event-rules-box">
+                            <h3 class="sidebar-title" data-en="🎲 Game Rules" data-th="🎲 กฎเกม">🎲 กฎเกม</h3>
+                            <p id="eventModalRules" class="rules-text"></p>
+                        </div>
+
+                        <div class="event-pricing-box">
+                            <div class="pricing-label" data-en="Starting from" data-th="เริ่มต้น">เริ่มต้น</div>
+                            <div class="pricing-amount">
+                                <span class="currency">฿</span>
+                                <span class="amount">7,000</span>
+                                <span class="period" data-en="/day" data-th="/วัน">/วัน</span>
+                            </div>
+                            <p class="pricing-note" data-en="*Full package pricing available upon inquiry" 
+                            data-th="*ราคาแพ็คเกจเต็มสอบถามได้">*ราคาแพ็คเกจเต็มสอบถามได้</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions event-modal-actions">
+                    <button class="btn btn-primary btn-large btn-event-register" id="eventRegisterBtn">
+                        <span data-en="🎯 Register Now" data-th="🎯 ลงทะเบียนเลย">🎯 ลงทะเบียนเลย</span>
+                    </button>
+                    <button class="btn btn-secondary btn-large" id="eventModalCloseBtn">
+                        <span data-en="Close" data-th="ปิด">ปิด</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -981,6 +1039,18 @@
                 </p>
                 
                 <form id="bookingForm" class="booking-form">
+                    <!-- Event Information (Hidden by default, shown when registering from event) -->
+                    <div class="form-section event-info-section" id="eventInfoSection" style="display: none;">
+                        <div class="event-info-card">
+                            <h3 id="selectedEventTitle"></h3>
+                            <div class="event-info-details">
+                                <span class="event-info-item">📅 <span id="selectedEventDate"></span></span>
+                                <span class="event-info-item">⏰ <span id="selectedEventDuration"></span></span>
+                                <span class="event-info-item">👥 <span id="selectedEventPlayers"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Personal Information -->
                     <div class="form-section">
                         <h3 data-en="👤 Personal Information" data-th="👤 ข้อมูลส่วนตัว">👤 ข้อมูลส่วนตัว</h3>
@@ -1021,6 +1091,18 @@
                     <!-- Booking Details -->
                     <div class="form-section">
                         <h3 data-en="📦 Booking Details" data-th="📦 รายละเอียดการจอง">📦 รายละเอียดการจอง</h3>
+                        
+                        <div class="form-group">
+                            <label for="selectedEvent" data-en="Event *" data-th="อีเวนต์ *">อีเวนต์ *</label>
+                            <select id="selectedEvent" name="selectedEvent" required>
+                                <option value="" data-en="-- Select Event --" data-th="-- เลือกอีเวนต์ --">-- เลือกอีเวนต์ --</option>
+                                <option value="waterloo" data-en="⚔️ Battle of Waterloo" data-th="⚔️ Battle of Waterloo">⚔️ Battle of Waterloo</option>
+                                <option value="normandy" data-en="🚂 Break-out from Normandy" data-th="🚂 Break-out from Normandy">🚂 Break-out from Normandy</option>
+                                <option value="agincourt" data-en="🏹 Battle of Agincourt" data-th="🏹 Battle of Agincourt">🏹 Battle of Agincourt</option>
+                                <option value="rome" data-en="⚔️ Glory Of Rome 64AD" data-th="⚔️ Glory Of Rome 64AD">⚔️ Glory Of Rome 64AD</option>
+                                <option value="other" data-en="Other (Please specify in comments)" data-th="อื่นๆ (โปรดระบุในความคิดเห็น)">อื่นๆ (โปรดระบุในความคิดเห็น)</option>
+                            </select>
+                        </div>
                         
                         <div class="form-group">
                             <label for="packageType" data-en="Package Type *" data-th="ประเภทแพ็คเกจ *">ประเภทแพ็คเกจ *</label>
