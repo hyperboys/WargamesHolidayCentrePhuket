@@ -1047,6 +1047,16 @@ section {
     width: fit-content;
 }
 
+.event-date .day-name {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+    margin-bottom: 3px;
+}
+
 .event-date .day {
     display: block;
     font-size: 1.8rem;
