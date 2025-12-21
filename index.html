@@ -969,6 +969,186 @@
         </div>
     </div>
 
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal booking-modal">
+        <div class="modal-content booking-modal-content">
+            <span class="modal-close" id="bookingModalClose">&times;</span>
+            <div class="modal-body booking-modal-body">
+                <h2 data-en="📅 Book Your Wargaming Adventure" data-th="📅 จองการผจญภัยวอร์เกมของคุณ">📅 จองการผจญภัยวอร์เกมของคุณ</h2>
+                <p class="booking-subtitle" data-en="Fill out the form below and we'll get back to you within 24 hours" 
+                data-th="กรอกแบบฟอร์มด้านล่าง เราจะติดต่อกลับภายใน 24 ชั่วโมง">
+                    กรอกแบบฟอร์มด้านล่าง เราจะติดต่อกลับภายใน 24 ชั่วโมง
+                </p>
+                
+                <form id="bookingForm" class="booking-form">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3 data-en="👤 Personal Information" data-th="👤 ข้อมูลส่วนตัว">👤 ข้อมูลส่วนตัว</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" data-en="First Name *" data-th="ชื่อ *">ชื่อ *</label>
+                                <input type="text" id="firstName" name="firstName" required 
+                                data-placeholder-en="Enter your first name" data-placeholder-th="กรอกชื่อของคุณ" placeholder="กรอกชื่อของคุณ">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" data-en="Last Name *" data-th="นามสกุล *">นามสกุล *</label>
+                                <input type="text" id="lastName" name="lastName" required 
+                                data-placeholder-en="Enter your last name" data-placeholder-th="กรอกนามสกุลของคุณ" placeholder="กรอกนามสกุลของคุณ">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" data-en="Email *" data-th="อีเมล *">อีเมล *</label>
+                                <input type="email" id="email" name="email" required 
+                                data-placeholder-en="your.email@example.com" data-placeholder-th="your.email@example.com" placeholder="your.email@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" data-en="Phone Number *" data-th="เบอร์โทรศัพท์ *">เบอร์โทรศัพท์ *</label>
+                                <input type="tel" id="phone" name="phone" required 
+                                data-placeholder-en="+66 XX XXX XXXX" data-placeholder-th="+66 XX XXX XXXX" placeholder="+66 XX XXX XXXX">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="country" data-en="Country *" data-th="ประเทศ *">ประเทศ *</label>
+                            <input type="text" id="country" name="country" required 
+                            data-placeholder-en="Your country" data-placeholder-th="ประเทศของคุณ" placeholder="ประเทศของคุณ">
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Details -->
+                    <div class="form-section">
+                        <h3 data-en="📦 Booking Details" data-th="📦 รายละเอียดการจอง">📦 รายละเอียดการจอง</h3>
+                        
+                        <div class="form-group">
+                            <label for="packageType" data-en="Package Type *" data-th="ประเภทแพ็คเกจ *">ประเภทแพ็คเกจ *</label>
+                            <select id="packageType" name="packageType" required>
+                                <option value="" data-en="-- Select Package --" data-th="-- เลือกแพ็คเกจ --">-- เลือกแพ็คเกจ --</option>
+                                <option value="campaign-weekend" data-en="Campaign Weekend (Hosted by WHC)" data-th="แคมเปญสุดสัปดาห์ (จัดโดย WHC)">แคมเปญสุดสัปดาห์ (จัดโดย WHC)</option>
+                                <option value="own-hosted" data-en="Your Own Hosted Weekend" data-th="สุดสัปดาห์ของคุณเอง">สุดสัปดาห์ของคุณเอง</option>
+                                <option value="custom" data-en="Custom Package" data-th="แพ็คเกจที่กำหนดเอง">แพ็คเกจที่กำหนดเอง</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="checkIn" data-en="Check-in Date *" data-th="วันเช็คอิน *">วันเช็คอิน *</label>
+                                <input type="date" id="checkIn" name="checkIn" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkOut" data-en="Check-out Date *" data-th="วันเช็คเอาท์ *">วันเช็คเอาท์ *</label>
+                                <input type="date" id="checkOut" name="checkOut" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adults" data-en="Number of Adults *" data-th="จำนวนผู้ใหญ่ *">จำนวนผู้ใหญ่ *</label>
+                                <input type="number" id="adults" name="adults" min="1" value="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="children" data-en="Number of Children" data-th="จำนวนเด็ก">จำนวนเด็ก</label>
+                                <input type="number" id="children" name="children" min="0" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="accommodation" data-en="Accommodation Level" data-th="ระดับที่พัก">ระดับที่พัก</label>
+                            <select id="accommodation" name="accommodation">
+                                <option value="basic" data-en="Basic (Included)" data-th="พื้นฐาน (รวมในราคา)">พื้นฐาน (รวมในราคา)</option>
+                                <option value="superior" data-en="Superior (Extra charge)" data-th="เหนือกว่า (คิดค่าใช้จ่ายเพิ่ม)">เหนือกว่า (คิดค่าใช้จ่ายเพิ่ม)</option>
+                                <option value="deluxe" data-en="Deluxe / Hot Spring Resort (Extra charge)" data-th="Deluxe / รีสอร์ทน้ำพุร้อน (คิดค่าใช้จ่ายเพิ่ม)">Deluxe / รีสอร์ทน้ำพุร้อน (คิดค่าใช้จ่ายเพิ่ม)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Services -->
+                    <div class="form-section">
+                        <h3 data-en="✨ Extra Services (Optional)" data-th="✨ บริการเสริม (ตัวเลือกเพิ่มเติม)">✨ บริการเสริม (ตัวเลือกเพิ่มเติม)</h3>
+                        
+                        <div class="checkbox-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extras" value="firing-range">
+                                <span data-en="🔫 Firing Range Visit" data-th="🔫 เยี่ยมชมสนามยิงปืน">🔫 เยี่ยมชมสนามยิงปืน</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extras" value="costume-photos">
+                                <span data-en="📸 Costume Photos" data-th="📸 ถ่ายภาพคอสตูม">📸 ถ่ายภาพคอสตูม</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extras" value="spa-day">
+                                <span data-en="💆 Spa Day" data-th="💆 วันสปา">💆 วันสปา</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extras" value="family-tours">
+                                <span data-en="👨‍👩‍👧‍👦 Family Tours" data-th="👨‍👩‍👧‍👦 ทัวร์ครอบครัว">👨‍👩‍👧‍👦 ทัวร์ครอบครัว</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extras" value="horse-riding">
+                                <span data-en="🐴 Beach Horse Riding" data-th="🐴 ขี่ม้าชายหาด">🐴 ขี่ม้าชายหาด</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extras" value="sanctuaries">
+                                <span data-en="🐘 Sanctuaries Visit" data-th="🐘 เยี่ยมชมเขตอนุรักษ์">🐘 เยี่ยมชมเขตอนุรักษ์</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h3 data-en="💬 Additional Information" data-th="💬 ข้อมูลเพิ่มเติม">💬 ข้อมูลเพิ่มเติม</h3>
+                        
+                        <div class="form-group">
+                            <label for="specialRequests" data-en="Special Requests or Questions" data-th="คำขอพิเศษหรือคำถาม">คำขอพิเศษหรือคำถาม</label>
+                            <textarea id="specialRequests" name="specialRequests" rows="4" 
+                            data-placeholder-en="Tell us about any special requirements, dietary restrictions, or questions you may have..." 
+                            data-placeholder-th="บอกเราเกี่ยวกับความต้องการพิเศษ ข้อจำกัดด้านอาหาร หรือคำถามที่คุณมี..." 
+                            placeholder="บอกเราเกี่ยวกับความต้องการพิเศษ ข้อจำกัดด้านอาหาร หรือคำถามที่คุณมี..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="hearAbout" data-en="How did you hear about us?" data-th="คุณรู้จักเราได้อย่างไร?">คุณรู้จักเราได้อย่างไร?</label>
+                            <select id="hearAbout" name="hearAbout">
+                                <option value="" data-en="-- Please select --" data-th="-- กรุณาเลือก --">-- กรุณาเลือก --</option>
+                                <option value="google" data-en="Google Search" data-th="ค้นหาใน Google">ค้นหาใน Google</option>
+                                <option value="facebook" data-en="Facebook" data-th="Facebook">Facebook</option>
+                                <option value="instagram" data-en="Instagram" data-th="Instagram">Instagram</option>
+                                <option value="friend" data-en="Friend/Family Recommendation" data-th="แนะนำจากเพื่อน/ครอบครัว">แนะนำจากเพื่อน/ครอบครัว</option>
+                                <option value="other" data-en="Other" data-th="อื่นๆ">อื่นๆ</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <span data-en="📧 Send Booking Request" data-th="📧 ส่งคำขอจอง">📧 ส่งคำขอจอง</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-large" id="bookingModalCancel">
+                            <span data-en="Cancel" data-th="ยกเลิก">ยกเลิก</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div id="successModal" class="modal success-modal">
+        <div class="modal-content success-modal-content">
+            <div class="success-icon">✅</div>
+            <h2 data-en="Booking Request Sent!" data-th="ส่งคำขอจองแล้ว!">ส่งคำขอจองแล้ว!</h2>
+            <p data-en="Thank you for your interest in Wargames Holiday Centre Phuket. We'll review your booking request and get back to you within 24 hours." 
+            data-th="ขอบคุณที่สนใจ Wargames Holiday Centre Phuket เราจะตรวจสอบคำขอจองของคุณและติดต่อกลับภายใน 24 ชั่วโมง">
+                ขอบคุณที่สนใจ Wargames Holiday Centre Phuket เราจะตรวจสอบคำขอจองของคุณและติดต่อกลับภายใน 24 ชั่วโมง
+            </p>
+            <button class="btn btn-primary" id="successModalClose">
+                <span data-en="Close" data-th="ปิด">ปิด</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

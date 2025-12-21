@@ -106,8 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('preferredLanguage');
     if (savedLang) {
         currentLanguage = savedLang;
-        updateLanguage();
+    } else {
+        // Default to English if no preference saved
+        currentLanguage = 'en';
     }
+    // Always update language on page load
+    updateLanguage();
 });
 
 navToggle.addEventListener('click', () => {
@@ -255,7 +259,6 @@ bookingButtons.forEach(button => {
     if (button.textContent.includes('จอง') || button.textContent.includes('เลือก')) {
         button.addEventListener('click', (e) => {
             e.preventDefault();
-            alert('ระบบการจองจะเปิดให้บริการเร็วๆ นี้!\nกรุณาติดต่อเราทางโทรศัพท์หรืออีเมลเพื่อจอง');
         });
     }
 });
@@ -858,6 +861,239 @@ if (scrollToTopBtn) {
             behavior: 'smooth'
         });
     });
+}
+
+// Booking Modal Management
+let bookingModal, bookingModalClose, bookingModalCancel, bookingForm, successModal, successModalClose;
+
+// Initialize booking modal after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    bookingModal = document.getElementById('bookingModal');
+    bookingModalClose = document.getElementById('bookingModalClose');
+    bookingModalCancel = document.getElementById('bookingModalCancel');
+    bookingForm = document.getElementById('bookingForm');
+    successModal = document.getElementById('successModal');
+    successModalClose = document.getElementById('successModalClose');
+    
+    // Setup booking modal event listeners
+    setupBookingModal();
+});
+
+// Setup booking modal
+function setupBookingModal() {
+    // Use event delegation for booking buttons
+    document.addEventListener('click', (e) => {
+        const button = e.target.closest('.btn-primary, .btn-secondary');
+        if (button) {
+            const buttonText = button.textContent.trim();
+            if (buttonText.includes('Book Now') || buttonText.includes('จองเลย') || 
+                buttonText.includes('Contact Us') || buttonText.includes('ติดต่อเรา') ||
+                buttonText.includes('Select Package') || buttonText.includes('เลือกแพ็คเกจ')) {
+                e.preventDefault();
+                openBookingModal();
+            }
+        }
+    });
+    
+    // Close booking modal
+    if (bookingModalClose) {
+        bookingModalClose.addEventListener('click', closeBookingModal);
+    }
+
+    if (bookingModalCancel) {
+        bookingModalCancel.addEventListener('click', closeBookingModal);
+    }
+
+    // Close success modal
+    if (successModalClose) {
+        successModalClose.addEventListener('click', () => {
+            closeSuccessModal();
+            closeBookingModal();
+        });
+    }
+
+    // Close modals when clicking outside
+    bookingModal?.addEventListener('click', (e) => {
+        if (e.target === bookingModal) {
+            closeBookingModal();
+        }
+    });
+
+    successModal?.addEventListener('click', (e) => {
+        if (e.target === successModal) {
+            closeSuccessModal();
+            closeBookingModal();
+        }
+    });
+    
+    // Setup form submission
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', handleBookingSubmit);
+    }
+    
+    // Check-in/Check-out date validation
+    const checkInInput = document.getElementById('checkIn');
+    const checkOutInput = document.getElementById('checkOut');
+
+    if (checkInInput && checkOutInput) {
+        checkInInput.addEventListener('change', () => {
+            const checkInDate = new Date(checkInInput.value);
+            const minCheckOut = new Date(checkInDate);
+            minCheckOut.setDate(minCheckOut.getDate() + 1);
+            
+            checkOutInput.setAttribute('min', minCheckOut.toISOString().split('T')[0]);
+            
+            // If check-out is before check-in, clear it
+            if (checkOutInput.value && new Date(checkOutInput.value) <= checkInDate) {
+                checkOutInput.value = '';
+            }
+        });
+        
+        checkInInput.addEventListener('change', updateBookingDuration);
+        checkOutInput.addEventListener('change', updateBookingDuration);
+    }
+}
+
+function openBookingModal() {
+    bookingModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkIn').setAttribute('min', today);
+    document.getElementById('checkOut').setAttribute('min', today);
+}
+
+function closeBookingModal() {
+    bookingModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function openSuccessModal() {
+    successModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSuccessModal() {
+    successModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+
+
+// Setup Escape key handler after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const gameModal = document.getElementById('gameModal');
+            const eventModal = document.getElementById('eventModal');
+            
+            if (gameModal?.classList.contains('active')) {
+                closeGameModal();
+            }
+            if (eventModal?.classList.contains('active')) {
+                closeEventModal();
+            }
+            if (bookingModal?.classList.contains('active')) {
+                closeBookingModal();
+            }
+            if (successModal?.classList.contains('active')) {
+                closeSuccessModal();
+            }
+        }
+    });
+});
+
+
+
+// Handle booking form submission
+async function handleBookingSubmit(e) {
+    e.preventDefault();
+    
+    if (!bookingForm) return;
+        
+        // Get form data
+        const formData = new FormData(bookingForm);
+        const bookingData = {
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            country: formData.get('country'),
+            packageType: formData.get('packageType'),
+            checkIn: formData.get('checkIn'),
+            checkOut: formData.get('checkOut'),
+            adults: formData.get('adults'),
+            children: formData.get('children'),
+            accommodation: formData.get('accommodation'),
+            extras: formData.getAll('extras'),
+            specialRequests: formData.get('specialRequests'),
+            hearAbout: formData.get('hearAbout'),
+            language: currentLanguage,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Log to console (in production, send to server)
+        console.log('Booking Request:', bookingData);
+        
+        // Show loading state
+        const submitBtn = bookingForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span data-en="⏳ Sending..." data-th="⏳ กำลังส่ง...">⏳ กำลังส่ง...</span>';
+        
+        // Simulate API call (replace with actual API call in production)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        
+        // Reset form
+        bookingForm.reset();
+        
+        // Show success modal
+        openSuccessModal();
+        
+        // In production, you would send this data to your server:
+        /*
+        try {
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookingData)
+            });
+            
+            if (response.ok) {
+                openSuccessModal();
+                bookingForm.reset();
+            } else {
+                alert('Error submitting booking. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error submitting booking. Please try again.');
+        }
+        */
+}
+
+// Calculate number of nights and update display
+function updateBookingDuration() {
+    const checkInInput = document.getElementById('checkIn');
+    const checkOutInput = document.getElementById('checkOut');
+    
+    if (checkInInput?.value && checkOutInput?.value) {
+        const checkIn = new Date(checkInInput.value);
+        const checkOut = new Date(checkOutInput.value);
+        const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        
+        if (nights > 0) {
+            console.log(`Booking duration: ${nights} night(s)`);
+            // You can display this to the user if needed
+        }
+    }
 }
 
 // Print welcome message to console
