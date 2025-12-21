@@ -35,6 +35,13 @@ html {
     padding: 0 20px;
 }
 
+/* Expand container for larger screens */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1350px;
+    }
+}
+
 /* Top Announcement Bar */
 .top-bar {
     position: fixed;
@@ -146,16 +153,42 @@ html {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 1.8rem;
 }
 
 .nav-menu li a {
     color: var(--text-light);
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.5rem;
     transition: color 0.3s;
     position: relative;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+
+/* Larger screens - more spacing */
+@media (min-width: 1200px) {
+    .nav-menu {
+        gap: 2.2rem;
+    }
+    
+    .nav-menu li a {
+        font-size: 1rem;
+        padding: 0.5rem 0.7rem;
+    }
+}
+
+@media (min-width: 1400px) {
+    .nav-menu {
+        gap: 2.5rem;
+    }
+    
+    .nav-menu li a {
+        font-size: 1.05rem;
+        padding: 0.6rem 0.8rem;
+    }
 }
 
 .nav-menu li a:hover {
