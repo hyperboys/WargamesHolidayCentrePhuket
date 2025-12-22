@@ -180,7 +180,7 @@ const translations = {
         // Pricing Section
         pricingTitle: "Packages & Pricing",
         package1Name: "Day Pass",
-        package1Price: "1,500",
+        package1Price: "200",
         package1Period: "/day",
         package1Feature1: "Full day battle table access",
         package1Feature2: "Free equipment and models",
@@ -204,7 +204,7 @@ const translations = {
         package3Feature5: "10% discount on next visit",
         badgeRecommended: "Recommended",
         selectPackage: "Select Package",
-        currency: "฿",
+        currency: "$",
         
         // review Section
         reviewTitle: "// Customer Reviews",
