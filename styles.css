@@ -2797,6 +2797,242 @@ s
     border-color: #28a745;
 }
 
+/* Player and Companion Cards */
+.person-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.person-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    border-color: var(--accent-color);
+}
+
+.phone-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.country-code-select {
+    flex: 0 0 130px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.country-code-select:hover {
+    border-color: var(--accent-color);
+}
+
+.country-code-select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(79, 119, 45, 0.1);
+}
+
+.phone-number-input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.phone-number-input:hover {
+    border-color: var(--accent-color);
+}
+
+.phone-number-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(79, 119, 45, 0.1);
+}
+
+.person-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.person-card-title {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.person-card-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: white;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.btn-remove-person {
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-remove-person::before {
+    content: "×";
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.btn-remove-person:hover {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-remove-person:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.btn-remove-person:disabled {
+    background: transparent;
+    border-color: #cccccc;
+    color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-remove-person:disabled:hover {
+    background: transparent;
+    box-shadow: none;
+}
+
+.remove-person-btn {
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.remove-person-btn::before {
+    content: "×";
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.remove-person-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.remove-person-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.remove-person-btn:disabled {
+    background: transparent;
+    border-color: #cccccc;
+    color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.remove-person-btn:disabled:hover {
+    background: transparent;
+    box-shadow: none;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+.section-note {
+    background: rgba(79, 119, 45, 0.1);
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--secondary-color);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* Age Type Selection */
+.age-type-selector {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.age-type-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    color: #666;
+}
+
+.age-type-btn:hover {
+    border-color: var(--accent-color);
+    background: #f8f9fa;
+}
+
+.age-type-btn.active {
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: white;
+    border-color: var(--secondary-color);
+}
+
 /* Mobile Responsive for New Sections */
 @media (max-width: 768px) {
     .services-grid,
@@ -2928,6 +3164,30 @@ s
     
     .modal-actions {
         flex-direction: column;
+    }
+    
+    /* Person Cards Responsive */
+    .person-card {
+        padding: 20px 15px;
+    }
+    
+    .person-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .person-card-title {
+        font-size: 1rem;
+    }
+    
+    .age-type-selector {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .age-type-btn {
+        width: 100%;
     }
     
     /* Event Modal Responsive */
