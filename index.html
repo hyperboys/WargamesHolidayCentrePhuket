@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="translations.js"></script>
 </head>
 <body>
@@ -98,7 +100,7 @@
                     <div class="event-image">
                         <img src="image/event/Waterloo.jpg" alt="Waterloo Campaign">
                         <div class="event-overlay">
-                            <div class="event-date">
+                            <div class="event-date" data-start="06/03/2026" data-end="10/03/2026">
                                 <span class="day-name" data-en="Thu-Mon" data-th="พฤ-จ">Thu-Mon</span>
                                 <span class="day">6-10</span>
                                 <span class="month" data-en="March" data-th="มี.ค.">March</span>
@@ -115,7 +117,7 @@
                     <div class="event-image">
                         <img src="image/event/Normandy.jpg" alt="Break-out from Normandy">
                         <div class="event-overlay">
-                            <div class="event-date">
+                            <div class="event-date" data-start="13/03/2026" data-end="16/03/2026">
                                 <span class="day-name" data-en="Thu-Sun" data-th="พฤ-อา">พฤ-อา</span>
                                 <span class="day">13-16</span>
                                 <span class="month" data-en="March" data-th="มี.ค.">มี.ค.</span>
@@ -132,7 +134,7 @@
                     <div class="event-image">
                         <img src="image/event/Agincourt.jpg" alt="Agincourt">
                         <div class="event-overlay">
-                            <div class="event-date">
+                            <div class="event-date" data-start="20/03/2026" data-end="24/03/2026">
                                 <span class="day-name" data-en="Thu-Mon" data-th="พฤ-จ">พฤ-จ</span>
                                 <span class="day">20-24</span>
                                 <span class="month" data-en="March" data-th="มี.ค.">มี.ค.</span>
@@ -149,7 +151,7 @@
                     <div class="event-image">
                         <img src="image/event/GloryOfRome.jpg" alt="Glory Of Rome">
                         <div class="event-overlay">
-                            <div class="event-date">
+                            <div class="event-date" data-start="27/03/2026" data-end="30/03/2026">
                                 <span class="day-name" data-en="Thu-Sun" data-th="พฤ-อา">พฤ-อา</span>
                                 <span class="day">27-30</span>
                                 <span class="month" data-en="March" data-th="มี.ค.">มี.ค.</span>
@@ -1119,22 +1121,23 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="checkIn" data-en="Check-in Date *" data-th="วันเช็คอิน *">วันเช็คอิน *</label>
-                                <input type="date" id="checkIn" name="checkIn" required>
+                                <input type="text" id="checkIn" name="checkIn" required 
+                                    placeholder="DD/MM/YYYY" 
+                                    pattern="\d{2}/\d{2}/\d{4}" 
+                                    maxlength="10"
+                                    data-placeholder-en="DD/MM/YYYY" 
+                                    data-placeholder-th="วัน/เดือน/ปี">
+                                <small class="date-format-hint" data-en="Format: DD/MM/YYYY (e.g., 27/12/2025)" data-th="รูปแบบ: วัน/เดือน/ปี (เช่น 27/12/2025)" style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem;">รูปแบบ: วัน/เดือน/ปี (เช่น 27/12/2025)</small>
                             </div>
                             <div class="form-group">
                                 <label for="checkOut" data-en="Check-out Date *" data-th="วันเช็คเอาท์ *">วันเช็คเอาท์ *</label>
-                                <input type="date" id="checkOut" name="checkOut" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="adults" data-en="Number of Adults *" data-th="จำนวนผู้ใหญ่ *">จำนวนผู้ใหญ่ *</label>
-                                <input type="number" id="adults" name="adults" min="1" value="1" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="children" data-en="Number of Children" data-th="จำนวนเด็ก">จำนวนเด็ก</label>
-                                <input type="number" id="children" name="children" min="0" value="0">
+                                <input type="text" id="checkOut" name="checkOut" required 
+                                    placeholder="DD/MM/YYYY" 
+                                    pattern="\d{2}/\d{2}/\d{4}" 
+                                    maxlength="10"
+                                    data-placeholder-en="DD/MM/YYYY" 
+                                    data-placeholder-th="วัน/เดือน/ปี">
+                                <small class="date-format-hint" data-en="Format: DD/MM/YYYY (e.g., 28/12/2025)" data-th="รูปแบบ: วัน/เดือน/ปี (เช่น 28/12/2025)" style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem;">รูปแบบ: วัน/เดือน/ปี (เช่น 28/12/2025)</small>
                             </div>
                         </div>
                         
@@ -1159,6 +1162,41 @@
                         <p class="section-note" data-en="Add personal information for each player" data-th="เพิ่มข้อมูลส่วนตัวสำหรับผู้เล่นแต่ละคน">เพิ่มข้อมูลส่วนตัวสำหรับผู้เล่นแต่ละคน</p>
                         
                         <div id="playersContainer"></div>
+                        
+                        <!-- Companions Section -->
+                        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #e0e0e0;">
+                            <h4 style="color: var(--secondary-color); font-size: 1.1rem; margin-bottom: 1rem;" data-en="👥 Companions (Non-playing)" data-th="👥 ผ้ติดตาม (ไม่เล่นเกม)">👥 ผู้ติดตาม (ไม่เล่นเกม)</h4>
+                            <p class="section-note" data-en="Add companions who will not participate in games" data-th="เพิ่มผู้ติดตามที่ไม่เข้าร่วมเล่นเกม">เพิ่มผู้ติดตามที่ไม่เข้าร่วมเล่นเกม</p>
+                            
+                            <div class="form-row" style="margin-top: 1rem;">
+                                <div class="form-group">
+                                    <label for="adults" data-en="Adult Companions" data-th="ผู้ติดตาม (ผู้ใหญ่)">ผู้ติดตาม (ผู้ใหญ่)</label>
+                                    <div class="number-input-group">
+                                        <button type="button" class="number-btn minus" data-target="adults">
+                                            <span>−</span>
+                                        </button>
+                                        <input type="number" id="adults" name="adults" min="0" max="50" value="0" readonly>
+                                        <button type="button" class="number-btn plus" data-target="adults">
+                                            <span>+</span>
+                                        </button>
+                                    </div>
+                                    <small class="form-hint" data-en="Non-playing adults" data-th="ผู้ใหญ่ที่ไม่เล่นเกม" style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem; font-style: italic;">ผู้ใหญ่ที่ไม่เล่นเกม</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="children" data-en="Child Companions" data-th="ผู้ติดตาม (เด็ก)">ผู้ติดตาม (เด็ก)</label>
+                                    <div class="number-input-group">
+                                        <button type="button" class="number-btn minus" data-target="children">
+                                            <span>−</span>
+                                        </button>
+                                        <input type="number" id="children" name="children" min="0" max="50" value="0" readonly>
+                                        <button type="button" class="number-btn plus" data-target="children">
+                                            <span>+</span>
+                                        </button>
+                                    </div>
+                                    <small class="form-hint" data-en="Non-playing children" data-th="เด็กที่ไม่เล่นเกม" style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem; font-style: italic;">เด็กที่ไม่เล่นเกม</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Extra Services -->
@@ -1253,6 +1291,8 @@
         </svg>
     </button>
 
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="script.js"></script>
 </body>
 </html>

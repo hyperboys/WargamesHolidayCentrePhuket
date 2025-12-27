@@ -543,6 +543,7 @@ eventModalBtns.forEach(btn => {
 });
 
 let currentEventType = null; // Store current event type
+let currentEventDates = { start: null, end: null }; // Store event dates
 
 function openEventModal(eventType) {
     const data = eventData[eventType];
@@ -550,6 +551,16 @@ function openEventModal(eventType) {
 
     const lang = currentLanguage;
     currentEventType = eventType; // Store for later use
+    
+    // Get dates from the event card
+    const eventCard = document.querySelector(`[data-event="${eventType}"]`);
+    if (eventCard) {
+        const eventDateDiv = eventCard.closest('.event-card').querySelector('.event-date');
+        if (eventDateDiv) {
+            currentEventDates.start = eventDateDiv.getAttribute('data-start');
+            currentEventDates.end = eventDateDiv.getAttribute('data-end');
+        }
+    }
     
     // Update modal image
     const modalImage = document.getElementById('eventModalImage');
@@ -954,6 +965,7 @@ function setupBookingModal() {
                         data-placeholder-en="Enter age" 
                         data-placeholder-th="กรอกอายุ" 
                         placeholder="Enter age">
+                    <small class="error-message" style="display: none; color: #dc3545; font-size: 0.85rem; margin-top: 5px;"></small>
                 </div>
                 <div class="form-group">
                     <label data-en="Phone Number" data-th="เบอร์โทรศัพท์">Phone Number</label>
@@ -961,6 +973,7 @@ function setupBookingModal() {
                         data-placeholder-en="Enter phone number" 
                         data-placeholder-th="กรอกเบอร์โทรศัพท์" 
                         placeholder="Enter phone number">
+                    <small class="error-message" style="display: none; color: #dc3545; font-size: 0.85rem; margin-top: 5px;"></small>
                 </div>
             </div>
             
@@ -970,6 +983,7 @@ function setupBookingModal() {
                     data-placeholder-en="Enter email address" 
                     data-placeholder-th="กรอกอีเมล" 
                     placeholder="Enter email address">
+                <small class="error-message" style="display: none; color: #dc3545; font-size: 0.85rem; margin-top: 5px;"></small>
             </div>
         `;
         
@@ -982,6 +996,58 @@ function setupBookingModal() {
             const currentPlayerCount = playersContainer.querySelectorAll('.person-card').length;
             const playerCard = createPlayerCard(currentPlayerCount + 1);
             playersContainer.appendChild(playerCard);
+            
+            // Add validation listeners
+            const emailInput = playerCard.querySelector(`input[name="${playerId}_email"]`);
+            const phoneInput = playerCard.querySelector(`input[name="${playerId}_phone"]`);
+            const ageInput = playerCard.querySelector(`input[name="${playerId}_age"]`);
+            const firstNameInput = playerCard.querySelector(`input[name="${playerId}_firstName"]`);
+            const lastNameInput = playerCard.querySelector(`input[name="${playerId}_lastName"]`);
+            
+            if (emailInput) {
+                emailInput.addEventListener('blur', function() {
+                    validatePlayerEmail(this);
+                });
+                emailInput.addEventListener('input', function() {
+                    clearError(this);
+                });
+            }
+            
+            if (phoneInput) {
+                phoneInput.addEventListener('blur', function() {
+                    validatePlayerPhone(this);
+                });
+                phoneInput.addEventListener('input', function() {
+                    clearError(this);
+                });
+            }
+            
+            if (ageInput) {
+                ageInput.addEventListener('blur', function() {
+                    validatePlayerAge(this);
+                });
+                ageInput.addEventListener('input', function() {
+                    clearError(this);
+                });
+            }
+            
+            if (firstNameInput) {
+                firstNameInput.addEventListener('blur', function() {
+                    validateRequiredField(this);
+                });
+                firstNameInput.addEventListener('input', function() {
+                    clearError(this);
+                });
+            }
+            
+            if (lastNameInput) {
+                lastNameInput.addEventListener('blur', function() {
+                    validateRequiredField(this);
+                });
+                lastNameInput.addEventListener('input', function() {
+                    clearError(this);
+                });
+            }
             
             // Update language for new card
             updateLanguage();
@@ -1033,7 +1099,7 @@ function setupBookingModal() {
             closeEventModal();
             
             // Open booking modal with event info
-            openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, currentEventType);
+            openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, currentEventType, currentEventDates);
         });
     }
     
@@ -1173,7 +1239,7 @@ function openBookingModal() {
     document.getElementById('checkOut').setAttribute('min', today);
 }
 
-function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, eventType) {
+function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, eventType, eventDates) {
     // Show and populate event info section
     const eventInfoSection = document.getElementById('eventInfoSection');
     if (eventInfoSection) {
@@ -1189,6 +1255,51 @@ function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPl
     if (eventSelect && eventType) {
         eventSelect.value = eventType;
         eventSelect.disabled = true; // Disable selection when coming from event modal
+    }
+    
+    // Pre-select Campaign Weekend package and make it readonly
+    const packageSelect = document.getElementById('packageType');
+    if (packageSelect) {
+        packageSelect.value = 'campaign-weekend';
+        packageSelect.disabled = true; // Disable selection when coming from event modal
+    }
+    
+    // Auto-fill check-in and check-out dates if available
+    const checkInInput = document.getElementById('checkIn');
+    const checkOutInput = document.getElementById('checkOut');
+    
+    if (eventDates && eventDates.start && eventDates.end) {
+        // Set the date values
+        if (checkInInput) {
+            checkInInput.value = eventDates.start;
+            checkInInput.readOnly = true;
+            checkInInput.disabled = true;
+            checkInInput.style.backgroundColor = '#f5f5f5';
+            checkInInput.style.cursor = 'not-allowed';
+            checkInInput.style.pointerEvents = 'none';
+        }
+        
+        if (checkOutInput) {
+            checkOutInput.value = eventDates.end;
+            checkOutInput.readOnly = true;
+            checkOutInput.disabled = true;
+            checkOutInput.style.backgroundColor = '#f5f5f5';
+            checkOutInput.style.cursor = 'not-allowed';
+            checkOutInput.style.pointerEvents = 'none';
+        }
+        
+        // Update booking duration display
+        updateBookingDuration();
+        
+        // Disable Flatpickr calendars if they exist
+        if (window.flatpickrInstances) {
+            if (window.flatpickrInstances.checkIn) {
+                window.flatpickrInstances.checkIn.destroy();
+            }
+            if (window.flatpickrInstances.checkOut) {
+                window.flatpickrInstances.checkOut.destroy();
+            }
+        }
     }
     
     // Hide duration and price displays initially
@@ -1207,8 +1318,8 @@ function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPl
     
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('checkIn').setAttribute('min', today);
-    document.getElementById('checkOut').setAttribute('min', today);
+    if (checkInInput) checkInInput.setAttribute('min', today);
+    if (checkOutInput) checkOutInput.setAttribute('min', today);
 }
 
 function closeBookingModal() {
@@ -1273,6 +1384,9 @@ function closeSuccessModal() {
 
 // Setup Escape key handler after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Setup date input formatting
+    setupDateInputs();
+    
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const gameModal = document.getElementById('gameModal');
@@ -1294,6 +1408,282 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Setup date inputs with Flatpickr
+function setupDateInputs() {
+    const checkInInput = document.getElementById('checkIn');
+    const checkOutInput = document.getElementById('checkOut');
+    
+    if (!checkInInput || !checkOutInput) return;
+    
+    // Setup number input buttons for adults and children
+    setupNumberInputs();
+    
+    // Initialize Flatpickr for check-in date
+    const checkInPicker = flatpickr(checkInInput, {
+        dateFormat: 'd/m/Y',
+        minDate: 'today',
+        allowInput: true,
+        locale: {
+            firstDayOfWeek: 1,
+            weekdays: {
+                shorthand: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            },
+            months: {
+                shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                longhand: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            }
+        },
+        onChange: function(selectedDates, dateStr, instance) {
+            // Update check-out minimum date
+            if (selectedDates.length > 0) {
+                const nextDay = new Date(selectedDates[0]);
+                nextDay.setDate(nextDay.getDate() + 1);
+                checkOutPicker.set('minDate', nextDay);
+            }
+            // Update duration and price
+            updateBookingDuration();
+            updatePriceEstimate();
+        },
+        onOpen: function() {
+            // Prevent opening if input is disabled
+            if (checkInInput.disabled) {
+                this.close();
+                return false;
+            }
+        }
+    });
+    
+    // Initialize Flatpickr for check-out date
+    const checkOutPicker = flatpickr(checkOutInput, {
+        dateFormat: 'd/m/Y',
+        minDate: 'today',
+        allowInput: true,
+        locale: {
+            firstDayOfWeek: 1,
+            weekdays: {
+                shorthand: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                longhand: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            },
+            months: {
+                shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                longhand: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            }
+        },
+        onChange: function(selectedDates, dateStr, instance) {
+            // Update duration and price
+            updateBookingDuration();
+            updatePriceEstimate();
+        },
+        onOpen: function() {
+            // Prevent opening if input is disabled
+            if (checkOutInput.disabled) {
+                this.close();
+                return false;
+            }
+        }
+    });
+    
+    // Store instances globally
+    if (!window.flatpickrInstances) {
+        window.flatpickrInstances = {};
+    }
+    window.flatpickrInstances.checkIn = checkInPicker;
+    window.flatpickrInstances.checkOut = checkOutPicker;
+    
+    // Add click prevention for locked dates
+    checkInInput.addEventListener('click', function(e) {
+        if (this.readOnly) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+    
+    checkOutInput.addEventListener('click', function(e) {
+        if (this.readOnly) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+}
+
+// Setup number input buttons for adults/children
+function setupNumberInputs() {
+    const numberBtns = document.querySelectorAll('.number-btn');
+    
+    numberBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            if (!input) return;
+            
+            const currentValue = parseInt(input.value) || 0;
+            const min = parseInt(input.min) || 0;
+            const max = parseInt(input.max) || 100;
+            
+            if (this.classList.contains('plus')) {
+                if (currentValue < max) {
+                    input.value = currentValue + 1;
+                    updatePriceEstimate();
+                }
+            } else if (this.classList.contains('minus')) {
+                if (currentValue > min) {
+                    input.value = currentValue - 1;
+                    updatePriceEstimate();
+                }
+            }
+            
+            // Update button states
+            updateNumberButtonStates(input);
+        });
+    });
+    
+    // Initialize button states
+    const adultsInput = document.getElementById('adults');
+    const childrenInput = document.getElementById('children');
+    if (adultsInput) updateNumberButtonStates(adultsInput);
+    if (childrenInput) updateNumberButtonStates(childrenInput);
+}
+
+// Update number button states (enable/disable based on min/max)
+function updateNumberButtonStates(input) {
+    const targetId = input.id;
+    const currentValue = parseInt(input.value) || 0;
+    const min = parseInt(input.min) || 0;
+    const max = parseInt(input.max) || 100;
+    
+    const minusBtn = document.querySelector(`.number-btn.minus[data-target="${targetId}"]`);
+    const plusBtn = document.querySelector(`.number-btn.plus[data-target="${targetId}"]`);
+    
+    if (minusBtn) {
+        minusBtn.disabled = currentValue <= min;
+    }
+    
+    if (plusBtn) {
+        plusBtn.disabled = currentValue >= max;
+    }
+}
+
+// Validation helper functions for player information
+function validatePlayerEmail(input) {
+    const value = input.value.trim();
+    if (value && !isValidEmail(value)) {
+        showError(input, currentLanguage === 'en' ? 'Please enter a valid email address' : 'กรุณากรอกอีเมลให้ถูกต้อง');
+        return false;
+    }
+    clearError(input);
+    return true;
+}
+
+function validatePlayerPhone(input) {
+    const value = input.value.trim();
+    if (value && !isValidPhone(value)) {
+        showError(input, currentLanguage === 'en' ? 'Please enter a valid phone number' : 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง');
+        return false;
+    }
+    clearError(input);
+    return true;
+}
+
+function validatePlayerAge(input) {
+    const value = parseInt(input.value);
+    if (!value || value < 1 || value > 120) {
+        showError(input, currentLanguage === 'en' ? 'Age must be between 1 and 120' : 'อายุต้องอยู่ระหว่าง 1 ถึง 120 ปี');
+        return false;
+    }
+    clearError(input);
+    return true;
+}
+
+function validateRequiredField(input) {
+    const value = input.value.trim();
+    if (!value) {
+        showError(input, currentLanguage === 'en' ? 'This field is required' : 'กรุณากรอกข้อมูลนี้');
+        return false;
+    }
+    clearError(input);
+    return true;
+}
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function isValidPhone(phone) {
+    // Allow digits, spaces, hyphens, parentheses, and plus sign
+    // Minimum 8 digits
+    const phoneRegex = /^[\d\s\-\(\)\+]{8,}$/;
+    const digitsOnly = phone.replace(/[^\d]/g, '');
+    return phoneRegex.test(phone) && digitsOnly.length >= 8;
+}
+
+function showError(input, message) {
+    const errorElement = input.parentElement.querySelector('.error-message');
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+    input.style.borderColor = '#dc3545';
+    input.style.background = '#fff5f5';
+}
+
+function clearError(input) {
+    const errorElement = input.parentElement.querySelector('.error-message');
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.style.display = 'none';
+    }
+    input.style.borderColor = '#ddd';
+    input.style.background = 'white';
+}
+
+// Validate all players before submission
+function validateAllPlayers() {
+    let isValid = true;
+    const playersContainer = document.getElementById('playersContainer');
+    if (!playersContainer) return true;
+    
+    const playerCards = playersContainer.querySelectorAll('.person-card');
+    playerCards.forEach((card) => {
+        const inputs = card.querySelectorAll('input[required]');
+        inputs.forEach(input => {
+            if (!validateRequiredField(input)) {
+                isValid = false;
+            }
+        });
+        
+        // Validate email if provided
+        const emailInput = card.querySelector('input[type="email"]');
+        if (emailInput && emailInput.value.trim() && !validatePlayerEmail(emailInput)) {
+            isValid = false;
+        }
+        
+        // Validate phone if provided
+        const phoneInput = card.querySelector('input[type="tel"]');
+        if (phoneInput && phoneInput.value.trim() && !validatePlayerPhone(phoneInput)) {
+            isValid = false;
+        }
+        
+        // Validate age
+        const ageInput = card.querySelector('input[type="number"]');
+        if (ageInput && !validatePlayerAge(ageInput)) {
+            isValid = false;
+        }
+    });
+    
+    if (!isValid) {
+        const errorMsg = currentLanguage === 'en' 
+            ? 'Please correct the errors in player information' 
+            : 'กรุณาแก้ไขข้อผิดพลาดในข้อมูลผู้เล่น';
+        alert(errorMsg);
+    }
+    
+    return isValid;
+}
+
 
 
 // Handle booking form submission
@@ -1307,13 +1697,33 @@ async function handleBookingSubmit(e) {
         return;
     }
     
+    // Validate all players
+    if (!validateAllPlayers()) {
+        return;
+    }
+    
     // Get form data
     const formData = new FormData(bookingForm);
     
+    // Parse dates from dd/mm/yyyy format
+    const parseDate = (dateString) => {
+        const match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+        if (!match) return null;
+        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
+    };
+    
+    const checkInDate = parseDate(formData.get('checkIn'));
+    const checkOutDate = parseDate(formData.get('checkOut'));
+    
+    if (!checkInDate || !checkOutDate) {
+        alert(currentLanguage === 'en' 
+            ? 'Please enter valid dates in DD/MM/YYYY format' 
+            : 'กรุณากรอกวันที่ให้ถูกต้องในรูปแบบ วัน/เดือน/ปี');
+        return;
+    }
+    
     // Calculate nights
-    const checkIn = new Date(formData.get('checkIn'));
-    const checkOut = new Date(formData.get('checkOut'));
-    const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
     
     // Collect player information
     const players = [];
@@ -1497,6 +1907,16 @@ function validateBookingForm() {
 
 // Format booking data for email
 function formatBookingEmail(data) {
+    // Format dates as dd/mm/yyyy
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+    
     let playersInfo = '';
     if (data.players && data.players.length > 0) {
         playersInfo = '\n⚔️ PLAYERS INFORMATION:\n';
@@ -1524,12 +1944,13 @@ Country: ${data.country}
 ━━━━━━━━━━━━━━━━━━━━━━
 Event: ${data.selectedEvent}
 Package Type: ${data.packageType}
-Check-in: ${data.checkIn}
-Check-out: ${data.checkOut}
+Check-in: ${formatDate(data.checkIn)}
+Check-out: ${formatDate(data.checkOut)}
 Duration: ${data.nights} night(s)
 
-Number of Adults: ${data.adults}
-Number of Children: ${data.children}
+Companions (Non-playing):
+- Adults: ${data.adults}
+- Children: ${data.children}
 Accommodation: ${data.accommodation}
 ${playersInfo}
 ✨ Extra Services:
@@ -1552,8 +1973,18 @@ function updateBookingDuration() {
     const checkOutInput = document.getElementById('checkOut');
     
     if (checkInInput?.value && checkOutInput?.value) {
-        const checkIn = new Date(checkInInput.value);
-        const checkOut = new Date(checkOutInput.value);
+        // Parse dd/mm/yyyy format
+        const parseDate = (dateString) => {
+            const match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+            if (!match) return null;
+            return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
+        };
+        
+        const checkIn = parseDate(checkInInput.value);
+        const checkOut = parseDate(checkOutInput.value);
+        
+        if (!checkIn || !checkOut) return;
+        
         const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
         
         if (nights > 0) {

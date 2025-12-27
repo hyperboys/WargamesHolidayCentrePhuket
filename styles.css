@@ -2680,6 +2680,20 @@ s
     cursor: pointer;
 }
 
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+.date-format-hint {
+    font-style: italic;
+}
+
 .form-group input[type="number"] {
     -moz-appearance: textfield;
 }
@@ -2860,6 +2874,96 @@ s
     outline: none;
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 3px rgba(79, 119, 45, 0.1);
+}
+
+/* Number Input Group for Adults/Children */
+.number-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.number-input-group:hover {
+    border-color: var(--accent-color);
+}
+
+.number-input-group:focus-within {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(79, 119, 45, 0.1);
+}
+
+.number-input-group input[type="number"] {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: transparent;
+    -moz-appearance: textfield;
+    cursor: default;
+}
+
+.number-input-group input[type="number"]::-webkit-outer-spin-button,
+.number-input-group input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.number-input-group input[type="number"]:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.number-btn {
+    flex: 0 0 44px;
+    height: 44px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.number-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+.number-btn:active {
+    transform: scale(0.95);
+}
+
+.number-btn:disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.number-btn:disabled:hover {
+    background: #e0e0e0;
+    transform: none;
+}
+
+.number-btn.minus {
+    border-right: 1px solid #ddd;
+}
+
+.number-btn.plus {
+    border-left: 1px solid #ddd;
 }
 
 .person-card-header {
