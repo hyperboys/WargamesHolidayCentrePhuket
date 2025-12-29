@@ -1173,6 +1173,7 @@ function setupBookingModal() {
     if (successModalClose) {
         successModalClose.addEventListener('click', () => {
             closeSuccessModal();
+            skipCloseConfirm = true; // Skip confirm when closing after success
             closeBookingModal();
         });
     }
@@ -1187,6 +1188,7 @@ function setupBookingModal() {
     successModal?.addEventListener('click', (e) => {
         if (e.target === successModal) {
             closeSuccessModal();
+            skipCloseConfirm = true; // Skip confirm when closing after success
             closeBookingModal();
         }
     });
@@ -1288,29 +1290,38 @@ function attachBookingFormListener() {
     
     console.log('✅ Attaching booking form listener');
     
-    // Remove existing listener to prevent duplicates
-    bookingForm.removeEventListener('submit', handleBookingSubmit);
+    // Use a flag to prevent double submission
+    let isSubmitting = false;
     
-    // Attach new listener
-    bookingForm.addEventListener('submit', handleBookingSubmit);
-    
-    // Also add direct click listener for debugging
+    // Add click listener for submit button
     const submitBtn = bookingForm.querySelector('button[type="submit"]');
-    if (submitBtn) {
-        submitBtn.addEventListener('click', (e) => {
-            console.log('🟢 SUBMIT BUTTON CLICKED!');
-            console.log('🟢 Form is VALID:', bookingForm.checkValidity());
+    if (submitBtn && !submitBtn.hasAttribute('data-listener-attached')) {
+        submitBtn.setAttribute('data-listener-attached', 'true');
+        submitBtn.addEventListener('click', async (e) => {
+            e.preventDefault(); // Prevent default form submission
             
-            // If form is valid, manually trigger handleBookingSubmit
-            if (bookingForm.checkValidity()) {
-                console.log('🟢 Form valid, manually calling handleBookingSubmit...');
-                e.preventDefault();
-                handleBookingSubmit(e);
-            } else {
-                // Check for invalid fields
-                const invalidFields = Array.from(bookingForm.querySelectorAll('input, select, textarea'))
-                    .filter(field => !field.checkValidity() && !field.disabled);
-                console.log('❌ Invalid fields:', invalidFields);
+            console.log('🟢 SUBMIT BUTTON CLICKED!');
+            
+            // Prevent double submission
+            if (isSubmitting) {
+                console.log('⚠️ Already submitting, ignoring...');
+                return;
+            }
+            
+            // Check form validity
+            if (!bookingForm.checkValidity()) {
+                console.log('❌ Form is NOT valid');
+                bookingForm.reportValidity();
+                return;
+            }
+            
+            console.log('✅ Form is valid, submitting...');
+            isSubmitting = true;
+            
+            try {
+                await handleBookingSubmit(e);
+            } finally {
+                isSubmitting = false;
             }
         });
     }
@@ -1404,9 +1415,12 @@ function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPl
     if (checkOutInput) checkOutInput.setAttribute('min', today);
 }
 
+// Flag to skip confirm when closing after successful submission
+let skipCloseConfirm = false;
+
 function closeBookingModal() {
-    // Check if form has data
-    if (bookingForm && hasFormData()) {
+    // Check if form has data (skip if submitting successfully)
+    if (!skipCloseConfirm && bookingForm && hasFormData()) {
         const confirmMsg = currentLanguage === 'th'
             ? 'คุณมีข้อมูลที่ยังไม่ได้บันทึก ต้องการปิดหน้าต่างนี้หรือไม่?'
             : 'You have unsaved data. Are you sure you want to close?';
@@ -1415,6 +1429,9 @@ function closeBookingModal() {
             return;
         }
     }
+    
+    // Reset the flag
+    skipCloseConfirm = false;
     
     // Reset form and players
     if (bookingForm) {
@@ -1462,6 +1479,57 @@ function closeSuccessModal() {
     document.body.style.overflow = 'auto';
 }
 
+// Loading Modal Functions
+let loadingModal = null;
+
+function createLoadingModal() {
+    if (loadingModal) return loadingModal;
+    
+    loadingModal = document.createElement('div');
+    loadingModal.id = 'loadingModal';
+    loadingModal.className = 'modal';
+    loadingModal.innerHTML = `
+        <div class="modal-content" style="text-align: center; max-width: 400px; padding: 40px;">
+            <div class="loading-spinner" style="margin-bottom: 20px;">
+                <div style="
+                    width: 60px; 
+                    height: 60px; 
+                    border: 5px solid #f3f3f3; 
+                    border-top: 5px solid #8B4513; 
+                    border-radius: 50%; 
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto;
+                "></div>
+            </div>
+            <h3 id="loadingText" style="margin: 0; color: #333;">
+                ${currentLanguage === 'th' ? '⏳ กำลังส่งข้อมูล...' : '⏳ Sending...'}
+            </h3>
+            <p style="color: #666; margin-top: 10px;">
+                ${currentLanguage === 'th' ? 'กรุณารอสักครู่' : 'Please wait...'}
+            </p>
+        </div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    `;
+    document.body.appendChild(loadingModal);
+    return loadingModal;
+}
+
+function showLoadingModal() {
+    const modal = createLoadingModal();
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideLoadingModal() {
+    if (loadingModal) {
+        loadingModal.classList.remove('active');
+    }
+}
 
 
 // Setup Escape key handler after DOM is loaded
@@ -1884,17 +1952,16 @@ async function handleBookingSubmit(e) {
         timestamp: new Date().toISOString()
     };
     
-    // Show loading state
+    // Show loading popup
     const submitBtn = bookingForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     
-    console.log('🔵 Setting loading state...'); // Debug log
-    console.log('🔵 Submit button:', submitBtn); // Debug log
+    console.log('🔵 Showing loading modal...'); // Debug log
     
     submitBtn.disabled = true;
-    submitBtn.innerHTML = `<span data-en="⏳ Sending..." data-th="⏳ กำลังส่ง...">${currentLanguage === 'th' ? '⏳ กำลังส่ง...' : '⏳ Sending...'}</span>`;
+    showLoadingModal(); // Show loading popup
     
-    console.log('🔵 Loading state set, preparing to send...'); // Debug log
+    console.log('🔵 Loading modal shown, preparing to send...'); // Debug log
     
     try {
         // Log to console for debugging
@@ -1953,7 +2020,9 @@ async function handleBookingSubmit(e) {
             eventInfoSection.style.display = 'none';
         }
         
-        // Close booking modal
+        // Hide loading and close booking modal (skip confirm)
+        hideLoadingModal();
+        skipCloseConfirm = true;
         closeBookingModal();
         
         // Show success modal
@@ -1961,6 +2030,9 @@ async function handleBookingSubmit(e) {
         
     } catch (error) {
         console.error('❌ Error submitting booking:', error);
+        
+        // Hide loading modal
+        hideLoadingModal();
         
         // Show user-friendly error message
         let errorMsg;
