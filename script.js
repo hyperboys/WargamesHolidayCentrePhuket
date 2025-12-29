@@ -75,8 +75,8 @@ const API_BASE_URL = (() => {
         return 'http://localhost:3000';
     }
     
-    // Production - Change to your production domain
-    return 'https://api.wargameshc.com'; // TODO: Replace with actual production API URL
+    // Production - Render backend URL
+    return 'https://wargamesholidaycentrephuket-backend.onrender.com';
 })();
 
 // Check backend connection on page load
