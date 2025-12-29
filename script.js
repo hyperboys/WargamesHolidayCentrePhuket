@@ -75,8 +75,8 @@ const API_BASE_URL = (() => {
         return 'http://localhost:3000';
     }
     
-    // Production - Render backend URL
-    return 'https://wargamesholidaycentrephuket-backend.onrender.com';
+    // Production - Railway backend URL
+    return 'https://wargamesholidaycentrephuket-backend-production.up.railway.app';
 })();
 
 // Check backend connection on page load
