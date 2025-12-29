@@ -2709,6 +2709,34 @@ s
     min-height: 100px;
 }
 
+/* Phone Input Group with Country Code */
+.phone-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.country-code-select {
+    width: 120px;
+    flex-shrink: 0;
+    padding: 12px 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.country-code-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(184, 146, 96, 0.1);
+}
+
+.phone-input-group input[type="tel"] {
+    flex: 1;
+    min-width: 0;
+}
+
 /* Checkbox Grid */
 .checkbox-grid {
     display: grid;

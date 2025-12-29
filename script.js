@@ -2,6 +2,42 @@
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 
+// Country List for Autocomplete
+const countries = [
+    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+    "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
+    "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon",
+    "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
+    "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador",
+    "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France",
+    "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau",
+    "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq",
+    "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+    "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
+    "Luxembourg", "Macau", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+    "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+    "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia",
+    "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines",
+    "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent", "Samoa",
+    "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
+    "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden",
+    "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia",
+    "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+    "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+];
+
+// Initialize country datalist
+document.addEventListener('DOMContentLoaded', () => {
+    const countryList = document.getElementById('countryList');
+    if (countryList) {
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country;
+            countryList.appendChild(option);
+        });
+    }
+});
+
 // View All Events Toggle
 const viewAllEventsBtn = document.getElementById('viewAllEventsBtn');
 let eventsExpanded = false;
@@ -999,10 +1035,52 @@ function setupBookingModal() {
                 </div>
                 <div class="form-group">
                     <label data-en="Phone Number" data-th="เบอร์โทรศัพท์">Phone Number</label>
-                    <input type="tel" name="${playerId}_phone" 
-                        data-placeholder-en="Enter phone number" 
-                        data-placeholder-th="กรอกเบอร์โทรศัพท์" 
-                        placeholder="Enter phone number">
+                    <div class="phone-input-group">
+                        <select name="${playerId}_phoneCountryCode" class="country-code-select">
+                            <option value="+66">TH +66</option>
+                            <option value="+1">US +1</option>
+                            <option value="+44">GB +44</option>
+                            <option value="+61">AU +61</option>
+                            <option value="+81">JP +81</option>
+                            <option value="+82">KR +82</option>
+                            <option value="+86">CN +86</option>
+                            <option value="+91">IN +91</option>
+                            <option value="+65">SG +65</option>
+                            <option value="+60">MY +60</option>
+                            <option value="+62">ID +62</option>
+                            <option value="+63">PH +63</option>
+                            <option value="+84">VN +84</option>
+                            <option value="+852">HK +852</option>
+                            <option value="+886">TW +886</option>
+                            <option value="+49">DE +49</option>
+                            <option value="+33">FR +33</option>
+                            <option value="+39">IT +39</option>
+                            <option value="+34">ES +34</option>
+                            <option value="+31">NL +31</option>
+                            <option value="+46">SE +46</option>
+                            <option value="+47">NO +47</option>
+                            <option value="+45">DK +45</option>
+                            <option value="+358">FI +358</option>
+                            <option value="+41">CH +41</option>
+                            <option value="+43">AT +43</option>
+                            <option value="+32">BE +32</option>
+                            <option value="+48">PL +48</option>
+                            <option value="+7">RU +7</option>
+                            <option value="+971">AE +971</option>
+                            <option value="+966">SA +966</option>
+                            <option value="+972">IL +972</option>
+                            <option value="+90">TR +90</option>
+                            <option value="+27">ZA +27</option>
+                            <option value="+64">NZ +64</option>
+                            <option value="+55">BR +55</option>
+                            <option value="+52">MX +52</option>
+                            <option value="+54">AR +54</option>
+                        </select>
+                        <input type="tel" name="${playerId}_phone" 
+                            data-placeholder-en="XX XXX XXXX" 
+                            data-placeholder-th="XX XXX XXXX" 
+                            placeholder="XX XXX XXXX">
+                    </div>
                     <small class="error-message" style="display: none; color: #dc3545; font-size: 0.85rem; margin-top: 5px;"></small>
                 </div>
             </div>
@@ -1249,6 +1327,52 @@ function setupBookingModal() {
         btn.addEventListener('click', function() {
             setTimeout(updatePriceEstimate, 100);
         });
+    });
+    
+    // ===== Auto-fill Personal Information to Player 1 =====
+    function syncPersonalInfoToPlayer1() {
+        const player1Card = document.querySelector('.person-card[data-player-id="player-1"]');
+        if (!player1Card) return;
+        
+        // Get Personal Information values
+        const personalFirstName = document.getElementById('firstName')?.value || '';
+        const personalLastName = document.getElementById('lastName')?.value || '';
+        const personalPhone = document.getElementById('phone')?.value || '';
+        const personalPhoneCode = document.getElementById('phoneCountryCode')?.value || '+66';
+        const personalEmail = document.getElementById('email')?.value || '';
+        
+        // Get Player 1 fields
+        const player1FirstName = player1Card.querySelector('input[name="player-1_firstName"]');
+        const player1LastName = player1Card.querySelector('input[name="player-1_lastName"]');
+        const player1Phone = player1Card.querySelector('input[name="player-1_phone"]');
+        const player1PhoneCode = player1Card.querySelector('select[name="player-1_phoneCountryCode"]');
+        const player1Email = player1Card.querySelector('input[name="player-1_email"]');
+        
+        // Sync values (only if Player 1 field is empty)
+        if (player1FirstName && !player1FirstName.value) {
+            player1FirstName.value = personalFirstName;
+        }
+        if (player1LastName && !player1LastName.value) {
+            player1LastName.value = personalLastName;
+        }
+        if (player1Phone && !player1Phone.value) {
+            player1Phone.value = personalPhone;
+        }
+        if (player1PhoneCode && personalPhoneCode) {
+            player1PhoneCode.value = personalPhoneCode;
+        }
+        if (player1Email && !player1Email.value) {
+            player1Email.value = personalEmail;
+        }
+    }
+    
+    // Add listeners to Personal Information fields to sync to Player 1
+    const personalInfoFields = ['firstName', 'lastName', 'phone', 'phoneCountryCode', 'email'];
+    personalInfoFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('blur', syncPersonalInfoToPlayer1);
+        }
     });
 }
 
@@ -1909,13 +2033,21 @@ async function handleBookingSubmit(e) {
         const playerCards = playersContainer.querySelectorAll('.person-card');
         playerCards.forEach((card, index) => {
             const playerId = card.getAttribute('data-player-id');
+            
+            // Get phone with country code for player
+            const playerPhoneCode = formData.get(`${playerId}_phoneCountryCode`) || '+66';
+            const playerPhoneNumber = formData.get(`${playerId}_phone`) || '';
+            const playerFullPhone = playerPhoneNumber ? `${playerPhoneCode} ${playerPhoneNumber}` : '';
+            
             const player = {
                 number: index + 1,
                 name: `${formData.get(`${playerId}_firstName`)} ${formData.get(`${playerId}_lastName`)}`,
                 firstName: formData.get(`${playerId}_firstName`),
                 lastName: formData.get(`${playerId}_lastName`),
                 age: formData.get(`${playerId}_age`),
-                phone: formData.get(`${playerId}_phone`) || '',
+                phone: playerFullPhone,
+                phoneCountryCode: playerPhoneCode,
+                phoneNumber: playerPhoneNumber,
                 email: formData.get(`${playerId}_email`) || ''
             };
             players.push(player);
@@ -1926,16 +2058,76 @@ async function handleBookingSubmit(e) {
     const eventSelect = document.getElementById('selectedEvent');
     const packageSelect = document.getElementById('packageType');
     
+    // Get full event name
+    const eventValue = eventSelect?.value || formData.get('selectedEvent');
+    let eventFullName = eventValue;
+    if (eventValue && eventData[eventValue]) {
+        eventFullName = eventData[eventValue].title[currentLanguage] || eventData[eventValue].title.en;
+    }
+    
+    // Calculate price estimate
+    const playerCount = players.length || 1;
+    const adultCompanions = parseInt(formData.get('adults')) || 0;
+    const exchangeRate = 35; // 1 USD = 35 THB
+    
+    // Calculate prices based on currency
+    const currency = currentLanguage === 'th' ? 'THB' : 'USD';
+    
+    let playerPricePerNight, companionPricePerNight, playersTotal, companionsTotal, totalPrice;
+    
+    if (currency === 'THB') {
+        playerPricePerNight = 7000; // THB
+        companionPricePerNight = 3500; // THB
+        playersTotal = playerCount * nights * playerPricePerNight;
+        companionsTotal = adultCompanions * nights * companionPricePerNight;
+        totalPrice = playersTotal + companionsTotal;
+    } else {
+        playerPricePerNight = 200; // USD
+        companionPricePerNight = 100; // USD
+        playersTotal = playerCount * nights * playerPricePerNight;
+        companionsTotal = adultCompanions * nights * companionPricePerNight;
+        totalPrice = playersTotal + companionsTotal;
+    }
+    
+    // Get package full name
+    const packageValue = packageSelect?.value || formData.get('packageType');
+    const packageNames = {
+        'day-visit': { en: 'Day Visit', th: 'เยี่ยมชมรายวัน' },
+        'weekend-warrior': { en: 'Weekend Warrior (2D/1N)', th: 'Weekend Warrior (2 วัน 1 คืน)' },
+        'campaign-weekend': { en: 'Campaign Weekend (3D/2N)', th: 'Campaign Weekend (3 วัน 2 คืน)' },
+        'extended-campaign': { en: 'Extended Campaign (5D/4N)', th: 'Extended Campaign (5 วัน 4 คืน)' },
+        'custom': { en: 'Custom Package', th: 'แพ็คเกจกำหนดเอง' }
+    };
+    const packageFullName = packageNames[packageValue]?.[currentLanguage] || packageValue;
+    
+    // Get accommodation full name
+    const accommodationValue = formData.get('accommodation');
+    const accommodationNames = {
+        'basic': { en: 'Basic (Shared Room)', th: 'ห้องพักรวม' },
+        'standard': { en: 'Standard (Private Room)', th: 'ห้องส่วนตัว' },
+        'premium': { en: 'Premium (En-suite)', th: 'ห้องพรีเมียม' }
+    };
+    const accommodationFullName = accommodationNames[accommodationValue]?.[currentLanguage] || accommodationValue;
+    
+    // Combine country code with phone number
+    const phoneCountryCode = document.getElementById('phoneCountryCode')?.value || '+66';
+    const phoneNumber = formData.get('phone') || '';
+    const fullPhoneNumber = phoneNumber ? `${phoneCountryCode} ${phoneNumber}` : '';
+    
     const bookingData = {
         // Main contact
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
         email: formData.get('email'),
-        phone: formData.get('phone'),
+        phone: fullPhoneNumber,
+        phoneCountryCode: phoneCountryCode,
+        phoneNumber: phoneNumber,
         country: formData.get('country'),
         // Booking details
-        selectedEvent: eventSelect?.value || formData.get('selectedEvent'),
-        packageType: packageSelect?.value || formData.get('packageType'),
+        selectedEvent: eventValue,
+        selectedEventName: eventFullName,
+        packageType: packageValue,
+        packageTypeName: packageFullName,
         checkIn: checkInValue,
         checkOut: checkOutValue,
         nights: nights,
@@ -1943,11 +2135,26 @@ async function handleBookingSubmit(e) {
         adults: parseInt(formData.get('adults')) || 0,
         children: parseInt(formData.get('children')) || 0,
         players: players,
+        playerCount: playerCount,
         // Accommodation
-        accommodation: formData.get('accommodation'),
+        accommodation: accommodationValue,
+        accommodationName: accommodationFullName,
         extras: formData.getAll('extras'),
         specialRequests: formData.get('specialRequests') || '',
         hearAbout: formData.get('hearAbout') || '',
+        // Price estimate - sends only the selected currency
+        priceEstimate: {
+            currency: currency,
+            currencySymbol: currency === 'THB' ? '฿' : '$',
+            playerPricePerNight: playerPricePerNight,
+            companionPricePerNight: companionPricePerNight,
+            playersTotal: playersTotal,
+            companionsTotal: companionsTotal,
+            total: totalPrice,
+            displayTotal: currency === 'THB' 
+                ? `฿${totalPrice.toLocaleString()}` 
+                : `$${totalPrice.toLocaleString()}`
+        },
         language: currentLanguage,
         timestamp: new Date().toISOString()
     };
