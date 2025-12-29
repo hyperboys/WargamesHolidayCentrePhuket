@@ -170,7 +170,7 @@ switch(packageType) {
 ## 📞 ข้อมูลติดต่อ
 
 หากพบปัญหาหรือต้องการความช่วยเหลือ:
-- Email: booking@wargamesphuket.com
+- Email: info@wargameshc.com
 - Phone: +66 XX XXX XXXX
 
 ---

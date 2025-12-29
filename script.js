@@ -30,6 +30,33 @@ if (viewAllEventsBtn) {
 // Language Management
 let currentLanguage = 'en'; // Default language
 
+// Backend API Configuration
+const API_BASE_URL = 'http://localhost:3000'; // Change to production URL when deployed
+
+// Check backend connection on page load
+async function checkBackendConnection() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/health`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        });
+        
+        if (response.ok) {
+            console.log('✅ Backend connected successfully');
+            return true;
+        } else {
+            console.warn('⚠️ Backend responded but with error:', response.status);
+            return false;
+        }
+    } catch (error) {
+        console.warn('⚠️ Backend not available:', error.message);
+        console.log('💡 Make sure backend is running at:', API_BASE_URL);
+        console.log('   cd WargamesHolidayCentrePhuket-Backend');
+        console.log('   npm run dev');
+        return false;
+    }
+}
+
 // Language Dropdown Handler - will be initialized after DOM loads
 let languageBtn, languageMenu, currentFlagImg, languageOptions;
 
@@ -73,6 +100,9 @@ function updateLanguage() {
 
 // Load saved language preference on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Check backend connection
+    checkBackendConnection();
+    
     // Initialize language elements
     languageBtn = document.getElementById('languageBtn');
     languageMenu = document.getElementById('languageMenu');
@@ -994,7 +1024,8 @@ function setupBookingModal() {
     if (addPlayerBtn && playersContainer) {
         addPlayerBtn.addEventListener('click', () => {
             const currentPlayerCount = playersContainer.querySelectorAll('.person-card').length;
-            const playerCard = createPlayerCard(currentPlayerCount + 1);
+            const playerId = currentPlayerCount + 1;
+            const playerCard = createPlayerCard(playerId);
             playersContainer.appendChild(playerCard);
             
             // Add validation listeners
@@ -1052,12 +1083,17 @@ function setupBookingModal() {
             // Update language for new card
             updateLanguage();
             
+            // Update price when player is added
+            updatePriceEstimate();
+            
             // Add remove button handler
             const removeBtn = playerCard.querySelector('.btn-remove-person');
             removeBtn.addEventListener('click', function() {
                 if (playersContainer.querySelectorAll('.person-card').length > 1) {
                     playerCard.remove();
                     updatePlayerNumbers();
+                    // Update price when player is removed
+                    updatePriceEstimate();
                 } else {
                     alert(currentLanguage === 'en' 
                         ? 'At least one player is required' 
@@ -1066,9 +1102,13 @@ function setupBookingModal() {
             });
         });
         
-        // Add first player by default
+        // Add first player by default and show price
         setTimeout(() => {
             addPlayerBtn.click();
+            // Update price after player is added
+            setTimeout(() => {
+                updatePriceEstimate();
+            }, 100);
         }, 100);
     }
     
@@ -1152,9 +1192,7 @@ function setupBookingModal() {
     });
     
     // Setup form submission
-    if (bookingForm) {
-        bookingForm.addEventListener('submit', handleBookingSubmit);
-    }
+    attachBookingFormListener();
     
     // Check-in/Check-out date validation
     const checkInInput = document.getElementById('checkIn');
@@ -1203,6 +1241,13 @@ function setupBookingModal() {
     if (childrenInput) {
         childrenInput.addEventListener('change', updatePriceEstimate);
     }
+    
+    // Update price when companion buttons are clicked
+    document.querySelectorAll('.number-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            setTimeout(updatePriceEstimate, 100);
+        });
+    });
 }
 
 function openBookingModal() {
@@ -1225,11 +1270,6 @@ function openBookingModal() {
         durationDisplay.style.display = 'none';
     }
     
-    const priceDisplay = document.getElementById('priceEstimate');
-    if (priceDisplay) {
-        priceDisplay.style.display = 'none';
-    }
-    
     bookingModal.classList.add('active');
     document.body.style.overflow = 'hidden';
     
@@ -1237,6 +1277,45 @@ function openBookingModal() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('checkIn').setAttribute('min', today);
     document.getElementById('checkOut').setAttribute('min', today);
+}
+
+// Function to attach form submit listener (can be called multiple times)
+function attachBookingFormListener() {
+    if (!bookingForm) {
+        console.log('❌ Booking form NOT found');
+        return;
+    }
+    
+    console.log('✅ Attaching booking form listener');
+    
+    // Remove existing listener to prevent duplicates
+    bookingForm.removeEventListener('submit', handleBookingSubmit);
+    
+    // Attach new listener
+    bookingForm.addEventListener('submit', handleBookingSubmit);
+    
+    // Also add direct click listener for debugging
+    const submitBtn = bookingForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', (e) => {
+            console.log('🟢 SUBMIT BUTTON CLICKED!');
+            console.log('🟢 Form is VALID:', bookingForm.checkValidity());
+            
+            // If form is valid, manually trigger handleBookingSubmit
+            if (bookingForm.checkValidity()) {
+                console.log('🟢 Form valid, manually calling handleBookingSubmit...');
+                e.preventDefault();
+                handleBookingSubmit(e);
+            } else {
+                // Check for invalid fields
+                const invalidFields = Array.from(bookingForm.querySelectorAll('input, select, textarea'))
+                    .filter(field => !field.checkValidity() && !field.disabled);
+                console.log('❌ Invalid fields:', invalidFields);
+            }
+        });
+    }
+    
+    console.log('✅ Booking form listener attached successfully');
 }
 
 function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, eventType, eventDates) {
@@ -1291,6 +1370,11 @@ function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPl
         // Update booking duration display
         updateBookingDuration();
         
+        // Update price estimate after dates are set
+        setTimeout(() => {
+            updatePriceEstimate();
+        }, 200);
+        
         // Disable Flatpickr calendars if they exist
         if (window.flatpickrInstances) {
             if (window.flatpickrInstances.checkIn) {
@@ -1308,13 +1392,11 @@ function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPl
         durationDisplay.style.display = 'none';
     }
     
-    const priceDisplay = document.getElementById('priceEstimate');
-    if (priceDisplay) {
-        priceDisplay.style.display = 'none';
-    }
-    
     bookingModal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Re-attach form submit listener when opening modal
+    attachBookingFormListener();
     
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
@@ -1690,30 +1772,57 @@ function validateAllPlayers() {
 async function handleBookingSubmit(e) {
     e.preventDefault();
     
-    if (!bookingForm) return;
+    console.log('🔵 Form submit triggered'); // Debug log
+    
+    if (!bookingForm) {
+        console.log('❌ bookingForm not found');
+        return;
+    }
+    
+    console.log('🔵 Validating form...'); // Debug log
     
     // Validate form
     if (!validateBookingForm()) {
+        console.log('❌ Form validation failed');
         return;
     }
     
+    console.log('🔵 Validating players...'); // Debug log
+    
     // Validate all players
     if (!validateAllPlayers()) {
+        console.log('❌ Player validation failed');
         return;
     }
+    
+    console.log('✅ Validation passed, preparing data...'); // Debug log
+    
+    console.log('🔵 Getting form data...'); // Debug log
     
     // Get form data
     const formData = new FormData(bookingForm);
     
+    console.log('🔵 Parsing dates...'); // Debug log
+    
     // Parse dates from dd/mm/yyyy format
     const parseDate = (dateString) => {
+        if (!dateString) return null;
         const match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})/);
         if (!match) return null;
         return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
     };
     
-    const checkInDate = parseDate(formData.get('checkIn'));
-    const checkOutDate = parseDate(formData.get('checkOut'));
+    // Get dates directly from inputs (in case they are disabled)
+    const checkInInput = document.getElementById('checkIn');
+    const checkOutInput = document.getElementById('checkOut');
+    const checkInValue = checkInInput?.value || formData.get('checkIn');
+    const checkOutValue = checkOutInput?.value || formData.get('checkOut');
+    
+    console.log('🔵 Check-in value:', checkInValue);
+    console.log('🔵 Check-out value:', checkOutValue);
+    
+    const checkInDate = parseDate(checkInValue);
+    const checkOutDate = parseDate(checkOutValue);
     
     if (!checkInDate || !checkOutDate) {
         alert(currentLanguage === 'en' 
@@ -1734,6 +1843,7 @@ async function handleBookingSubmit(e) {
             const playerId = card.getAttribute('data-player-id');
             const player = {
                 number: index + 1,
+                name: `${formData.get(`${playerId}_firstName`)} ${formData.get(`${playerId}_lastName`)}`,
                 firstName: formData.get(`${playerId}_firstName`),
                 lastName: formData.get(`${playerId}_lastName`),
                 age: formData.get(`${playerId}_age`),
@@ -1744,6 +1854,10 @@ async function handleBookingSubmit(e) {
         });
     }
     
+    // Get disabled field values directly from inputs
+    const eventSelect = document.getElementById('selectedEvent');
+    const packageSelect = document.getElementById('packageType');
+    
     const bookingData = {
         // Main contact
         firstName: formData.get('firstName'),
@@ -1752,20 +1866,20 @@ async function handleBookingSubmit(e) {
         phone: formData.get('phone'),
         country: formData.get('country'),
         // Booking details
-        selectedEvent: formData.get('selectedEvent'),
-        packageType: formData.get('packageType'),
-        checkIn: formData.get('checkIn'),
-        checkOut: formData.get('checkOut'),
+        selectedEvent: eventSelect?.value || formData.get('selectedEvent'),
+        packageType: packageSelect?.value || formData.get('packageType'),
+        checkIn: checkInValue,
+        checkOut: checkOutValue,
         nights: nights,
-        // Players
-        adults: formData.get('adults'),
-        children: formData.get('children'),
+        // Players & Companions
+        adults: parseInt(formData.get('adults')) || 0,
+        children: parseInt(formData.get('children')) || 0,
         players: players,
         // Accommodation
         accommodation: formData.get('accommodation'),
         extras: formData.getAll('extras'),
-        specialRequests: formData.get('specialRequests'),
-        hearAbout: formData.get('hearAbout'),
+        specialRequests: formData.get('specialRequests') || '',
+        hearAbout: formData.get('hearAbout') || '',
         language: currentLanguage,
         timestamp: new Date().toISOString()
     };
@@ -1773,29 +1887,22 @@ async function handleBookingSubmit(e) {
     // Show loading state
     const submitBtn = bookingForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
+    
+    console.log('🔵 Setting loading state...'); // Debug log
+    console.log('🔵 Submit button:', submitBtn); // Debug log
+    
     submitBtn.disabled = true;
     submitBtn.innerHTML = `<span data-en="⏳ Sending..." data-th="⏳ กำลังส่ง...">${currentLanguage === 'th' ? '⏳ กำลังส่ง...' : '⏳ Sending...'}</span>`;
     
+    console.log('🔵 Loading state set, preparing to send...'); // Debug log
+    
     try {
-        // Send booking data via email using mailto (temporary solution)
-        // In production, replace with actual API call to your server
-        const emailSubject = `Booking Request - ${bookingData.firstName} ${bookingData.lastName}`;
-        const emailBody = formatBookingEmail(bookingData);
-        
         // Log to console for debugging
-        console.log('Booking Request:', bookingData);
-        console.log('Email Body:', emailBody);
+        console.log('📤 Sending booking request:', bookingData);
+        console.log('📤 API URL:', `${API_BASE_URL}/api/booking`); // Debug log
         
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Option 1: Open email client (uncomment to use)
-        // const mailtoLink = `mailto:booking@wargamesphuket.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-        // window.location.href = mailtoLink;
-        
-        // Option 2: In production, send to your server:
-        /*
-        const response = await fetch('/api/bookings', {
+        // Send to backend API
+        const response = await fetch(`${API_BASE_URL}/api/booking`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1803,16 +1910,23 @@ async function handleBookingSubmit(e) {
             body: JSON.stringify(bookingData)
         });
         
+        console.log('📥 Response received:', response.status); // Debug log
+        
+        const result = await response.json();
+        
+        console.log('📥 Response data:', result); // Debug log
+        
         if (!response.ok) {
-            throw new Error('Failed to submit booking');
+            throw new Error(result.error || 'Failed to submit booking');
         }
-        */
+        
+        console.log('✅ Booking submitted successfully:', result);
+        console.log('✅ Booking submitted successfully:', result);
         
         // Reset form
         bookingForm.reset();
         
         // Reset players container
-        const playersContainer = document.getElementById('playersContainer');
         if (playersContainer) {
             playersContainer.innerHTML = '';
             const addPlayerBtn = document.getElementById('addPlayerBtn');
@@ -1821,20 +1935,45 @@ async function handleBookingSubmit(e) {
             }
         }
         
+        // Reset companion counts
+        const adultsInput = document.getElementById('adults');
+        const childrenInput = document.getElementById('children');
+        if (adultsInput) adultsInput.value = 0;
+        if (childrenInput) childrenInput.value = 0;
+        
         // Re-enable event select if it was disabled
         const eventSelect = document.getElementById('selectedEvent');
         if (eventSelect) {
             eventSelect.disabled = false;
         }
         
+        // Hide event info section if visible
+        const eventInfoSection = document.getElementById('eventInfoSection');
+        if (eventInfoSection) {
+            eventInfoSection.style.display = 'none';
+        }
+        
+        // Close booking modal
+        closeBookingModal();
+        
         // Show success modal
         openSuccessModal();
         
     } catch (error) {
-        console.error('Error:', error);
-        const errorMsg = currentLanguage === 'th' 
-            ? 'เกิดข้อผิดพลาดในการส่งคำขอจอง กรุณาลองใหม่อีกครั้ง'
-            : 'Error submitting booking. Please try again.';
+        console.error('❌ Error submitting booking:', error);
+        
+        // Show user-friendly error message
+        let errorMsg;
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            errorMsg = currentLanguage === 'th' 
+                ? '⚠️ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้\n\nกรุณาตรวจสอบว่า:\n• Backend server กำลังรันอยู่ที่ http://localhost:3000\n• หรือติดต่อเราโดยตรงที่:\n  📞 +66 (0) 92-721-9803\n  ✉️ info@wargameshc.com'
+                : '⚠️ Unable to connect to server\n\nPlease check that:\n• Backend server is running at http://localhost:3000\n• Or contact us directly at:\n  📞 +66 (0) 92-721-9803\n  ✉️ info@wargameshc.com';
+        } else {
+            errorMsg = currentLanguage === 'th' 
+                ? `เกิดข้อผิดพลาด: ${error.message}\n\nกรุณาลองใหม่อีกครั้ง หรือติดต่อเราที่:\n📞 +66 (0) 92-721-9803\n✉️ info@wargameshc.com`
+                : `Error: ${error.message}\n\nPlease try again or contact us at:\n📞 +66 (0) 92-721-9803\n✉️ info@wargameshc.com`;
+        }
+        
         alert(errorMsg);
     } finally {
         // Reset button
@@ -2018,57 +2157,51 @@ function updatePriceEstimate() {
     const packageTypeInput = document.getElementById('packageType');
     const accommodationInput = document.getElementById('accommodation');
     
-    // Check if all required inputs have values
-    if (!checkInInput?.value || !checkOutInput?.value || !adultsInput?.value || !packageTypeInput?.value) {
-        // Hide price estimate if not all required fields are filled
-        const priceDisplay = document.getElementById('priceEstimate');
-        if (priceDisplay) {
-            priceDisplay.style.display = 'none';
+    // Parse dates from DD/MM/YYYY format
+    const parseDate = (dateStr) => {
+        if (!dateStr) return null;
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+            // DD/MM/YYYY -> YYYY-MM-DD
+            return new Date(parts[2], parts[1] - 1, parts[0]);
         }
-        return;
+        return new Date(dateStr);
+    };
+    
+    // Get values with defaults
+    let nights = 2; // Default 2 nights
+    if (checkInInput?.value && checkOutInput?.value) {
+        const checkIn = parseDate(checkInInput.value);
+        const checkOut = parseDate(checkOutInput.value);
+        const calculatedNights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        if (calculatedNights > 0) {
+            nights = calculatedNights;
+        }
     }
     
-    const checkIn = new Date(checkInInput.value);
-    const checkOut = new Date(checkOutInput.value);
-    const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
-    const adults = parseInt(adultsInput.value) || 1;
+    const adults = parseInt(adultsInput?.value) || 0;
     const children = parseInt(childrenInput?.value) || 0;
-    const packageType = packageTypeInput.value;
+    const packageType = packageTypeInput?.value || 'campaign-weekend';
     const accommodation = accommodationInput?.value || 'basic';
     
-    if (nights <= 0) return;
+    // Base prices for players: $200 per player per night (≈ ฿7,000)
+    const playerPricePerNight = 7000; // THB per player per night
     
-    // Base prices (example - adjust according to your actual pricing)
-    let basePrice = 0;
-    switch(packageType) {
-        case 'campaign-weekend':
-            basePrice = 8500; // THB per person per night
-            break;
-        case 'own-hosted':
-            basePrice = 7500;
-            break;
-        case 'custom':
-            basePrice = 9000;
-            break;
-        default:
-            basePrice = 8000;
-    }
+    // Calculate players total
+    const playersContainer = document.getElementById('playersContainer');
+    const playerCards = playersContainer?.querySelectorAll('.person-card') || [];
+    const playerCount = playerCards.length;
     
-    // Accommodation surcharge
-    let accommodationSurcharge = 0;
-    switch(accommodation) {
-        case 'superior':
-            accommodationSurcharge = 1500; // per person per night
-            break;
-        case 'deluxe':
-            accommodationSurcharge = 3000;
-            break;
-    }
+    // If no players yet (during initialization), assume at least 1 for display
+    const displayPlayerCount = playerCount > 0 ? playerCount : 1;
+    const playersTotal = displayPlayerCount * nights * playerPricePerNight;
     
-    // Calculate total
-    const adultTotal = adults * nights * (basePrice + accommodationSurcharge);
-    const childTotal = children * nights * (basePrice + accommodationSurcharge) * 0.7; // 30% discount for children
-    const totalPrice = adultTotal + childTotal;
+    // Calculate adult companions total ($100 per person per night = ฿3,500)
+    const companionPricePerNight = 3500; // THB per adult companion per night
+    const adultCompanionsTotal = adults * nights * companionPricePerNight;
+    
+    // Total price (players + adult companions, children not included)
+    const totalPrice = playersTotal + adultCompanionsTotal;
     
     // Display price estimate
     let priceDisplay = document.getElementById('priceEstimate');
@@ -2076,21 +2209,167 @@ function updatePriceEstimate() {
         priceDisplay = document.createElement('div');
         priceDisplay.id = 'priceEstimate';
         priceDisplay.className = 'price-estimate';
-        priceDisplay.style.cssText = 'margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #4f772d 0%, #90a955 100%); color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
+        priceDisplay.style.cssText = 'margin-top: 2rem; padding: 15px; background: linear-gradient(135deg, #4f772d 0%, #90a955 100%); color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
         
-        const formSection = accommodationInput?.closest('.form-section');
-        if (formSection) {
-            formSection.appendChild(priceDisplay);
+        // Find the players form section and append after companions
+        const playersSection = playersContainer?.closest('.form-section');
+        if (playersSection) {
+            playersSection.appendChild(priceDisplay);
         }
     }
     
-    const priceText = currentLanguage === 'th'
-        ? `<strong>💰 ราคาประมาณการ: ฿${totalPrice.toLocaleString('th-TH')}</strong><br>
-           <small style="opacity: 0.9;">*ราคานี้เป็นการประมาณการเบื้องต้น ราคาสุดท้ายอาจแตกต่างกันตามบริการเสริมและโปรโมชั่น</small>`
-        : `<strong>💰 Estimated Price: ฿${totalPrice.toLocaleString('en-US')}</strong><br>
-           <small style="opacity: 0.9;">*This is a preliminary estimate. Final price may vary based on extras and promotions.</small>`;
+    // Build price breakdown
+    let priceBreakdown = '';
     
-    priceDisplay.innerHTML = priceText;
+    if (currentLanguage === 'th') {
+        priceBreakdown = `<div style="margin-bottom: 12px;">
+            <strong style="font-size: 1.1em;">💰 รายละเอียดราคา</strong>
+        </div>`;
+        
+        // Package info
+        const packageNames = {
+            'campaign-weekend': 'Campaign Weekend',
+            'own-hosted': 'Own Hosted Weekend',
+            'custom': 'Custom Package'
+        };
+        const nightsText = (!checkInInput?.value || !checkOutInput?.value) 
+            ? `${nights} คืน (ประมาณการเริ่มต้น)` 
+            : `${nights} คืน`;
+        priceBreakdown += `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.3);">
+            📦 <strong>แพ็คเกจ:</strong> ${packageNames[packageType] || packageType}<br>
+            🏠 <strong>ที่พัก:</strong> ${accommodation === 'basic' ? 'Basic' : accommodation === 'superior' ? 'Superior' : 'Deluxe/Hot Spring'}<br>
+            🌙 <strong>จำนวนคืน:</strong> ${nightsText}
+        </div>`;
+        
+        // Players breakdown - always show
+        priceBreakdown += `<div style="margin-bottom: 6px;">
+            ⚔️ <strong>ผู้เล่น ${displayPlayerCount} คน:</strong><br>
+            <span style="margin-left: 20px; font-size: 0.95em;">
+                ${displayPlayerCount} คน × ${nights} คืน × ฿${playerPricePerNight.toLocaleString('th-TH')} = <strong>฿${playersTotal.toLocaleString('th-TH')}</strong>
+            </span>
+        </div>`;
+        
+        // Adult companions breakdown
+        if (adults > 0) {
+            priceBreakdown += `<div style="margin-bottom: 6px;">
+                👨 <strong>ผู้ติดตามผู้ใหญ่ ${adults} คน:</strong><br>
+                <span style="margin-left: 20px; font-size: 0.95em;">
+                    ${adults} คน × ${nights} คืน × ฿${companionPricePerNight.toLocaleString('th-TH')} = <strong>฿${adultCompanionsTotal.toLocaleString('th-TH')}</strong>
+                </span>
+            </div>`;
+        }
+        
+        // Children information (no charge, but show count)
+        if (children > 0) {
+            priceBreakdown += `<div style="margin-bottom: 6px; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                👶 <strong>เด็ก ${children} คน:</strong><br>
+                <span style="margin-left: 20px; font-size: 0.9em; opacity: 0.95;">
+                    ราคาขึ้นอยู่กับอายุและความจุของห้อง<br>
+                    ✓ ได้รับสิ่งอำนวยความสะดวกเหมือนผู้ใหญ่<br>
+                    ✓ Kid-friendly tours
+                </span>
+            </div>`;
+        }
+        
+        // Total
+        priceBreakdown += `<div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(255,255,255,0.5); font-size: 1.15em;">
+            <strong>💵 ราคารวมทั้งหมด: ฿${totalPrice.toLocaleString('th-TH')}</strong>
+        </div>`;
+        
+        if (children > 0) {
+            priceBreakdown += `<div style="margin-top: 8px; padding: 8px; background: rgba(255,255,255,0.15); border-radius: 5px;">
+                <small style="opacity: 0.95; font-size: 0.85em;">
+                    📝 <strong>หมายเหตุ:</strong> ราคาสำหรับเด็กจะคำนวณตามอายุและความจุของห้อง<br>
+                    (โรงแรมส่วนใหญ่อนุญาต 2-4 คนต่อห้อง)
+                </small>
+            </div>`;
+        }
+        
+        priceBreakdown += `<div style="margin-top: 10px;">
+            <small style="opacity: 0.9; font-size: 0.85em;">
+                *ราคานี้เป็นการประมาณการเบื้องต้น ราคาสุดท้ายอาจแตกต่างกันตามบริการเสริมและโปรโมชั่น
+            </small>
+        </div>`;
+    } else {
+        // English - Show USD
+        const exchangeRate = 35; // 1 USD = 35 THB (approximate)
+        const totalPriceUSD = totalPrice / exchangeRate;
+        const companionPricePerNightUSD = 100; // $100 per adult companion per night
+        const adultCompanionsTotalUSD = adults * nights * companionPricePerNightUSD;
+        
+        priceBreakdown = `<div style="margin-bottom: 12px; color: #2d3748;">
+            <strong style="font-size: 1.1em;">💰 Price Breakdown</strong>
+        </div>`;
+        
+        // Package info
+        const packageNames = {
+            'campaign-weekend': 'Campaign Weekend',
+            'own-hosted': 'Own Hosted Weekend',
+            'custom': 'Custom Package'
+        };
+        const nightsText = (!checkInInput?.value || !checkOutInput?.value) 
+            ? `${nights} night${nights > 1 ? 's' : ''} (estimated)` 
+            : `${nights} night${nights > 1 ? 's' : ''}`;
+        priceBreakdown += `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.2); color: #2d3748;">
+            📦 <strong>Package:</strong> ${packageNames[packageType] || packageType}<br>
+            🏠 <strong>Accommodation:</strong> ${accommodation === 'basic' ? 'Basic' : accommodation === 'superior' ? 'Superior' : 'Deluxe/Hot Spring'}<br>
+            🌙 <strong>Nights:</strong> ${nightsText}
+        </div>`;
+        
+        // Players breakdown - always show
+        const playerPricePerNightUSD = 200; // $200 per player per night
+        const playersTotalUSD = playersTotal / exchangeRate;
+        priceBreakdown += `<div style="margin-bottom: 6px; color: #2d3748;">
+            ⚔️ <strong>${displayPlayerCount} Player${displayPlayerCount > 1 ? 's' : ''}:</strong><br>
+            <span style="margin-left: 20px; font-size: 0.95em;">
+                ${displayPlayerCount} × ${nights} night${nights > 1 ? 's' : ''} × $${playerPricePerNightUSD.toFixed(2)} = <strong>$${playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
+            </span>
+        </div>`;
+        
+        // Adult companions breakdown
+        if (adults > 0) {
+            priceBreakdown += `<div style="margin-bottom: 6px; color: #2d3748;">
+                👨 <strong>${adults} Adult Companion${adults > 1 ? 's' : ''}:</strong><br>
+                <span style="margin-left: 20px; font-size: 0.95em;">
+                    ${adults} × ${nights} night${nights > 1 ? 's' : ''} × $${companionPricePerNightUSD.toFixed(2)} = <strong>$${adultCompanionsTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
+                </span>
+            </div>`;
+        }
+        
+        // Children information (no charge, but show count)
+        if (children > 0) {
+            priceBreakdown += `<div style="margin-bottom: 6px; padding: 8px; background: rgba(79, 119, 45, 0.1); border-radius: 5px; color: #2d3748;">
+                👶 <strong>${children} Child${children > 1 ? 'ren' : ''}:</strong><br>
+                <span style="margin-left: 20px; font-size: 0.9em; opacity: 0.95;">
+                    Cheaper rates - depends on age and room capacity<br>
+                    ✓ Same inclusions as adults<br>
+                    ✓ Kid-friendly tours
+                </span>
+            </div>`;
+        }
+        
+        // Total
+        priceBreakdown += `<div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(0,0,0,0.3); font-size: 1.15em; color: #1a202c;">
+            <strong>💵 Total Price: $${totalPriceUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
+        </div>`;
+        
+        if (children > 0) {
+            priceBreakdown += `<div style="margin-top: 8px; padding: 8px; background: rgba(79, 119, 45, 0.15); border-radius: 5px; color: #2d3748;">
+                <small style="opacity: 0.95; font-size: 0.85em;">
+                    📝 <strong>Note:</strong> Children's rates will be calculated based on age and room capacity<br>
+                    (Most hotels allow 2-4 per room)
+                </small>
+            </div>`;
+        }
+        
+        priceBreakdown += `<div style="margin-top: 10px; color: #4a5568;">
+            <small style="opacity: 0.9; font-size: 0.85em;">
+                *This is a preliminary estimate. Final price may vary based on extras and promotions. (≈ ฿${totalPrice.toLocaleString('en-US')})
+            </small>
+        </div>`;
+    }
+    
+    priceDisplay.innerHTML = priceBreakdown;
     priceDisplay.style.display = 'block';
 }
 

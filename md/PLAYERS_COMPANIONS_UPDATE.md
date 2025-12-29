@@ -297,7 +297,7 @@ const companionsTotal = numCompanions * nights * (accommodationSurcharge + YOUR_
 ## 📞 สนับสนุน (Support)
 
 หากพบปัญหาหรือต้องการความช่วยเหลือ:
-- **Email:** booking@wargamesphuket.com
+- **Email:** info@wargameshc.com
 - **Phone:** +66 XX XXX XXXX
 
 ---

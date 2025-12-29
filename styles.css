@@ -1732,13 +1732,13 @@ section {
     font-size: 1.1rem;
     font-weight: 600;
     margin-left: 5px;
-    color: var(--primary-color);
+    color: #ffffff;
     vertical-align: baseline;
 }
 
 .price .period {
     font-size: 1rem;
-    color: #666;
+    color: #ffffff;
 }
 s
 .pricing-features {
