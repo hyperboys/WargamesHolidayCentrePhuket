@@ -2815,6 +2815,72 @@ s
     margin-bottom: 30px;
 }
 
+/* Error Modal */
+.error-modal-content {
+    max-width: 550px;
+    text-align: center;
+    padding: 50px 40px;
+}
+
+.error-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: shake 0.5s ease;
+}
+
+.error-modal-content h2 {
+    color: #dc3545;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.error-modal-content p {
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    white-space: pre-line;
+}
+
+.error-contact-info {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.error-contact-info > p {
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-details > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.1rem;
+}
+
+.contact-details a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.contact-details a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
 @keyframes scaleIn {
     from {
         transform: scale(0);
@@ -2823,6 +2889,18 @@ s
     to {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
     }
 }
 

@@ -66,8 +66,18 @@ if (viewAllEventsBtn) {
 // Language Management
 let currentLanguage = 'en'; // Default language
 
-// Backend API Configuration
-const API_BASE_URL = 'http://localhost:3000'; // Change to production URL when deployed
+// Backend API Configuration - Auto-detect environment
+const API_BASE_URL = (() => {
+    const hostname = window.location.hostname;
+    
+    // Development
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://localhost:3000';
+    }
+    
+    // Production - Change to your production domain
+    return 'https://api.wargameshc.com'; // TODO: Replace with actual production API URL
+})();
 
 // Check backend connection on page load
 async function checkBackendConnection() {
@@ -1256,10 +1266,24 @@ function setupBookingModal() {
         });
     }
 
+    // Close error modal
+    const errorModalClose = document.getElementById('errorModalClose');
+    if (errorModalClose) {
+        errorModalClose.addEventListener('click', closeErrorModal);
+    }
+
     // Close modals when clicking outside
     bookingModal?.addEventListener('click', (e) => {
         if (e.target === bookingModal) {
             closeBookingModal();
+        }
+    });
+
+    // Close error modal when clicking outside
+    const errorModal = document.getElementById('errorModal');
+    errorModal?.addEventListener('click', (e) => {
+        if (e.target === errorModal) {
+            closeErrorModal();
         }
     });
 
@@ -1601,6 +1625,37 @@ function openSuccessModal() {
 function closeSuccessModal() {
     successModal.classList.remove('active');
     document.body.style.overflow = 'auto';
+}
+
+// Error Modal Functions
+function showErrorModal(title, message) {
+    const errorModal = document.getElementById('errorModal');
+    const errorModalTitle = document.getElementById('errorModalTitle');
+    const errorModalMessage = document.getElementById('errorModalMessage');
+    
+    if (errorModal && errorModalTitle && errorModalMessage) {
+        // Set title
+        if (title) {
+            errorModalTitle.textContent = title;
+        } else {
+            errorModalTitle.textContent = currentLanguage === 'th' ? 'เกิดข้อผิดพลาด' : 'Error';
+        }
+        
+        // Set message
+        errorModalMessage.textContent = message;
+        
+        // Show modal
+        errorModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeErrorModal() {
+    const errorModal = document.getElementById('errorModal');
+    if (errorModal) {
+        errorModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
 }
 
 // Loading Modal Functions
@@ -2241,19 +2296,22 @@ async function handleBookingSubmit(e) {
         // Hide loading modal
         hideLoadingModal();
         
-        // Show user-friendly error message
-        let errorMsg;
+        // Show user-friendly error message in modal
+        let errorTitle, errorMessage;
+        
         if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-            errorMsg = currentLanguage === 'th' 
-                ? '⚠️ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้\n\nกรุณาตรวจสอบว่า:\n• Backend server กำลังรันอยู่ที่ http://localhost:3000\n• หรือติดต่อเราโดยตรงที่:\n  📞 +66 (0) 92-721-9803\n  ✉️ info@wargameshc.com'
-                : '⚠️ Unable to connect to server\n\nPlease check that:\n• Backend server is running at http://localhost:3000\n• Or contact us directly at:\n  📞 +66 (0) 92-721-9803\n  ✉️ info@wargameshc.com';
+            errorTitle = currentLanguage === 'th' ? 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์' : 'Connection Error';
+            errorMessage = currentLanguage === 'th' 
+                ? 'ขออภัย ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ในขณะนี้'
+                : 'Sorry, unable to connect to the server at this time.';
         } else {
-            errorMsg = currentLanguage === 'th' 
-                ? `เกิดข้อผิดพลาด: ${error.message}\n\nกรุณาลองใหม่อีกครั้ง หรือติดต่อเราที่:\n📞 +66 (0) 92-721-9803\n✉️ info@wargameshc.com`
-                : `Error: ${error.message}\n\nPlease try again or contact us at:\n📞 +66 (0) 92-721-9803\n✉️ info@wargameshc.com`;
+            errorTitle = currentLanguage === 'th' ? 'เกิดข้อผิดพลาด' : 'Booking Error';
+            errorMessage = currentLanguage === 'th' 
+                ? `เกิดข้อผิดพลาด: ${error.message}\n\nกรุณาลองใหม่อีกครั้ง`
+                : `Error: ${error.message}\n\nPlease try again.`;
         }
         
-        alert(errorMsg);
+        showErrorModal(errorTitle, errorMessage);
     } finally {
         // Reset button
         submitBtn.disabled = false;
