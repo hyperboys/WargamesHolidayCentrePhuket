@@ -1,0 +1,23 @@
+{
+  "name": "wargamesholidaycentrephuket",
+  "version": "1.0.0",
+  "description": "Official website for Wargames Holiday Centre Phuket - Thailand's premier wargaming destination.",
+  "main": "config.example.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyperboys/WargamesHolidayCentrePhuket.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyperboys/WargamesHolidayCentrePhuket/issues"
+  },
+  "homepage": "https://github.com/hyperboys/WargamesHolidayCentrePhuket#readme",
+  "dependencies": {
+    "sharp": "^0.34.5"
+  }
+}
