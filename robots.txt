@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wargamesholidaycentrephuket.netlify.app/sitemap.xml
+Sitemap: https://wargameshc.com/sitemap.xml
