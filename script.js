@@ -2074,15 +2074,20 @@ async function verifyRecaptcha() {
         const siteKey = '6LebhJ8sAAAAAP6I6hNbgTelN9vlXOQPTz316HI9';
         
         if (typeof grecaptcha === 'undefined') {
-            console.warn('⚠️ reCAPTCHA not loaded. Skipping verification.');
-            return null;
+            console.error('❌ reCAPTCHA not loaded. Please refresh the page.');
+            throw new Error('reCAPTCHA verification required');
         }
         
         const token = await grecaptcha.execute(siteKey, { action: 'booking' });
+        
+        if (!token) {
+            throw new Error('reCAPTCHA verification required');
+        }
+        
         return token;
     } catch (error) {
         console.error('❌ reCAPTCHA error:', error);
-        return null;
+        throw new Error('reCAPTCHA verification required');
     }
 }
 
@@ -2357,6 +2362,11 @@ async function handleBookingSubmit(e) {
             errorMessage = currentLanguage === 'th' 
                 ? 'ขออภัย ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ในขณะนี้'
                 : 'Sorry, unable to connect to the server at this time.';
+        } else if (error.message.includes('reCAPTCHA')) {
+            errorTitle = currentLanguage === 'th' ? 'เกิดข้อผิดพลาด' : 'Booking Error';
+            errorMessage = currentLanguage === 'th' 
+                ? `เกิดข้อผิดพลาด: ${error.message}\n\nกรุณารีเฟรชหน้าเว็บและลองใหม่อีกครั้ง`
+                : `Error: ${error.message}\n\nPlease refresh the page and try again.`;
         } else {
             errorTitle = currentLanguage === 'th' ? 'เกิดข้อผิดพลาด' : 'Booking Error';
             errorMessage = currentLanguage === 'th' 
