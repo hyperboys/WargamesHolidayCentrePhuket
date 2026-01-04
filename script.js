@@ -2071,7 +2071,7 @@ function checkRateLimit() {
 async function verifyRecaptcha() {
     try {
         // Replace '6LfYourSiteKeyHere' with your actual reCAPTCHA site key
-        const siteKey = '6LebhJ8sAAAAAP6I6hNbgTelN9vlXOQPTz316HI9';
+        const siteKey = '6LfroT8sAAAAAGJLKzr69wyKC0BlR5LiV9QZGSkO';
         
         if (typeof grecaptcha === 'undefined') {
             console.error('❌ reCAPTCHA not loaded. Please refresh the page.');

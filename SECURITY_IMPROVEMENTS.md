@@ -102,7 +102,7 @@ function checkRateLimit() {
 #### 3. ฟังก์ชัน verification:
 ```javascript
 async function verifyRecaptcha() {
-    const siteKey = '6LebhJ8sAAAAAP6I6hNbgTelN9vlXOQPTz316HI9'; // แทนที่ด้วย site key จริง
+    const siteKey = '6LfroT8sAAAAAGJLKzr69wyKC0BlR5LiV9QZGSkO'; // แทนที่ด้วย site key จริง
     const token = await grecaptcha.execute(siteKey, { action: 'booking' });
     return token;
 }
