@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Wargames Holiday Centre Phuket</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#bookings" class="nav-item" data-page="bookings">
+                <i class="fas fa-calendar-check"></i>
+                <span>การจอง</span>
+            </a>
+            <a href="#users" class="nav-item" data-page="users" id="usersNav">
+                <i class="fas fa-user-shield"></i>
+                <span>จัดการ Users</span>
+            </a>
+            <a href="#logout" class="nav-item logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>ออกจากระบบ</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 id="pageTitle">Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="ค้นหา...">
+                </div>
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">5</span>
+                </button>
+                <div class="user-menu">
+                    <img src="image/icon/android-chrome-192x192.png" alt="Admin">
+                    <span id="userName">Admin</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Page -->
+        <section id="dashboard-page" class="page active">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>การจองวันนี้</h3>
+                        <p class="stat-number">0</p>
+                        <span class="stat-change">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>รายได้เดือนนี้</h3>
+                        <p class="stat-number">$0</p>
+                        <span class="stat-change">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>รอยืนยัน</h3>
+                        <p class="stat-number">0</p>
+                        <span class="stat-change">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>ยืนยันแล้ว</h3>
+                        <p class="stat-number">0</p>
+                        <span class="stat-change">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>รายได้รายเดือน</h3>
+                        <select>
+                            <option>2026</option>
+                            <option>2025</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>สถานะการจอง</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="gamesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <div class="table-card">
+                <div class="card-header">
+                    <h3>การจองล่าสุด</h3>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ชื่อลูกค้า</th>
+                            <th>Event</th>
+                            <th>วันที่</th>
+                            <th>เวลา</th>
+                            <th>จำนวนคน</th>
+                            <th>สถานะ</th>
+                            <th>การกระทำ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentBookingsTable">
+                        <tr><td colspan="8" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bookings Page -->
+        <section id="bookings-page" class="page">
+            <div class="page-header">
+                <h2>จัดการการจอง</h2>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label>สถานะ:</label>
+                    <select id="statusFilter">
+                        <option value="">ทั้งหมด</option>
+                        <option value="confirmed">ยืนยันแล้ว</option>
+                        <option value="pending">รอยืนยัน</option>
+                        <option value="completed">เสร็จสิ้น</option>
+                        <option value="cancelled">ยกเลิก</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>วันที่:</label>
+                    <input type="date" id="dateFilter">
+                </div>
+                <div class="filter-group">
+                    <label>Event:</label>
+                    <select id="gameFilter">
+                        <option value="">ทั้งหมด</option>
+                        <option value="waterloo">Waterloo</option>
+                        <option value="napoleon">Napoleon</option>
+                        <option value="medieval">Medieval</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Bookings Table -->
+            <div class="table-card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>ID</th>
+                            <th>ชื่อลูกค้า</th>
+                            <th>อีเมล</th>
+                            <th>โทรศัพท์</th>
+                            <th>Event</th>
+                            <th>Check-in</th>
+                            <th>เวลา</th>
+                            <th>ผู้เล่น</th>
+                            <th>ราคา</th>
+                            <th>สถานะ</th>
+                            <th>การกระทำ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTable">
+                        <tr><td colspan="12" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="bookingsPagination">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Users Management Page (Admin Only) -->
+        <section id="users-page" class="page">
+            <div class="page-header">
+                <h2>จัดการ Users</h2>
+                <button class="btn-primary" onclick="showAddUserModal()">
+                    <i class="fas fa-user-plus"></i> เพิ่ม User ใหม่
+                </button>
+            </div>
+
+            <div class="table-card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>สถานะ</th>
+                            <th>Login ล่าสุด</th>
+                            <th>สร้างเมื่อ</th>
+                            <th>การกระทำ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr><td colspan="8" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Booking Details -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>รายละเอียดการจอง</h2>
+                <button class="close-btn" onclick="closeModal('bookingModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="bookingModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('bookingModal')">ปิด</button>
+                <select id="bookingStatusSelect" class="status-select">
+                    <option value="pending">รอยืนยัน</option>
+                    <option value="confirmed">ยืนยันแล้ว</option>
+                    <option value="completed">เสร็จสิ้น</option>
+                    <option value="cancelled">ยกเลิก</option>
+                </select>
+                <button class="btn-primary" onclick="updateBookingStatus()">อัพเดทสถานะ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit User -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">เพิ่ม User ใหม่</h2>
+                <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm" class="settings-form">
+                    <input type="hidden" id="userId">
+                    <div class="form-group">
+                        <label>Username *</label>
+                        <input type="text" id="userUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="userPassword">
+                        <small>เว้นว่างไว้ถ้าไม่ต้องการเปลี่ยน</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Role *</label>
+                        <select id="userRole" required>
+                            <option value="staff">Staff</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="userActive" checked>
+                            <span>Active</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('userModal')">ยกเลิก</button>
+                <button class="btn-primary" onclick="saveUser()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="api-service.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
