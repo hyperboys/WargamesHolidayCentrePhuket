@@ -3,6 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.google.com https://www.gstatic.com;
+        style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https:;
+        connect-src 'self' https://wargamesholidaycentrephuket-backend-production.up.railway.app http://localhost:3000 https://www.google.com;
+        frame-src https://www.google.com;
+    ">
+    
     <title>Wargames Holiday Centre Phuket - ศูนย์พักผ่อนเกมสงครามภูเก็ต</title>
     <meta name="description" content="Experience thrilling wargames at Wargames Holiday Centre Phuket. Book your adventure in Phuket, Thailand with professional gaming events, accommodation, and unforgettable experiences.">
     <meta name="keywords" content="wargames, Phuket, Thailand, holiday centre, gaming events, booking, adventure, war games, Phuket activities">
@@ -32,6 +44,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- DOMPurify for XSS Protection -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+    
+    <!-- Google reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LebhJ8sAAAAAP6I6hNbgTelN9vlXOQPTz316HI9"></script>
+    
     <script src="translations.js"></script>
     <script type="application/ld+json">
     {
@@ -1118,6 +1137,8 @@
                 </p>
                 
                 <form id="bookingForm" class="booking-form">
+                    <!-- reCAPTCHA Token -->
+                    <input type="hidden" id="recaptchaToken" name="recaptchaToken">
                     <!-- Event Information (Hidden by default, shown when registering from event) -->
                     <div class="form-section event-info-section" id="eventInfoSection" style="display: none;">
                         <div class="event-info-card">

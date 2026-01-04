@@ -128,7 +128,13 @@ function updateLanguage() {
     document.querySelectorAll('[data-th][data-en]').forEach(element => {
         const text = lang === 'th' ? element.getAttribute('data-th') : element.getAttribute('data-en');
         if (text) {
-            element.innerHTML = text;
+            // Use textContent for plain text to prevent XSS
+            // If HTML is needed, use DOMPurify
+            if (text.includes('<')) {
+                element.innerHTML = DOMPurify.sanitize(text);
+            } else {
+                element.textContent = text;
+            }
         }
     });
     
@@ -1004,7 +1010,8 @@ function setupBookingModal() {
         playerCard.className = 'person-card';
         playerCard.setAttribute('data-player-id', playerId);
         
-        playerCard.innerHTML = `
+        // Use DOMPurify to sanitize HTML
+        const playerCardHTML = `
             <div class="person-card-header">
                 <div>
                     <h4 class="person-card-title">
@@ -1104,6 +1111,9 @@ function setupBookingModal() {
                 <small class="error-message" style="display: none; color: #dc3545; font-size: 0.85rem; margin-top: 5px;"></small>
             </div>
         `;
+        
+        // Use DOMPurify to sanitize HTML before inserting
+        playerCard.innerHTML = DOMPurify.sanitize(playerCardHTML);
         
         return playerCard;
     }
@@ -1432,11 +1442,8 @@ function openBookingModal() {
 // Function to attach form submit listener (can be called multiple times)
 function attachBookingFormListener() {
     if (!bookingForm) {
-        console.log('❌ Booking form NOT found');
         return;
     }
-    
-    console.log('✅ Attaching booking form listener');
     
     // Use a flag to prevent double submission
     let isSubmitting = false;
@@ -1448,22 +1455,17 @@ function attachBookingFormListener() {
         submitBtn.addEventListener('click', async (e) => {
             e.preventDefault(); // Prevent default form submission
             
-            console.log('🟢 SUBMIT BUTTON CLICKED!');
-            
             // Prevent double submission
             if (isSubmitting) {
-                console.log('⚠️ Already submitting, ignoring...');
                 return;
             }
             
             // Check form validity
             if (!bookingForm.checkValidity()) {
-                console.log('❌ Form is NOT valid');
                 bookingForm.reportValidity();
                 return;
             }
             
-            console.log('✅ Form is valid, submitting...');
             isSubmitting = true;
             
             try {
@@ -1473,8 +1475,6 @@ function attachBookingFormListener() {
             }
         });
     }
-    
-    console.log('✅ Booking form listener attached successfully');
 }
 
 function openBookingModalWithEvent(eventTitle, eventDate, eventDuration, eventPlayers, eventType, eventDates) {
@@ -1667,7 +1667,8 @@ function createLoadingModal() {
     loadingModal = document.createElement('div');
     loadingModal.id = 'loadingModal';
     loadingModal.className = 'modal';
-    loadingModal.innerHTML = `
+    
+    const loadingHTML = `
         <div class="modal-content" style="text-align: center; max-width: 400px; padding: 40px;">
             <div class="loading-spinner" style="margin-bottom: 20px;">
                 <div style="
@@ -1694,6 +1695,8 @@ function createLoadingModal() {
             }
         </style>
     `;
+    
+    loadingModal.innerHTML = DOMPurify.sanitize(loadingHTML);
     document.body.appendChild(loadingModal);
     return loadingModal;
 }
@@ -2015,41 +2018,104 @@ function validateAllPlayers() {
 
 
 
+// Rate Limiting Configuration
+const RATE_LIMIT = {
+    maxAttempts: 3,
+    timeWindow: 60000, // 1 minute
+    cooldownPeriod: 300000 // 5 minutes after max attempts
+};
+
+let bookingAttempts = [];
+let isRateLimited = false;
+let rateLimitEndTime = null;
+
+// Check if rate limit is exceeded
+function checkRateLimit() {
+    const now = Date.now();
+    
+    // Check if in cooldown period
+    if (isRateLimited && rateLimitEndTime) {
+        if (now < rateLimitEndTime) {
+            const remainingSeconds = Math.ceil((rateLimitEndTime - now) / 1000);
+            const message = currentLanguage === 'th' 
+                ? `กรุณารอ ${remainingSeconds} วินาทีก่อนส่งอีกครั้ง`
+                : `Please wait ${remainingSeconds} seconds before trying again`;
+            return { allowed: false, message };
+        } else {
+            // Cooldown period ended
+            isRateLimited = false;
+            rateLimitEndTime = null;
+            bookingAttempts = [];
+        }
+    }
+    
+    // Remove old attempts outside time window
+    bookingAttempts = bookingAttempts.filter(time => now - time < RATE_LIMIT.timeWindow);
+    
+    // Check if exceeded max attempts
+    if (bookingAttempts.length >= RATE_LIMIT.maxAttempts) {
+        isRateLimited = true;
+        rateLimitEndTime = now + RATE_LIMIT.cooldownPeriod;
+        const message = currentLanguage === 'th' 
+            ? `มีการพยายามส่งข้อมูลบ่อยเกินไป กรุณารอ 5 นาที`
+            : `Too many attempts. Please wait 5 minutes.`;
+        return { allowed: false, message };
+    }
+    
+    // Add current attempt
+    bookingAttempts.push(now);
+    return { allowed: true };
+}
+
+// Google reCAPTCHA v3 verification
+async function verifyRecaptcha() {
+    try {
+        // Replace '6LfYourSiteKeyHere' with your actual reCAPTCHA site key
+        const siteKey = '6LebhJ8sAAAAAP6I6hNbgTelN9vlXOQPTz316HI9';
+        
+        if (typeof grecaptcha === 'undefined') {
+            console.warn('⚠️ reCAPTCHA not loaded. Skipping verification.');
+            return null;
+        }
+        
+        const token = await grecaptcha.execute(siteKey, { action: 'booking' });
+        return token;
+    } catch (error) {
+        console.error('❌ reCAPTCHA error:', error);
+        return null;
+    }
+}
+
 // Handle booking form submission
 async function handleBookingSubmit(e) {
     e.preventDefault();
     
-    console.log('🔵 Form submit triggered'); // Debug log
-    
-    if (!bookingForm) {
-        console.log('❌ bookingForm not found');
+    // Check rate limiting first
+    const rateLimitCheck = checkRateLimit();
+    if (!rateLimitCheck.allowed) {
+        showErrorModal(
+            currentLanguage === 'th' ? 'ส่งข้อมูลบ่อยเกินไป' : 'Rate Limit Exceeded',
+            rateLimitCheck.message
+        );
         return;
     }
     
-    console.log('🔵 Validating form...'); // Debug log
+    if (!bookingForm) {
+        return;
+    }
     
     // Validate form
     if (!validateBookingForm()) {
-        console.log('❌ Form validation failed');
         return;
     }
-    
-    console.log('🔵 Validating players...'); // Debug log
     
     // Validate all players
     if (!validateAllPlayers()) {
-        console.log('❌ Player validation failed');
         return;
     }
     
-    console.log('✅ Validation passed, preparing data...'); // Debug log
-    
-    console.log('🔵 Getting form data...'); // Debug log
-    
     // Get form data
     const formData = new FormData(bookingForm);
-    
-    console.log('🔵 Parsing dates...'); // Debug log
     
     // Parse dates from dd/mm/yyyy format
     const parseDate = (dateString) => {
@@ -2064,9 +2130,6 @@ async function handleBookingSubmit(e) {
     const checkOutInput = document.getElementById('checkOut');
     const checkInValue = checkInInput?.value || formData.get('checkIn');
     const checkOutValue = checkOutInput?.value || formData.get('checkOut');
-    
-    console.log('🔵 Check-in value:', checkInValue);
-    console.log('🔵 Check-out value:', checkOutValue);
     
     const checkInDate = parseDate(checkInValue);
     const checkOutDate = parseDate(checkOutValue);
@@ -2169,7 +2232,12 @@ async function handleBookingSubmit(e) {
     const phoneNumber = formData.get('phone') || '';
     const fullPhoneNumber = phoneNumber ? `${phoneCountryCode} ${phoneNumber}` : '';
     
+    // Get reCAPTCHA token
+    const recaptchaToken = await verifyRecaptcha();
+    
     const bookingData = {
+        // Security
+        recaptchaToken: recaptchaToken,
         // Main contact
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
@@ -2218,18 +2286,10 @@ async function handleBookingSubmit(e) {
     const submitBtn = bookingForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     
-    console.log('🔵 Showing loading modal...'); // Debug log
-    
     submitBtn.disabled = true;
     showLoadingModal(); // Show loading popup
     
-    console.log('🔵 Loading modal shown, preparing to send...'); // Debug log
-    
     try {
-        // Log to console for debugging
-        console.log('📤 Sending booking request:', bookingData);
-        console.log('📤 API URL:', `${API_BASE_URL}/api/booking`); // Debug log
-        
         // Send to backend API
         const response = await fetch(`${API_BASE_URL}/api/booking`, {
             method: 'POST',
@@ -2239,18 +2299,11 @@ async function handleBookingSubmit(e) {
             body: JSON.stringify(bookingData)
         });
         
-        console.log('📥 Response received:', response.status); // Debug log
-        
         const result = await response.json();
-        
-        console.log('📥 Response data:', result); // Debug log
         
         if (!response.ok) {
             throw new Error(result.error || 'Failed to submit booking');
         }
-        
-        console.log('✅ Booking submitted successfully:', result);
-        console.log('✅ Booking submitted successfully:', result);
         
         // Reset form
         bookingForm.reset();
@@ -2479,7 +2532,11 @@ function updateBookingDuration() {
                 ? `📅 ระยะเวลา: ${nights} คืน`
                 : `📅 Duration: ${nights} night${nights > 1 ? 's' : ''}`;
             
-            durationDisplay.innerHTML = `<strong>${durationText}</strong>`;
+            // Use textContent to prevent XSS, but create strong element separately
+            durationDisplay.textContent = '';
+            const strongEl = document.createElement('strong');
+            strongEl.textContent = durationText;
+            durationDisplay.appendChild(strongEl);
             durationDisplay.style.display = 'block';
         }
     }
@@ -2706,7 +2763,8 @@ function updatePriceEstimate() {
         </div>`;
     }
     
-    priceDisplay.innerHTML = priceBreakdown;
+    // Use DOMPurify to sanitize HTML content
+    priceDisplay.innerHTML = DOMPurify.sanitize(priceBreakdown);
     priceDisplay.style.display = 'block';
 }
 
