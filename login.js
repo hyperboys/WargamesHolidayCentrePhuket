@@ -1,13 +1,13 @@
 // Login Page JavaScript
 
-const API_BASE_URL = 'http://localhost:3000/api';
+// Create apiService instance
+const apiService = new APIService();
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check if already logged in
-    const token = localStorage.getItem('adminToken');
-    if (token) {
+    if (apiService.isAuthenticated()) {
         // Verify token is still valid
-        verifyToken(token);
+        verifyToken();
     }
 
     // Setup form
@@ -63,19 +63,8 @@ async function handleLogin(username, password, rememberMe) {
         btnLoading.style.display = 'flex';
         hideError();
         
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        });
-        
-        const result = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(result.error || 'Login failed');
-        }
+        // Use apiService to login
+        const result = await apiService.login(username, password);
         
         if (result.success) {
             const { token, user } = result.data;
@@ -111,26 +100,18 @@ async function handleLogin(username, password, rememberMe) {
 }
 
 // Verify Token
-async function verifyToken(token) {
+async function verifyToken() {
     try {
-        const response = await fetch(`${API_BASE_URL}/auth/me`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const result = await apiService.getMe();
         
-        if (response.ok) {
+        if (result.success) {
             // Token is valid, redirect to admin
             window.location.href = 'admin.html';
-        } else {
-            // Token is invalid, clear it
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminUser');
-            sessionStorage.removeItem('adminToken');
-            sessionStorage.removeItem('adminUser');
         }
     } catch (error) {
         console.error('Token verification error:', error);
+        // Token is invalid, clear it
+        apiService.clearAuth();
     }
 }
 

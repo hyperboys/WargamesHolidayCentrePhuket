@@ -4,6 +4,8 @@
 let currentBookingId = null;
 let currentPage = 1;
 let currentFilters = {};
+let revenueChart = null;
+let gamesChart = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
@@ -197,10 +199,20 @@ function initMenuToggle() {
 
 // Charts
 function initCharts(stats) {
+    // Destroy existing charts before creating new ones
+    if (revenueChart) {
+        revenueChart.destroy();
+        revenueChart = null;
+    }
+    if (gamesChart) {
+        gamesChart.destroy();
+        gamesChart = null;
+    }
+    
     // Revenue Chart
     const revenueCtx = document.getElementById('revenueChart');
     if (revenueCtx) {
-        new Chart(revenueCtx, {
+        revenueChart = new Chart(revenueCtx, {
             type: 'line',
             data: {
                 labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
@@ -233,7 +245,7 @@ function initCharts(stats) {
     // Games Chart
     const gamesCtx = document.getElementById('gamesChart');
     if (gamesCtx) {
-        new Chart(gamesCtx, {
+        gamesChart = new Chart(gamesCtx, {
             type: 'doughnut',
             data: {
                 labels: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],

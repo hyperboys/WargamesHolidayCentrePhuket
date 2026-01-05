@@ -1,11 +1,16 @@
 // API Service Module
 // Handle all API calls to the backend
 
-const API_BASE_URL = 'http://localhost:3000/api';
+// Determine API URL based on environment
+const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isDevelopment 
+    ? 'http://localhost:3000/api'
+    : 'https://wargamesholidaycentrephuket-backend-production.up.railway.app/api';
 
 class APIService {
     constructor() {
         this.baseURL = API_BASE_URL;
+        console.log('API Service initialized with URL:', this.baseURL);
     }
 
     // Get token from storage
