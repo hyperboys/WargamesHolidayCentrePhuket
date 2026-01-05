@@ -1,7 +1,5 @@
 // Login Page JavaScript
-
-// Create apiService instance
-const apiService = new APIService();
+// Uses apiService from api-service.js
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check if already logged in
