@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,12 +17,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Language Toggle -->
+    <button class="lang-toggle" onclick="toggleLanguage()" title="Switch Language">
+        TH
+    </button>
+    
     <div class="login-container">
         <div class="login-box">
             <div class="login-header">
                 <img src="image/icon/android-chrome-192x192.png" alt="Logo" class="logo">
-                <h1>Admin Dashboard</h1>
-                <p>Wargames Holiday Centre Phuket</p>
+                <h1 data-i18n="loginTitle">Admin Dashboard</h1>
+                <p data-i18n="loginSubtitle">Wargames Holiday Centre Phuket</p>
             </div>
 
             <form id="loginForm" class="login-form">
@@ -34,7 +39,7 @@
                 <div class="form-group">
                     <label for="username">
                         <i class="fas fa-user"></i>
-                        Username
+                        <span data-i18n="username">Username</span>
                     </label>
                     <input 
                         type="text" 
@@ -42,6 +47,7 @@
                         name="username" 
                         required 
                         autocomplete="username"
+                        data-i18n="enterUsername"
                         placeholder="Enter your username"
                     >
                 </div>
@@ -49,7 +55,7 @@
                 <div class="form-group">
                     <label for="password">
                         <i class="fas fa-lock"></i>
-                        Password
+                        <span data-i18n="password">Password</span>
                     </label>
                     <div class="password-input">
                         <input 
@@ -58,6 +64,7 @@
                             name="password" 
                             required 
                             autocomplete="current-password"
+                            data-i18n="enterPassword"
                             placeholder="Enter your password"
                         >
                         <button type="button" class="toggle-password" id="togglePassword">
@@ -69,15 +76,15 @@
                 <div class="form-group">
                     <label class="checkbox-label">
                         <input type="checkbox" id="rememberMe" name="rememberMe">
-                        <span>Remember me</span>
+                        <span data-i18n="rememberMe">Remember me</span>
                     </label>
                 </div>
 
                 <button type="submit" class="btn-login" id="loginBtn">
-                    <span class="btn-text">Login</span>
+                    <span class="btn-text" data-i18n="login">Login</span>
                     <span class="btn-loading" style="display: none;">
                         <i class="fas fa-spinner fa-spin"></i>
-                        Logging in...
+                        <span data-i18n="loggingIn">Logging in...</span>
                     </span>
                 </button>
             </form>
@@ -85,7 +92,7 @@
             <div class="login-footer">
                 <a href="index.html">
                     <i class="fas fa-arrow-left"></i>
-                    Back to Homepage
+                    <span data-i18n="backToHomepage">Back to Homepage</span>
                 </a>
             </div>
         </div>
@@ -97,6 +104,7 @@
         </div>
     </div>
 
+    <script src="translations.js"></script>
     <script src="api-service.js"></script>
     <script src="login.js"></script>
 </body>

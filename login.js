@@ -2,6 +2,9 @@
 // Uses apiService from api-service.js
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize language
+    initLanguage();
+    
     // Check if already logged in
     if (apiService.isAuthenticated()) {
         // Verify token is still valid
@@ -12,6 +15,20 @@ document.addEventListener('DOMContentLoaded', function() {
     setupLoginForm();
     setupPasswordToggle();
 });
+
+// Initialize Language
+function initLanguage() {
+    // Get saved language or default to English
+    const savedLang = localStorage.getItem('language') || 'en';
+    currentLang = savedLang;
+    updatePageLanguage();
+}
+
+// Toggle Language
+function toggleLanguage() {
+    const newLang = currentLang === 'en' ? 'th' : 'en';
+    setLanguage(newLang);
+}
 
 // Setup Login Form
 function setupLoginForm() {
@@ -25,7 +42,7 @@ function setupLoginForm() {
         const rememberMe = document.getElementById('rememberMe').checked;
         
         if (!username || !password) {
-            showError('Please enter username and password');
+            showError(translations[currentLang].loginError);
             return;
         }
         
@@ -77,7 +94,7 @@ async function handleLogin(username, password, rememberMe) {
             }
             
             // Show success and redirect
-            showSuccess('Login successful! Redirecting...');
+            showSuccess(translations[currentLang].loginSuccess);
             
             setTimeout(() => {
                 window.location.href = 'admin.html';

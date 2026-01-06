@@ -29,6 +29,34 @@ body {
     overflow-x: hidden;
 }
 
+/* Language Toggle Button */
+.lang-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.lang-toggle:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.lang-toggle:active {
+    transform: translateY(0);
+}
+
 /* Sidebar */
 .sidebar {
     position: fixed;
@@ -192,6 +220,7 @@ body {
     padding: 8px 12px;
     border-radius: 8px;
     transition: background 0.3s;
+    margin-right: 60px; /* Space for language toggle button */
 }
 
 .user-menu:hover {

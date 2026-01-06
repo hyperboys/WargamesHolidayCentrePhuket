@@ -9,6 +9,9 @@ let gamesChart = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize language
+    initLanguage();
+    
     // Check authentication
     if (!apiService.isAuthenticated()) {
         window.location.href = 'login.html';
@@ -35,6 +38,37 @@ document.addEventListener('DOMContentLoaded', async function() {
         showNotification('เกิดข้อผิดพลาดในการโหลดข้อมูล', 'error');
     }
 });
+
+// Initialize Language
+function initLanguage() {
+    // Get saved language or default to English
+    const savedLang = localStorage.getItem('language') || 'en';
+    currentLang = savedLang;
+    updatePageLanguage();
+}
+
+// Toggle Language
+function toggleLanguage() {
+    const newLang = currentLang === 'en' ? 'th' : 'en';
+    setLanguage(newLang);
+    // Reload dashboard stats to update currency (now at index 3)
+    const statCards = document.querySelectorAll('.stat-number');
+    if (statCards.length >= 4) {
+        const currentValue = statCards[3].textContent.replace(/[^0-9.]/g, '');
+        if (currentValue) {
+            statCards[3].textContent = formatCurrency(parseFloat(currentValue));
+        }
+    }
+}
+
+// Format Currency based on language
+function formatCurrency(amount) {
+    if (currentLang === 'th') {
+        return '฿' + amount.toLocaleString('th-TH');
+    } else {
+        return '$' + amount.toLocaleString('en-US');
+    }
+}
 
 // Load User Info
 async function loadUserInfo() {
@@ -101,13 +135,15 @@ async function loadDashboardData() {
 function updateDashboardStats(stats) {
     console.log('Updating dashboard stats:', stats);
     
-    // Update stat cards
+    // Update stat cards in new order: Today, Pending, Confirmed, Revenue
     const statCards = document.querySelectorAll('.stat-number');
     if (statCards.length >= 4) {
         statCards[0].textContent = stats.today || 0;
-        statCards[1].textContent = '฿' + ((stats.thisMonth || 0) * 1500).toLocaleString();
-        statCards[2].textContent = (stats.byStatus?.pending || 0);
-        statCards[3].textContent = (stats.byStatus?.confirmed || 0);
+        statCards[1].textContent = (stats.byStatus?.pending || 0);
+        statCards[2].textContent = (stats.byStatus?.confirmed || 0);
+        // Use confirmed revenue only from revenueByStatus
+        const confirmedRevenue = stats.revenueByStatus?.confirmed || 0;
+        statCards[3].textContent = formatCurrency(confirmedRevenue);
     }
 }
 
@@ -381,7 +417,7 @@ async function loadBookingsPage(page = 1) {
                 <td>${formatDate(booking.checkIn)}</td>
                 <td>-</td>
                 <td>${(booking.players || []).length || 0}</td>
-                <td>-</td>
+                <td>${booking.price ? formatCurrency(booking.price) : '-'}</td>
                 <td><span class="status-badge ${booking.status}">${getStatusText(booking.status)}</span></td>
                 <td>
                     <div class="action-buttons">

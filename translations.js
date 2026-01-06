@@ -119,7 +119,96 @@ const translations = {
         quickLinks: "ลิงก์ด่วน",
         gameTypes: "ประเภทเกม",
         contactInfo: "ติดต่อ",
-        copyright: "© 2025 Wargames Holiday Centre Phuket. All Rights Reserved."
+        copyright: "© 2025 Wargames Holiday Centre Phuket. All Rights Reserved.",
+        
+        // Login Page
+        loginTitle: "Admin Dashboard",
+        loginSubtitle: "Wargames Holiday Centre Phuket",
+        username: "ชื่อผู้ใช้",
+        password: "รหัสผ่าน",
+        enterUsername: "กรอกชื่อผู้ใช้",
+        enterPassword: "กรอกรหัสผ่าน",
+        rememberMe: "จดจำฉันไว้",
+        login: "เข้าสู่ระบบ",
+        loggingIn: "กำลังเข้าสู่ระบบ...",
+        backToHomepage: "กลับหน้าแรก",
+        loginError: "กรุณากรอกชื่อผู้ใช้และรหัสผ่าน",
+        loginSuccess: "เข้าสู่ระบบสำเร็จ! กำลังเปลี่ยนหน้า...",
+        
+        // Admin Dashboard
+        adminPanel: "แผงควบคุมผู้ดูแลระบบ",
+        dashboard: "แดชบอร์ด",
+        bookings: "การจอง",
+        manageUsers: "จัดการ Users",
+        logout: "ออกจากระบบ",
+        search: "ค้นหา...",
+        
+        // Dashboard Stats
+        todayBookings: "การจองวันนี้",
+        monthRevenue: "รายได้เดือนนี้",
+        pending: "รอยืนยัน",
+        confirmed: "ยืนยันแล้ว",
+        
+        // Charts
+        monthlyRevenue: "รายได้รายเดือน",
+        bookingStatus: "สถานะการจอง",
+        recentBookings: "การจองล่าสุด",
+        
+        // Table Headers
+        id: "ID",
+        customerName: "ชื่อลูกค้า",
+        event: "Event",
+        date: "วันที่",
+        time: "เวลา",
+        people: "จำนวนคน",
+        status: "สถานะ",
+        actions: "การกระทำ",
+        email: "อีเมล",
+        phone: "โทรศัพท์",
+        checkIn: "Check-in",
+        players: "ผู้เล่น",
+        price: "ราคา",
+        role: "Role",
+        lastLogin: "Login ล่าสุด",
+        createdAt: "สร้างเมื่อ",
+        
+        // Status
+        statusAll: "ทั้งหมด",
+        statusConfirmed: "ยืนยันแล้ว",
+        statusPending: "รอยืนยัน",
+        statusCompleted: "เสร็จสิ้น",
+        statusCancelled: "ยกเลิก",
+        
+        // Buttons & Actions
+        view: "ดู",
+        edit: "แก้ไข",
+        delete: "ลบ",
+        close: "ปิด",
+        save: "บันทึก",
+        cancel: "ยกเลิก",
+        update: "อัพเดท",
+        updateStatus: "อัพเดทสถานะ",
+        addNewUser: "เพิ่ม User ใหม่",
+        addUser: "เพิ่ม User",
+        editUser: "แก้ไข User",
+        
+        // Filters
+        filters: "ตัวกรอง",
+        statusFilter: "สถานะ:",
+        dateFilter: "วันที่:",
+        eventFilter: "Event:",
+        
+        // Modals
+        bookingDetails: "รายละเอียดการจอง",
+        userDetails: "รายละเอียด User",
+        
+        // Loading
+        loading: "กำลังโหลดข้อมูล...",
+        
+        // Form Fields
+        required: "*",
+        passwordHint: "เว้นว่างไว้ถ้าไม่ต้องการเปลี่ยน",
+        active: "Active"
     },
     en: {
         // Hero Section
@@ -240,6 +329,138 @@ const translations = {
         quickLinks: "Quick Links",
         gameTypes: "Game Types",
         contactInfo: "Contact",
-        copyright: "© 2025 Wargames Holiday Centre Phuket. All Rights Reserved."
+        copyright: "© 2025 Wargames Holiday Centre Phuket. All Rights Reserved.",
+        
+        // Login Page
+        loginTitle: "Admin Dashboard",
+        loginSubtitle: "Wargames Holiday Centre Phuket",
+        username: "Username",
+        password: "Password",
+        enterUsername: "Enter your username",
+        enterPassword: "Enter your password",
+        rememberMe: "Remember me",
+        login: "Login",
+        loggingIn: "Logging in...",
+        backToHomepage: "Back to Homepage",
+        loginError: "Please enter username and password",
+        loginSuccess: "Login successful! Redirecting...",
+        
+        // Admin Dashboard
+        adminPanel: "Admin Panel",
+        dashboard: "Dashboard",
+        bookings: "Bookings",
+        manageUsers: "Manage Users",
+        logout: "Logout",
+        search: "Search...",
+        
+        // Dashboard Stats
+        todayBookings: "Today's Bookings",
+        monthRevenue: "Monthly Revenue",
+        pending: "Pending",
+        confirmed: "Confirmed",
+        
+        // Charts
+        monthlyRevenue: "Monthly Revenue",
+        bookingStatus: "Booking Status",
+        recentBookings: "Recent Bookings",
+        
+        // Table Headers
+        id: "ID",
+        customerName: "Customer Name",
+        event: "Event",
+        date: "Date",
+        time: "Time",
+        people: "People",
+        status: "Status",
+        actions: "Actions",
+        email: "Email",
+        phone: "Phone",
+        checkIn: "Check-in",
+        players: "Players",
+        price: "Price",
+        role: "Role",
+        lastLogin: "Last Login",
+        createdAt: "Created",
+        
+        // Status
+        statusAll: "All",
+        statusConfirmed: "Confirmed",
+        statusPending: "Pending",
+        statusCompleted: "Completed",
+        statusCancelled: "Cancelled",
+        
+        // Buttons & Actions
+        view: "View",
+        edit: "Edit",
+        delete: "Delete",
+        close: "Close",
+        save: "Save",
+        cancel: "Cancel",
+        update: "Update",
+        updateStatus: "Update Status",
+        addNewUser: "Add New User",
+        addUser: "Add User",
+        editUser: "Edit User",
+        
+        // Filters
+        filters: "Filters",
+        statusFilter: "Status:",
+        dateFilter: "Date:",
+        eventFilter: "Event:",
+        
+        // Modals
+        bookingDetails: "Booking Details",
+        userDetails: "User Details",
+        
+        // Loading
+        loading: "Loading data...",
+        
+        // Form Fields
+        required: "*",
+        passwordHint: "Leave blank if you don't want to change",
+        active: "Active"
     }
 };
+
+// Language Management
+let currentLang = localStorage.getItem('language') || 'en';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    updatePageLanguage();
+}
+
+function updatePageLanguage() {
+    const t = translations[currentLang];
+    
+    // Update all elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (t[key]) {
+            if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                element.placeholder = t[key];
+            } else if (element.innerHTML) {
+                element.innerHTML = t[key];
+            } else {
+                element.textContent = t[key];
+            }
+        }
+    });
+    
+    // Update language toggle button
+    const langBtn = document.querySelector('.lang-toggle');
+    if (langBtn) {
+        langBtn.textContent = currentLang === 'en' ? 'TH' : 'EN';
+    }
+    
+    // Update html lang attribute
+    document.documentElement.lang = currentLang;
+}
+
+// Initialize language on page load
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function() {
+        updatePageLanguage();
+    });
+}
