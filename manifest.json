@@ -2,23 +2,41 @@
   "name": "Wargames Holiday Centre Phuket",
   "short_name": "WHC Phuket",
   "description": "Experience thrilling wargames at Wargames Holiday Centre Phuket. Book your adventure in Phuket, Thailand.",
-  "start_url": "/",
+  "start_url": "https://wargameshc.com/",
+  "id": "https://wargameshc.com/",
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#ff6b35",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/image/icon/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "https://wargameshc.com/image/icon/favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
     },
     {
-      "src": "/image/icon/android-chrome-512x512.png",
+      "src": "https://wargameshc.com/image/icon/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://wargameshc.com/image/icon/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://wargameshc.com/image/icon/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://wargameshc.com/image/icon/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

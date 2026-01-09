@@ -34,13 +34,16 @@
     <meta name="twitter:description" content="Experience thrilling wargames at Wargames Holiday Centre Phuket. Book your adventure in Phuket, Thailand.">
     <meta name="twitter:image" content="https://wargameshc.com/image/icon/android-chrome-512x512.png">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/image/icon/favicon.ico">
-    <link rel="shortcut icon" type="image/x-icon" href="/image/icon/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/image/icon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/image/icon/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/image/icon/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
+    <!-- Favicon - Google requires at least 48x48px icon -->
+    <link rel="icon" type="image/x-icon" href="https://wargameshc.com/image/icon/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="https://wargameshc.com/image/icon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://wargameshc.com/image/icon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://wargameshc.com/image/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="https://wargameshc.com/image/icon/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://wargameshc.com/image/icon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://wargameshc.com/image/icon/android-chrome-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://wargameshc.com/image/icon/apple-touch-icon.png">
+    <link rel="manifest" href="https://wargameshc.com/manifest.json">
     <meta name="theme-color" content="#ff6b35">
     
     <link rel="stylesheet" href="styles.css">
@@ -57,6 +60,23 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LfroT8sAAAAAGJLKzr69wyKC0BlR5LiV9QZGSkO"></script>
     
     <script src="translations.js"></script>
+    <!-- WebSite Schema for Google Search favicon -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Wargames Holiday Centre Phuket",
+      "alternateName": "WHC Phuket",
+      "url": "https://wargameshc.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://wargameshc.com/search_results.html?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Organization Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -67,7 +87,8 @@
         "@type": "ImageObject",
         "url": "https://wargameshc.com/image/icon/android-chrome-512x512.png",
         "width": 512,
-        "height": 512
+        "height": 512,
+        "caption": "Wargames Holiday Centre Phuket Logo"
       },
       "image": "https://wargameshc.com/image/icon/android-chrome-512x512.png",
       "description": "Professional wargames holiday centre in Phuket, Thailand offering gaming events and accommodation.",

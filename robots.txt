@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Allow: /image/icon/
+
+# Favicon files for Google Search
+Allow: /image/icon/favicon.ico
+Allow: /image/icon/favicon-48x48.png
+Allow: /image/icon/android-chrome-192x192.png
+Allow: /image/icon/android-chrome-512x512.png
 
 Sitemap: https://wargameshc.com/sitemap.xml
