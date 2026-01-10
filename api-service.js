@@ -67,12 +67,15 @@ class APIService {
             // Handle unauthorized
             if (response.status === 401) {
                 this.clearAuth();
-                window.location.href = 'login.html';
-                throw new Error('Session expired. Please login again.');
+                // Only redirect if not already on login page
+                if (!window.location.pathname.includes('login.html')) {
+                    window.location.href = 'login.html';
+                }
+                throw new Error(data.error || data.message || 'Invalid credentials');
             }
 
             if (!response.ok) {
-                throw new Error(data.error || `HTTP error! status: ${response.status}`);
+                throw new Error(data.error || data.message || `HTTP error! status: ${response.status}`);
             }
 
             return data;

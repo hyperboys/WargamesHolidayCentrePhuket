@@ -166,19 +166,25 @@ function showSuccess(message) {
 
 // Get Error Message
 function getErrorMessage(error) {
-    if (error.message.includes('fetch')) {
-        return 'Cannot connect to server. Please check if the backend is running.';
+    if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+        return currentLang === 'th' 
+            ? 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบว่า Backend กำลังทำงานอยู่'
+            : 'Cannot connect to server. Please check if the backend is running.';
     }
     
-    if (error.message.includes('Invalid credentials')) {
-        return 'Invalid username or password.';
+    if (error.message.includes('Invalid credentials') || error.message.includes('401') || error.message.includes('Unauthorized')) {
+        return currentLang === 'th' 
+            ? '❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง'
+            : '❌ Invalid username or password. Please try again.';
     }
     
     if (error.message.includes('inactive')) {
-        return 'Your account has been deactivated. Please contact administrator.';
+        return currentLang === 'th'
+            ? 'บัญชีของคุณถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ'
+            : 'Your account has been deactivated. Please contact administrator.';
     }
     
-    return error.message || 'An error occurred. Please try again.';
+    return error.message || (currentLang === 'th' ? 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง' : 'An error occurred. Please try again.');
 }
 
 // Handle Enter Key
