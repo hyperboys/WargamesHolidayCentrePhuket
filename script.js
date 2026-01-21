@@ -1356,13 +1356,6 @@ function setupBookingModal() {
         childrenInput.addEventListener('change', updatePriceEstimate);
     }
     
-    // Update price when companion buttons are clicked
-    document.querySelectorAll('.number-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            setTimeout(updatePriceEstimate, 100);
-        });
-    });
-    
     // ===== Auto-fill Personal Information to Player 1 =====
     function syncPersonalInfoToPlayer1() {
         const player1Card = document.querySelector('.person-card[data-player-id="player-1"]');
@@ -2199,16 +2192,68 @@ async function handleBookingSubmit(e) {
     let playerPricePerNight, companionPricePerNight, playersTotal, companionsTotal, totalPrice;
     
     if (currency === 'THB') {
-        playerPricePerNight = 7000; // THB
-        companionPricePerNight = 3500; // THB
-        playersTotal = playerCount * nights * playerPricePerNight;
-        companionsTotal = adultCompanions * nights * companionPricePerNight;
+        // THB: 3,500 per night, 1,750 for first/last day
+        const regularPricePerNight = 3500; // Regular nights
+        const firstLastDayPrice = 1750;   // First and last days
+        
+        // Calculate player price
+        if (nights <= 1) {
+            playerPricePerNight = firstLastDayPrice; // Only first/last day
+            playersTotal = playerCount * playerPricePerNight;
+        } else {
+            // (nights - 2) regular days + 2 first/last days
+            const regularDaysPrice = (nights - 2) * regularPricePerNight;
+            const firstLastDaysPrice = 2 * firstLastDayPrice;
+            playersTotal = playerCount * (regularDaysPrice + firstLastDaysPrice);
+            playerPricePerNight = (regularDaysPrice + firstLastDaysPrice) / nights; // Average for display
+        }
+        
+        // Same calculation for companions (same as players)
+        const companionRegularPrice = 3500;
+        const companionFirstLastPrice = 1750;
+        
+        if (nights <= 1) {
+            companionPricePerNight = companionFirstLastPrice;
+            companionsTotal = adultCompanions * companionPricePerNight;
+        } else {
+            const companionRegularDays = (nights - 2) * companionRegularPrice;
+            const companionFirstLastDays = 2 * companionFirstLastPrice;
+            companionsTotal = adultCompanions * (companionRegularDays + companionFirstLastDays);
+            companionPricePerNight = (companionRegularDays + companionFirstLastDays) / nights; // Average for display
+        }
+        
         totalPrice = playersTotal + companionsTotal;
     } else {
-        playerPricePerNight = 200; // USD
-        companionPricePerNight = 100; // USD
-        playersTotal = playerCount * nights * playerPricePerNight;
-        companionsTotal = adultCompanions * nights * companionPricePerNight;
+        // USD: 100 per night, 50 for first/last day
+        const regularPricePerNight = 100; // Regular nights
+        const firstLastDayPrice = 50;     // First and last days
+        
+        // Calculate player price
+        if (nights <= 1) {
+            playerPricePerNight = firstLastDayPrice; // Only first/last day
+            playersTotal = playerCount * playerPricePerNight;
+        } else {
+            // (nights - 2) regular days + 2 first/last days
+            const regularDaysPrice = (nights - 2) * regularPricePerNight;
+            const firstLastDaysPrice = 2 * firstLastDayPrice;
+            playersTotal = playerCount * (regularDaysPrice + firstLastDaysPrice);
+            playerPricePerNight = (regularDaysPrice + firstLastDaysPrice) / nights; // Average for display
+        }
+        
+        // Same calculation for companions (60 USD regular, 30 USD first/last)
+        const companionRegularPrice = 60;
+        const companionFirstLastPrice = 30;
+        
+        if (nights <= 1) {
+            companionPricePerNight = companionFirstLastPrice;
+            companionsTotal = adultCompanions * companionPricePerNight;
+        } else {
+            const companionRegularDays = (nights - 2) * companionRegularPrice;
+            const companionFirstLastDays = 2 * companionFirstLastPrice;
+            companionsTotal = adultCompanions * (companionRegularDays + companionFirstLastDays);
+            companionPricePerNight = (companionRegularDays + companionFirstLastDays) / nights; // Average for display
+        }
+        
         totalPrice = playersTotal + companionsTotal;
     }
     
@@ -2554,6 +2599,7 @@ function updateBookingDuration() {
 
 // Calculate and display price estimate
 function updatePriceEstimate() {
+    console.log('updatePriceEstimate called');
     const checkInInput = document.getElementById('checkIn');
     const checkOutInput = document.getElementById('checkOut');
     const adultsInput = document.getElementById('adults');
@@ -2588,24 +2634,54 @@ function updatePriceEstimate() {
     const packageType = packageTypeInput?.value || 'campaign-weekend';
     const accommodation = accommodationInput?.value || 'basic';
     
-    // Base prices for players: $200 per player per night (≈ ฿7,000)
-    const playerPricePerNight = 7000; // THB per player per night
-    
-    // Calculate players total
+    // Calculate players total - use the new pricing with first/last day surcharge
     const playersContainer = document.getElementById('playersContainer');
     const playerCards = playersContainer?.querySelectorAll('.person-card') || [];
     const playerCount = playerCards.length;
     
     // If no players yet (during initialization), assume at least 1 for display
     const displayPlayerCount = playerCount > 0 ? playerCount : 1;
-    const playersTotal = displayPlayerCount * nights * playerPricePerNight;
     
-    // Calculate adult companions total ($100 per person per night = ฿3,500)
-    const companionPricePerNight = 3500; // THB per adult companion per night
-    const adultCompanionsTotal = adults * nights * companionPricePerNight;
+    // New pricing structure: 3,500 THB regular days, 1,750 THB first/last days
+    const regularPricePerNightTHB = 3500;
+    const firstLastDayPriceTHB = 1750;
+    
+    let playersTotal;
+    if (nights <= 1) {
+        playersTotal = displayPlayerCount * firstLastDayPriceTHB;
+    } else {
+        const regularDaysPrice = (nights - 2) * regularPricePerNightTHB;
+        const firstLastDaysPrice = 2 * firstLastDayPriceTHB;
+        playersTotal = displayPlayerCount * (regularDaysPrice + firstLastDaysPrice);
+    }
+    
+    // Calculate adult companions total 
+    // For booking data: use THB (3500 regular, 1750 first/last converted to USD price 60/30)
+    // THB: 3500 = ~100 USD, 1750 = ~50 USD equivalent, but companions pay 60/30 USD
+    // So in THB: 60 USD = 2100 THB, 30 USD = 1050 THB
+    const companionRegularPriceTHB = 2100;
+    const companionFirstLastPriceTHB = 1050;
+    const companionRegularPriceUSD = 60;
+    const companionFirstLastPriceUSD = 30;
+    
+    let adultCompanionsTotalTHB;
+    let adultCompanionsTotalUSD;
+    if (nights <= 1) {
+        adultCompanionsTotalTHB = adults * companionFirstLastPriceTHB;
+        adultCompanionsTotalUSD = adults * companionFirstLastPriceUSD;
+    } else {
+        const companionRegularDaysTHB = (nights - 2) * companionRegularPriceTHB;
+        const companionFirstLastDaysTHB = 2 * companionFirstLastPriceTHB;
+        adultCompanionsTotalTHB = adults * (companionRegularDaysTHB + companionFirstLastDaysTHB);
+        
+        const companionRegularDaysUSD = (nights - 2) * companionRegularPriceUSD;
+        const companionFirstLastDaysUSD = 2 * companionFirstLastPriceUSD;
+        adultCompanionsTotalUSD = adults * (companionRegularDaysUSD + companionFirstLastDaysUSD);
+    }
     
     // Total price (players + adult companions, children not included)
-    const totalPrice = playersTotal + adultCompanionsTotal;
+    // For display purposes, keep in current currency
+    let adultCompanionsTotal = currentLanguage === 'th' ? adultCompanionsTotalTHB : adultCompanionsTotalUSD;
     
     // Display price estimate
     let priceDisplay = document.getElementById('priceEstimate');
@@ -2615,10 +2691,10 @@ function updatePriceEstimate() {
         priceDisplay.className = 'price-estimate';
         priceDisplay.style.cssText = 'margin-top: 2rem; padding: 15px; background: linear-gradient(135deg, #4f772d 0%, #90a955 100%); color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
         
-        // Find the players form section and append after companions
-        const playersSection = playersContainer?.closest('.form-section');
-        if (playersSection) {
-            playersSection.appendChild(priceDisplay);
+        // Find the booking form or companions section and append
+        const bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+            bookingForm.appendChild(priceDisplay);
         }
     }
     
@@ -2646,19 +2722,32 @@ function updatePriceEstimate() {
         </div>`;
         
         // Players breakdown - always show
+        let playerBreakdownTextTH;
+        if (nights <= 1) {
+            playerBreakdownTextTH = `${displayPlayerCount} คน × ฿${firstLastDayPriceTHB.toLocaleString('th-TH')} (วันแรก/สุดท้าย) = <strong>฿${playersTotal.toLocaleString('th-TH')}</strong>`;
+        } else {
+            playerBreakdownTextTH = `${displayPlayerCount} คน × [(${nights - 2} คืน × ฿${regularPricePerNightTHB.toLocaleString('th-TH')}) + (2 วัน × ฿${firstLastDayPriceTHB.toLocaleString('th-TH')})] = <strong>฿${playersTotal.toLocaleString('th-TH')}</strong>`;
+        }
+        
         priceBreakdown += `<div style="margin-bottom: 6px;">
             ⚔️ <strong>ผู้เล่น ${displayPlayerCount} คน:</strong><br>
             <span style="margin-left: 20px; font-size: 0.95em;">
-                ${displayPlayerCount} คน × ${nights} คืน × ฿${playerPricePerNight.toLocaleString('th-TH')} = <strong>฿${playersTotal.toLocaleString('th-TH')}</strong>
+                ${playerBreakdownTextTH}
             </span>
         </div>`;
         
         // Adult companions breakdown
         if (adults > 0) {
+            let companionBreakdownTextTH;
+            if (nights <= 1) {
+                companionBreakdownTextTH = `${adults} คน × ฿${companionFirstLastPrice.toLocaleString('th-TH')} (วันแรก/สุดท้าย) = <strong>฿${adultCompanionsTotal.toLocaleString('th-TH')}</strong>`;
+            } else {
+                companionBreakdownTextTH = `${adults} คน × [(${nights - 2} คืน × ฿${companionRegularPrice.toLocaleString('th-TH')}) + (2 วัน × ฿${companionFirstLastPrice.toLocaleString('th-TH')})] = <strong>฿${adultCompanionsTotal.toLocaleString('th-TH')}</strong>`;
+            }
             priceBreakdown += `<div style="margin-bottom: 6px;">
                 👨 <strong>ผู้ติดตามผู้ใหญ่ ${adults} คน:</strong><br>
                 <span style="margin-left: 20px; font-size: 0.95em;">
-                    ${adults} คน × ${nights} คืน × ฿${companionPricePerNight.toLocaleString('th-TH')} = <strong>฿${adultCompanionsTotal.toLocaleString('th-TH')}</strong>
+                    ${companionBreakdownTextTH}
                 </span>
             </div>`;
         }
@@ -2697,9 +2786,8 @@ function updatePriceEstimate() {
     } else {
         // English - Show USD
         const exchangeRate = 35; // 1 USD = 35 THB (approximate)
-        const totalPriceUSD = totalPrice / exchangeRate;
-        const companionPricePerNightUSD = 100; // $100 per adult companion per night
-        const adultCompanionsTotalUSD = adults * nights * companionPricePerNightUSD;
+        const playersTotalUSD = playersTotal / exchangeRate;
+        const totalPriceUSD = playersTotalUSD + adultCompanionsTotalUSD;
         
         priceBreakdown = `<div style="margin-bottom: 12px; color: #2d3748;">
             <strong style="font-size: 1.1em;">💰 Price Breakdown</strong>
@@ -2721,59 +2809,72 @@ function updatePriceEstimate() {
         </div>`;
         
         // Players breakdown - always show
-        const playerPricePerNightUSD = 200; // $200 per player per night
-        const playersTotalUSD = playersTotal / exchangeRate;
-        priceBreakdown += `<div style="margin-bottom: 6px; color: #2d3748;">
-            ⚔️ <strong>${displayPlayerCount} Player${displayPlayerCount > 1 ? 's' : ''}:</strong><br>
-            <span style="margin-left: 20px; font-size: 0.95em;">
-                ${displayPlayerCount} × ${nights} night${nights > 1 ? 's' : ''} × $${playerPricePerNightUSD.toFixed(2)} = <strong>$${playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
-            </span>
-        </div>`;
+        let playerBreakdownText;
+        if (nights <= 1) {
+            playerBreakdownText = displayPlayerCount + ' × $' + (50).toFixed(2) + ' (first/last day) = <strong>$' + playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
+        } else {
+            playerBreakdownText = displayPlayerCount + ' × [(' + (nights - 2) + ' nights × $100) + (2 days × $50)] = <strong>$' + playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
+        }
+        
+        priceBreakdown += '<div style="margin-bottom: 6px; color: #2d3748;">' +
+            '<strong>' + displayPlayerCount + ' Player' + (displayPlayerCount > 1 ? 's' : '') + ':</strong><br>' +
+            '<span style="margin-left: 20px; font-size: 0.95em;">' +
+            playerBreakdownText +
+            '</span>' +
+        '</div>';
         
         // Adult companions breakdown
         if (adults > 0) {
-            priceBreakdown += `<div style="margin-bottom: 6px; color: #2d3748;">
-                👨 <strong>${adults} Adult Companion${adults > 1 ? 's' : ''}:</strong><br>
-                <span style="margin-left: 20px; font-size: 0.95em;">
-                    ${adults} × ${nights} night${nights > 1 ? 's' : ''} × $${companionPricePerNightUSD.toFixed(2)} = <strong>$${adultCompanionsTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
-                </span>
-            </div>`;
+            let companionBreakdownText;
+            if (nights <= 1) {
+                companionBreakdownText = adults + ' × $' + (30).toFixed(2) + ' (first/last day) = <strong>$' + adultCompanionsTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
+            } else {
+                companionBreakdownText = adults + ' × [(' + (nights - 2) + ' nights × $60) + (2 days × $30)] = <strong>$' + adultCompanionsTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
+            }
+            priceBreakdown += '<div style="margin-bottom: 6px; color: #2d3748;">' +
+                '<strong>' + adults + ' Adult Companion' + (adults > 1 ? 's' : '') + ':</strong><br>' +
+                '<span style="margin-left: 20px; font-size: 0.95em;">' +
+                companionBreakdownText +
+                '</span>' +
+            '</div>';
         }
         
         // Children information (no charge, but show count)
         if (children > 0) {
-            priceBreakdown += `<div style="margin-bottom: 6px; padding: 8px; background: rgba(79, 119, 45, 0.1); border-radius: 5px; color: #2d3748;">
-                👶 <strong>${children} Child${children > 1 ? 'ren' : ''}:</strong><br>
-                <span style="margin-left: 20px; font-size: 0.9em; opacity: 0.95;">
-                    Cheaper rates - depends on age and room capacity<br>
-                    ✓ Same inclusions as adults<br>
-                    ✓ Kid-friendly tours
-                </span>
-            </div>`;
+            priceBreakdown += '<div style="margin-bottom: 6px; padding: 8px; background: rgba(79, 119, 45, 0.1); border-radius: 5px; color: #2d3748;">' +
+                '<strong>' + children + ' Child' + (children > 1 ? 'ren' : '') + ':</strong><br>' +
+                '<span style="margin-left: 20px; font-size: 0.9em; opacity: 0.95;">' +
+                'Cheaper rates - depends on age and room capacity<br>' +
+                '✓ Same inclusions as adults<br>' +
+                '✓ Kid-friendly tours' +
+                '</span>' +
+            '</div>';
         }
         
         // Total
-        priceBreakdown += `<div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(0,0,0,0.3); font-size: 1.15em; color: #1a202c;">
-            <strong>💵 Total Price: $${totalPriceUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>
-        </div>`;
+        priceBreakdown += '<div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(0,0,0,0.3); font-size: 1.15em; color: #1a202c;">' +
+            '<strong>💵 Total Price: $' + totalPriceUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>' +
+        '</div>';
         
         if (children > 0) {
-            priceBreakdown += `<div style="margin-top: 8px; padding: 8px; background: rgba(79, 119, 45, 0.15); border-radius: 5px; color: #2d3748;">
-                <small style="opacity: 0.95; font-size: 0.85em;">
-                    📝 <strong>Note:</strong> Children's rates will be calculated based on age and room capacity<br>
-                    (Most hotels allow 2-4 per room)
-                </small>
-            </div>`;
+            priceBreakdown += '<div style="margin-top: 8px; padding: 8px; background: rgba(79, 119, 45, 0.15); border-radius: 5px; color: #2d3748;">' +
+                '<small style="opacity: 0.95; font-size: 0.85em;">' +
+                '📝 <strong>Note:</strong> Children\'s rates will be calculated based on age and room capacity<br>' +
+                '(Most hotels allow 2-4 per room)' +
+                '</small>' +
+            '</div>';
         }
         
-        priceBreakdown += `<div style="margin-top: 10px; color: #4a5568;">
-            <small style="opacity: 0.9; font-size: 0.85em;">
-                *This is a preliminary estimate. Final price may vary based on extras and promotions. (≈ ฿${totalPrice.toLocaleString('en-US')})
-            </small>
-        </div>`;
+        priceBreakdown += '<div style="margin-top: 10px; color: #4a5568;">' +
+            '<small style="opacity: 0.9; font-size: 0.85em;">' +
+            '*This is a preliminary estimate. Final price may vary based on extras and promotions. (≈ ฿' + (totalPriceUSD * 35).toLocaleString('en-US') + ')' +
+            '</small>' +
+        '</div>';
     }
     
     // Use DOMPurify to sanitize HTML content
+    console.log('priceBreakdown:', priceBreakdown);
+    console.log('priceDisplay:', priceDisplay);
     priceDisplay.innerHTML = DOMPurify.sanitize(priceBreakdown);
     priceDisplay.style.display = 'block';
 }
