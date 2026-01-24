@@ -42,8 +42,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Initialize Language
 function initLanguage() {
     // Get saved language or default to English
-    const savedLang = localStorage.getItem('language') || 'en';
-    currentLang = savedLang;
+    const savedLang = localStorage.getItem('language');
+    if (!savedLang) {
+        // First time or no saved language, set to English
+        currentLang = 'en';
+        localStorage.setItem('language', 'en');
+    } else {
+        currentLang = savedLang;
+    }
     updatePageLanguage();
 }
 
@@ -822,11 +828,21 @@ function initFilters() {
 // Helper Functions
 function formatDate(dateString) {
     if (!dateString) return '-';
+    
+    // If the date string is already in DD/MM/YYYY format, return as is
+    if (typeof dateString === 'string' && dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        return dateString;
+    }
+    
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
     
-    const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-    return `${date.getDate()} ${thaiMonths[date.getMonth()]} ${date.getFullYear() + 543}`;
+    // Format as DD/MM/YYYY
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}/${month}/${year}`;
 }
 
 function getStatusText(status) {
