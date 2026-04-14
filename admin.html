@@ -17,11 +17,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Language Toggle -->
-    <button class="lang-toggle" onclick="toggleLanguage()" title="Switch Language">
-        TH
-    </button>
-    
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -35,6 +30,10 @@
             <a href="#bookings" class="nav-item" data-page="bookings">
                 <i class="fas fa-calendar-check"></i>
                 <span data-i18n="bookings">การจอง</span>
+            </a>
+            <a href="#events" class="nav-item" data-page="events">
+                <i class="fas fa-calendar-alt"></i>
+                <span data-i18n="manageEvents">จัดการ Events</span>
             </a>
             <a href="#users" class="nav-item" data-page="users" id="usersNav">
                 <i class="fas fa-user-shield"></i>
@@ -225,6 +224,106 @@
             </div>
         </section>
 
+        <!-- Events Management Page -->
+        <section id="events-page" class="page">
+            <!-- Header with search -->
+            <div class="events-page-header">
+                <div class="events-header-left">
+                    <h2 data-i18n="manageEvents">จัดการ Events</h2>
+                    <div class="events-header-count" id="eventsHeaderCount">0 events</div>
+                </div>
+                <div class="events-header-actions">
+                    <div class="events-search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="eventSearchFilter" placeholder="ค้นหา Event..." data-i18n-placeholder="searchEvent">
+                    </div>
+                    <button class="btn-primary" onclick="showAddEventModal()">
+                        <i class="fas fa-plus"></i> <span data-i18n="addNewEvent">เพิ่ม Event</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Status Filter Tabs -->
+            <div class="events-filter-tabs">
+                <button class="events-tab active" data-filter="" onclick="filterEventsByTab(this)">
+                    <span data-i18n="statusAll">ทั้งหมด</span>
+                    <span class="tab-count" id="totalEventsCount">0</span>
+                </button>
+                <button class="events-tab" data-filter="active" onclick="filterEventsByTab(this)">
+                    <span class="tab-dot dot-active"></span>
+                    <span>Active</span>
+                    <span class="tab-count" id="activeEventsCount">0</span>
+                </button>
+                <button class="events-tab" data-filter="upcoming" onclick="filterEventsByTab(this)">
+                    <span class="tab-dot dot-upcoming"></span>
+                    <span>Upcoming</span>
+                    <span class="tab-count" id="upcomingEventsCount">0</span>
+                </button>
+                <button class="events-tab" data-filter="draft" onclick="filterEventsByTab(this)">
+                    <span class="tab-dot dot-draft"></span>
+                    <span>Draft</span>
+                    <span class="tab-count" id="draftEventsCount">0</span>
+                </button>
+                <button class="events-tab" data-filter="past" onclick="filterEventsByTab(this)">
+                    <span class="tab-dot dot-past"></span>
+                    <span>Past</span>
+                    <span class="tab-count" id="pastEventsCount">0</span>
+                </button>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="events-view-toggle">
+                <button class="view-btn active" id="viewCards" onclick="toggleEventsView('cards')" title="Card View">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button class="view-btn" id="viewTable" onclick="toggleEventsView('table')" title="Table View">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+
+            <!-- Events Cards Grid -->
+            <div class="events-grid" id="eventsGrid">
+                <!-- Cards populated by JS -->
+                <div class="events-loading" id="eventsLoading">
+                    <div class="event-card-skeleton"></div>
+                    <div class="event-card-skeleton"></div>
+                    <div class="event-card-skeleton"></div>
+                </div>
+            </div>
+
+            <!-- Events Table (Hidden by default) -->
+            <div class="events-table-wrapper" id="eventsTableWrapper" style="display:none;">
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:60px" data-i18n="image">รูปภาพ</th>
+                                <th data-i18n="eventTitle">ชื่อ Event</th>
+                                <th data-i18n="date">วันที่</th>
+                                <th data-i18n="duration">ระยะเวลา</th>
+                                <th data-i18n="players">ผู้เล่น</th>
+                                <th data-i18n="price">ราคา</th>
+                                <th data-i18n="status">สถานะ</th>
+                                <th data-i18n="actions">การกระทำ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="events-empty" id="eventsEmpty" style="display:none;">
+                <i class="fas fa-calendar-plus"></i>
+                <h3 data-i18n="noEventsFound">No events found</h3>
+                <p data-i18n="noEventsDesc">There are no events yet. Create your first event to get started.</p>
+                <button class="btn-primary" onclick="showAddEventModal()">
+                    <i class="fas fa-plus"></i> <span data-i18n="addNewEvent">เพิ่ม Event</span>
+                </button>
+            </div>
+        </section>
+
         <!-- Users Management Page (Admin Only) -->
         <section id="users-page" class="page">
             <div class="page-header">
@@ -320,6 +419,210 @@
             <div class="modal-footer">
                 <button class="btn-secondary" onclick="closeModal('userModal')" data-i18n="cancel">ยกเลิก</button>
                 <button class="btn-primary" onclick="saveUser()" data-i18n="save">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit Event -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content event-form-modal">
+            <div class="modal-header">
+                <h2 id="eventModalTitle" data-i18n="addNewEvent">เพิ่ม Event ใหม่</h2>
+                <button class="close-btn" onclick="closeModal('eventModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <form id="eventForm" class="settings-form">
+                    <input type="hidden" id="eventId">
+
+                    <!-- Form Tabs Navigation -->
+                    <div class="event-form-tabs">
+                        <button type="button" class="form-tab active" data-tab="tab-basic" onclick="switchEventTab(this)">
+                            <i class="fas fa-info-circle"></i> <span data-i18n="basicInfo">ข้อมูลพื้นฐาน</span>
+                        </button>
+                        <button type="button" class="form-tab" data-tab="tab-details" onclick="switchEventTab(this)">
+                            <i class="fas fa-align-left"></i> <span data-i18n="description">รายละเอียด</span>
+                        </button>
+                        <button type="button" class="form-tab" data-tab="tab-media" onclick="switchEventTab(this)">
+                            <i class="fas fa-image"></i> <span data-i18n="eventImage">รูปภาพ</span>
+                        </button>
+                        <button type="button" class="form-tab" data-tab="tab-settings" onclick="switchEventTab(this)">
+                            <i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab: Basic Info -->
+                    <div class="form-tab-content active" id="tab-basic">
+                        <div class="tab-inner">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-i18n="eventTitleEn">ชื่อ Event (EN) <span class="required">*</span></label>
+                                    <input type="text" id="eventTitleEn" required placeholder="e.g., Waterloo Campaign">
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="eventTitleTh">ชื่อ Event (TH)</label>
+                                    <input type="text" id="eventTitleTh" placeholder="e.g., แคมเปญ Waterloo">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="eventSlug">Slug (URL Key) <span class="required">*</span></label>
+                                <input type="text" id="eventSlug" required placeholder="e.g., waterloo">
+                                <small data-i18n="slugHint">ตัวพิมพ์เล็ก ใช้ - แทนเว้นวรรค • จะสร้างอัตโนมัติจากชื่อ EN</small>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-i18n="startDate">วันที่เริ่ม <span class="required">*</span></label>
+                                    <input type="date" id="eventStartDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="endDate">วันที่สิ้นสุด <span class="required">*</span></label>
+                                    <input type="date" id="eventEndDate" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-i18n="durationEn">ระยะเวลา (EN)</label>
+                                    <input type="text" id="eventDurationEn" placeholder="e.g., 5 Days / 4 Nights">
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="durationTh">ระยะเวลา (TH)</label>
+                                    <input type="text" id="eventDurationTh" placeholder="e.g., 5 วัน 4 คืน">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-i18n="playersEn">จำนวนผู้เล่น (EN)</label>
+                                    <input type="text" id="eventPlayersEn" placeholder="e.g., 8-12 players">
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="playersTh">จำนวนผู้เล่น (TH)</label>
+                                    <input type="text" id="eventPlayersTh" placeholder="e.g., 8-12 คน">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Details -->
+                    <div class="form-tab-content" id="tab-details">
+                        <div class="tab-inner">
+                            <div class="form-group">
+                                <label data-i18n="descriptionEn">คำอธิบาย (EN) <span class="required">*</span></label>
+                                <textarea id="eventDescEn" rows="4" required placeholder="Event description in English..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="descriptionTh">คำอธิบาย (TH)</label>
+                                <textarea id="eventDescTh" rows="4" placeholder="คำอธิบาย Event ภาษาไทย..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="historyEn">ประวัติศาสตร์ (EN)</label>
+                                <textarea id="eventHistoryEn" rows="4" placeholder="Historical background in English..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="historyTh">ประวัติศาสตร์ (TH)</label>
+                                <textarea id="eventHistoryTh" rows="4" placeholder="ประวัติศาสตร์ภาษาไทย..."></textarea>
+                            </div>
+                            <h4 style="margin: 16px 0 12px; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-star" style="color:var(--warning-color)"></i>
+                                <span data-i18n="highlights">สิ่งที่รวม (Highlights)</span>
+                            </h4>
+                            <div id="includesContainer">
+                                <!-- Dynamic include rows -->
+                            </div>
+                            <button type="button" class="btn-add-include" onclick="addIncludeRow()">
+                                <i class="fas fa-plus"></i> <span data-i18n="addHighlight">เพิ่มรายการ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Media -->
+                    <div class="form-tab-content" id="tab-media">
+                        <div class="tab-inner">
+                            <div class="image-upload-area" id="imageUploadArea">
+                                <div class="image-preview" id="imagePreview" style="display:none;">
+                                    <img id="imagePreviewImg" src="" alt="Preview" crossorigin="anonymous" onerror="this.style.opacity='0.5'; console.error('Image load failed:', this.src);">
+                                    <button type="button" class="btn-remove-image" onclick="removeEventImage()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="image-upload-placeholder" id="imageUploadPlaceholder">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p data-i18n="dragDropImage">ลากไฟล์มาวางหรือคลิกเพื่อเลือก</p>
+                                    <span data-i18n="imageFormats">รองรับ: JPG, PNG, WebP (สูงสุด 5MB)</span>
+                                </div>
+                                <input type="file" id="eventImageFile" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                            </div>
+                            <div class="form-group" style="margin-top:16px;">
+                                <label data-i18n="orImageUrl">หรือใส่ URL รูปภาพ</label>
+                                <input type="url" id="eventImageUrl" placeholder="https://example.com/image.jpg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Settings -->
+                    <div class="form-tab-content" id="tab-settings">
+                        <div class="tab-inner">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-i18n="pricePerDay">ราคาต่อวัน (USD) <span class="required">*</span></label>
+                                    <input type="number" id="eventPrice" step="0.01" min="0" required placeholder="100">
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="gameRules">กฎเกม</label>
+                                    <input type="text" id="eventRules" placeholder="e.g., Black Powder / General de Brigade">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-i18n="status">สถานะ</label>
+                                    <select id="eventStatus">
+                                        <option value="active">Active (เปิดรับสมัคร)</option>
+                                        <option value="upcoming">Upcoming (เร็วๆ นี้)</option>
+                                        <option value="draft">Draft (ฉบับร่าง)</option>
+                                        <option value="past">Past (สิ้นสุดแล้ว)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label data-i18n="maxCapacity">จำนวนที่นั่งสูงสุด</label>
+                                    <input type="number" id="eventMaxCapacity" min="1" placeholder="20">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer event-modal-footer">
+                <div class="footer-left">
+                    <button type="button" class="btn-tab-nav" id="btnPrevTab" onclick="navigateTab(-1)" style="display:none;">
+                        <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+                    </button>
+                </div>
+                <div class="footer-right">
+                    <button class="btn-secondary" onclick="closeModal('eventModal')" data-i18n="cancel">ยกเลิก</button>
+                    <button type="button" class="btn-tab-nav btn-next" id="btnNextTab" onclick="navigateTab(1)">
+                        <span data-i18n="next">Next</span> <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn-primary" id="btnSaveEvent" onclick="saveEvent()" style="display:none;">
+                        <i class="fas fa-save"></i> <span data-i18n="save">บันทึก</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Event Detail/Preview -->
+    <div id="eventDetailModal" class="modal">
+        <div class="modal-content event-detail-modal">
+            <div class="modal-header">
+                <h2 data-i18n="eventDetails">รายละเอียด Event</h2>
+                <button class="close-btn" onclick="closeModal('eventDetailModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="eventDetailBody">
+                <!-- Content populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('eventDetailModal')" data-i18n="close">ปิด</button>
+                <button class="btn-primary" id="editFromDetailBtn" onclick="">
+                    <i class="fas fa-edit"></i> <span data-i18n="edit">แก้ไข</span>
+                </button>
             </div>
         </div>
     </div>

@@ -167,6 +167,74 @@ class APIService {
             method: 'PUT'
         });
     }
+
+    // Event Management APIs
+    async getEvents(params = {}) {
+        const queryString = new URLSearchParams(params).toString();
+        return this.request(`/events${queryString ? '?' + queryString : ''}`);
+    }
+
+    async getEvent(eventId) {
+        return this.request(`/events/${eventId}`);
+    }
+
+    async createEvent(eventData) {
+        return this.request('/events', {
+            method: 'POST',
+            body: JSON.stringify(eventData)
+        });
+    }
+
+    async updateEvent(eventId, eventData) {
+        return this.request(`/events/${eventId}`, {
+            method: 'PUT',
+            body: JSON.stringify(eventData)
+        });
+    }
+
+    async deleteEvent(eventId) {
+        return this.request(`/events/${eventId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // Event with Image Upload (multipart/form-data)
+    async createEventWithImage(formData) {
+        const token = this.getToken();
+        const config = {
+            method: 'POST',
+            body: formData,
+            headers: {}
+        };
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        // Do NOT set Content-Type - browser will set it with boundary
+        const response = await fetch(`${this.baseURL}/events`, config);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Failed to create event');
+        }
+        return data;
+    }
+
+    async updateEventWithImage(eventId, formData) {
+        const token = this.getToken();
+        const config = {
+            method: 'PUT',
+            body: formData,
+            headers: {}
+        };
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        const response = await fetch(`${this.baseURL}/events/${eventId}`, config);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Failed to update event');
+        }
+        return data;
+    }
 }
 
 // Create singleton instance

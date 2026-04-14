@@ -208,7 +208,55 @@ const translations = {
         // Form Fields
         required: "*",
         passwordHint: "เว้นว่างไว้ถ้าไม่ต้องการเปลี่ยน",
-        active: "Active"
+        active: "Active",
+        
+        // Event Management
+        manageEvents: "จัดการ Events",
+        addNewEvent: "เพิ่ม Event ใหม่",
+        editEvent: "แก้ไข Event",
+        eventDetails: "รายละเอียด Event",
+        eventTitle: "ชื่อ Event",
+        eventTitleEn: "ชื่อ Event (EN)",
+        eventTitleTh: "ชื่อ Event (TH)",
+        eventSlug: "Slug (URL Key)",
+        slugHint: "ใช้ตัวอักษรพิมพ์เล็ก ไม่มีเว้นวรรค (ใช้ - แทน)",
+        eventImage: "รูปภาพ Event",
+        dragDropImage: "ลากไฟล์มาวางหรือคลิกเพื่อเลือก",
+        imageFormats: "รองรับ: JPG, PNG, WebP (สูงสุด 5MB)",
+        orImageUrl: "หรือใส่ URL รูปภาพ",
+        basicInfo: "ข้อมูลพื้นฐาน",
+        dateCapacity: "วันที่และจำนวนผู้เล่น",
+        startDate: "วันที่เริ่ม",
+        endDate: "วันที่สิ้นสุด",
+        durationEn: "ระยะเวลา (EN)",
+        durationTh: "ระยะเวลา (TH)",
+        playersEn: "จำนวนผู้เล่น (EN)",
+        playersTh: "จำนวนผู้เล่น (TH)",
+        description: "คำอธิบาย",
+        descriptionEn: "คำอธิบาย (EN)",
+        descriptionTh: "คำอธิบาย (TH)",
+        historicalBackground: "ประวัติศาสตร์",
+        historyEn: "ประวัติศาสตร์ (EN)",
+        historyTh: "ประวัติศาสตร์ (TH)",
+        pricingRules: "ราคาและกฎเกม",
+        pricePerDay: "ราคาต่อวัน (USD)",
+        gameRules: "กฎเกม",
+        highlights: "สิ่งที่รวม (Highlights)",
+        addHighlight: "เพิ่มรายการ",
+        eventStatus: "สถานะ Event",
+        maxCapacity: "จำนวนที่นั่งสูงสุด",
+        totalEvents: "Events ทั้งหมด",
+        activeEvents: "กำลังเปิด",
+        upcomingEvents: "กำลังจะมาถึง",
+        pastEvents: "สิ้นสุดแล้ว",
+        searchEvent: "ค้นหา",
+        image: "รูปภาพ",
+        duration: "ระยะเวลา",
+        settings: "ตั้งค่า",
+        back: "ย้อนกลับ",
+        next: "ถัดไป",
+        noEventsFound: "ไม่พบ Event",
+        noEventsDesc: "ยังไม่มี Event ในระบบ เริ่มสร้าง Event แรกของคุณเลย!"
     },
     en: {
         // Hero Section
@@ -418,7 +466,55 @@ const translations = {
         // Form Fields
         required: "*",
         passwordHint: "Leave blank if you don't want to change",
-        active: "Active"
+        active: "Active",
+        
+        // Event Management
+        manageEvents: "Manage Events",
+        addNewEvent: "Add New Event",
+        editEvent: "Edit Event",
+        eventDetails: "Event Details",
+        eventTitle: "Event Title",
+        eventTitleEn: "Event Title (EN)",
+        eventTitleTh: "Event Title (TH)",
+        eventSlug: "Slug (URL Key)",
+        slugHint: "Use lowercase, no spaces (use - instead)",
+        eventImage: "Event Image",
+        dragDropImage: "Drag & drop or click to select",
+        imageFormats: "Supports: JPG, PNG, WebP (max 5MB)",
+        orImageUrl: "Or enter image URL",
+        basicInfo: "Basic Information",
+        dateCapacity: "Date & Capacity",
+        startDate: "Start Date",
+        endDate: "End Date",
+        durationEn: "Duration (EN)",
+        durationTh: "Duration (TH)",
+        playersEn: "Players (EN)",
+        playersTh: "Players (TH)",
+        description: "Description",
+        descriptionEn: "Description (EN)",
+        descriptionTh: "Description (TH)",
+        historicalBackground: "Historical Background",
+        historyEn: "History (EN)",
+        historyTh: "History (TH)",
+        pricingRules: "Pricing & Rules",
+        pricePerDay: "Price per Day (USD)",
+        gameRules: "Game Rules",
+        highlights: "Includes (Highlights)",
+        addHighlight: "Add Item",
+        eventStatus: "Event Status",
+        maxCapacity: "Max Capacity",
+        totalEvents: "Total Events",
+        activeEvents: "Active",
+        upcomingEvents: "Upcoming",
+        pastEvents: "Past",
+        searchEvent: "Search",
+        image: "Image",
+        duration: "Duration",
+        settings: "Settings",
+        back: "Back",
+        next: "Next",
+        noEventsFound: "No events found",
+        noEventsDesc: "There are no events yet. Create your first event to get started."
     }
 };
 
@@ -445,6 +541,14 @@ function updatePageLanguage() {
             } else {
                 element.textContent = t[key];
             }
+        }
+    });
+
+    // Update placeholders with data-i18n-placeholder attribute
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (t[key]) {
+            element.setAttribute('placeholder', t[key]);
         }
     });
     

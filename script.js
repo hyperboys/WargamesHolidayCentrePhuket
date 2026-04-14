@@ -45,21 +45,8 @@ let eventsExpanded = false;
 if (viewAllEventsBtn) {
     viewAllEventsBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const hiddenEvent = document.getElementById('event-4');
-        
-        if (!eventsExpanded) {
-            hiddenEvent.classList.remove('hidden');
-            viewAllEventsBtn.setAttribute('data-en', 'Show Less');
-            viewAllEventsBtn.setAttribute('data-th', 'แสดงน้อยลง');
-            viewAllEventsBtn.textContent = currentLanguage === 'th' ? 'แสดงน้อยลง' : 'Show Less';
-            eventsExpanded = true;
-        } else {
-            hiddenEvent.classList.add('hidden');
-            viewAllEventsBtn.setAttribute('data-en', 'View All Events');
-            viewAllEventsBtn.setAttribute('data-th', 'ดูกิจกรรมทั้งหมด');
-            viewAllEventsBtn.textContent = currentLanguage === 'th' ? 'ดูกิจกรรมทั้งหมด' : 'View All Events';
-            eventsExpanded = false;
-        }
+        eventsExpanded = !eventsExpanded;
+        renderEventsSection();
     });
 }
 
@@ -148,12 +135,22 @@ function updateLanguage() {
     
     // Save language preference
     localStorage.setItem('preferredLanguage', lang);
+
+    if (typeof renderEventsSection === 'function') {
+        renderEventsSection();
+    }
+    if (typeof populateEventSelectOptions === 'function') {
+        populateEventSelectOptions();
+    }
 }
 
 // Load saved language preference on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Check backend connection
     checkBackendConnection();
+    renderEventsSection();
+    populateEventSelectOptions();
+    loadEventsFromAPI();
     
     // Initialize language elements
     languageBtn = document.getElementById('languageBtn');
@@ -509,8 +506,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initGallery();
 });
 
-// Event Modal Data
-const eventData = {
+// Event Modal Data Fallback
+const fallbackEventData = {
     waterloo: {
         title: { en: 'Waterloo Campaign', th: 'Waterloo Campaign' },
         image: 'image/event/Waterloo.jpg',
@@ -609,33 +606,485 @@ const eventData = {
     }
 };
 
+let eventData = {};
+const EVENT_PLACEHOLDER_IMAGE = 'image/event/Waterloo.jpg';
+let eventsQueryDate = '';
+
+const DEFAULT_EVENT_LIST_QUERY = {
+    status: 'active',
+    page: '1',
+    limit: '12',
+    sort: 'startDate',
+    order: 'asc',
+    search: ''
+};
+
+function getEventIcon(slug) {
+    const iconMap = {
+        waterloo: '⚔️',
+        normandy: '🚂',
+        agincourt: '🏹',
+        rome: '⚔️'
+    };
+
+    return iconMap[slug] || '🎫';
+}
+
+function getFallbackEventImage() {
+    return EVENT_PLACEHOLDER_IMAGE;
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function getEventImageUrl(imagePath, slug) {
+    console.log('🖼️ getEventImageUrl called:', { imagePath, slug, API_BASE_URL });
+    
+    if (!imagePath) {
+        return getFallbackEventImage(slug);
+    }
+
+    const normalizedPath = String(imagePath).trim();
+    if (!normalizedPath) {
+        return getFallbackEventImage(slug);
+    }
+
+    if (
+        normalizedPath.startsWith('data:') ||
+        normalizedPath.startsWith('http://') ||
+        normalizedPath.startsWith('https://')
+    ) {
+        console.log('🖼️ Already full URL:', normalizedPath);
+        return normalizedPath;
+    }
+
+    // API may return either "/uploads/..." or "uploads/..."
+    if (normalizedPath.startsWith('/uploads/') || normalizedPath.startsWith('uploads/')) {
+        const pathWithSlash = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
+        const fullUrl = `${API_BASE_URL}${pathWithSlash}`;
+        console.log('🖼️ Constructed upload URL:', fullUrl);
+        return fullUrl;
+    }
+
+    return normalizedPath;
+}
+
+const eventImageBlobUrlCache = new Map();
+
+async function resolveEventImageForDisplay(rawImagePath, slug) {
+    const fallback = getFallbackEventImage(slug);
+    const directUrl = getEventImageUrl(rawImagePath, slug);
+
+    if (!directUrl) {
+        return fallback;
+    }
+
+    // Local assets and data URLs can be used directly.
+    if (directUrl.startsWith('data:') || !directUrl.startsWith('http')) {
+        return directUrl;
+    }
+
+    let parsedUrl;
+    try {
+        parsedUrl = new URL(directUrl, window.location.href);
+    } catch (error) {
+        console.warn('Invalid image URL, using fallback:', directUrl, error.message);
+        return fallback;
+    }
+
+    const isCrossOrigin = parsedUrl.origin !== window.location.origin;
+    const isUploadPath = parsedUrl.pathname.startsWith('/uploads/');
+
+    if (!isCrossOrigin || !isUploadPath) {
+        return directUrl;
+    }
+
+    if (eventImageBlobUrlCache.has(directUrl)) {
+        return eventImageBlobUrlCache.get(directUrl);
+    }
+
+    try {
+        const response = await fetch(directUrl, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'omit'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Image fetch returned ${response.status}`);
+        }
+
+        const imageBlob = await response.blob();
+        const blobUrl = URL.createObjectURL(imageBlob);
+        eventImageBlobUrlCache.set(directUrl, blobUrl);
+        return blobUrl;
+    } catch (error) {
+        console.warn('Failed to load cross-origin upload image, using direct URL/fallback:', error.message);
+        return directUrl || fallback;
+    }
+}
+
+function hydrateEventCardImages() {
+    const eventImages = document.querySelectorAll('#publicEventsGrid img[data-api-src]');
+
+    eventImages.forEach(async (img) => {
+        const apiSrc = img.getAttribute('data-api-src');
+        const eventSlug = img.getAttribute('data-slug') || '';
+        const fallbackSrc = img.getAttribute('data-fallback-src') || getFallbackEventImage(eventSlug);
+
+        const resolvedSrc = await resolveEventImageForDisplay(apiSrc, eventSlug);
+        img.src = resolvedSrc || fallbackSrc;
+    });
+}
+
+function normalizeLocalizedField(value, fallback = {}) {
+    if (typeof value === 'string') {
+        return { ...fallback, en: value, th: value };
+    }
+
+    return { ...fallback, ...(value || {}) };
+}
+
+function normalizeEventRecord(apiEvent, fallbackKey = '') {
+    const slug = apiEvent.slug || fallbackKey;
+    if (!slug) {
+        return null;
+    }
+
+    const normalizedRules = typeof apiEvent.rules === 'string'
+        ? { en: apiEvent.rules, th: apiEvent.rules }
+        : normalizeLocalizedField(apiEvent.rules, {});
+
+    const normalizedIncludes = Array.isArray(apiEvent.includes) && apiEvent.includes.length > 0
+        ? apiEvent.includes.map((item) => {
+            if (typeof item === 'string') {
+                return { en: item, th: item };
+            }
+            return item;
+        })
+        : [];
+
+    const sourceImage = apiEvent.image || apiEvent.imageUrl || '';
+
+    return {
+        ...apiEvent,
+        slug,
+        title: normalizeLocalizedField(apiEvent.title, {}),
+        date: normalizeLocalizedField(apiEvent.date, {}),
+        duration: normalizeLocalizedField(apiEvent.duration, {}),
+        players: normalizeLocalizedField(apiEvent.players, {}),
+        description: normalizeLocalizedField(apiEvent.description, {}),
+        history: normalizeLocalizedField(apiEvent.history, {}),
+        rules: normalizedRules,
+        includes: normalizedIncludes,
+        image: sourceImage,
+        imageUrl: sourceImage
+    };
+}
+
+function buildEventsQuery(overrides = {}) {
+    const finalQuery = {
+        ...DEFAULT_EVENT_LIST_QUERY,
+        ...overrides
+    };
+
+    const params = new URLSearchParams();
+    Object.entries(finalQuery).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+            params.set(key, String(value));
+        }
+    });
+
+    return params.toString();
+}
+
+function getTodayIsoDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function findEventByIdentifier(identifier) {
+    if (!identifier) return null;
+
+    const normalizedIdentifier = String(identifier);
+
+    if (eventData[normalizedIdentifier]) {
+        return { key: normalizedIdentifier, event: eventData[normalizedIdentifier] };
+    }
+
+    const matchedKey = Object.keys(eventData).find((key) => {
+        const event = eventData[key];
+        return String(event?.id) === normalizedIdentifier || event?.slug === normalizedIdentifier;
+    });
+
+    if (!matchedKey) {
+        return null;
+    }
+
+    return { key: matchedKey, event: eventData[matchedKey] };
+}
+
+async function fetchEventByIdOrSlug(identifier, fallbackKey = '') {
+    const response = await fetch(`${API_BASE_URL}/api/events/${encodeURIComponent(identifier)}`, {
+        method: 'GET',
+        headers: { Accept: 'application/json' }
+    });
+
+    if (!response.ok) {
+        throw new Error(`Event detail API returned ${response.status}`);
+    }
+
+    const result = await response.json();
+    const apiEvent = result?.data || result;
+    if (!apiEvent) {
+        return null;
+    }
+
+    const normalized = normalizeEventRecord(apiEvent, fallbackKey);
+    if (!normalized) {
+        return null;
+    }
+
+    eventData[normalized.slug] = normalized;
+    return normalized;
+}
+
+function getEventDateParts(event) {
+    const lang = currentLanguage || 'en';
+    const weekdaysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const weekdaysTh = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+    const monthsEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthsTh = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+    if (event.startDate && event.endDate) {
+        const start = new Date(event.startDate);
+        const end = new Date(event.endDate);
+
+        if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())) {
+            const weekdays = lang === 'th' ? weekdaysTh : weekdaysEn;
+            const months = lang === 'th' ? monthsTh : monthsEn;
+
+            return {
+                dayName: `${weekdays[start.getDay()]}-${weekdays[end.getDay()]}`,
+                day: `${start.getDate()}-${end.getDate()}`,
+                month: months[start.getMonth()],
+                startValue: `${String(start.getDate()).padStart(2, '0')}/${String(start.getMonth() + 1).padStart(2, '0')}/${start.getFullYear()}`,
+                endValue: `${String(end.getDate()).padStart(2, '0')}/${String(end.getMonth() + 1).padStart(2, '0')}/${end.getFullYear()}`
+            };
+        }
+    }
+
+    const fallbackDateText = event.date?.[lang] || event.date?.en || '';
+    return {
+        dayName: lang === 'th' ? 'กิจกรรม' : 'Event',
+        day: fallbackDateText || '-',
+        month: '',
+        startValue: '',
+        endValue: ''
+    };
+}
+
+function renderEventsSection() {
+    const eventsGrid = document.getElementById('publicEventsGrid');
+    if (!eventsGrid) return;
+
+    const slugs = Object.keys(eventData);
+    const lang = currentLanguage || 'en';
+
+    if (slugs.length === 0) {
+        const comingSoonText = lang === 'th' ? 'Coming Soon' : 'Coming Soon';
+        const subText = lang === 'th'
+            ? `No events available for ${eventsQueryDate || getTodayIsoDate()}`
+            : `No events available for ${eventsQueryDate || getTodayIsoDate()}`;
+
+        eventsGrid.innerHTML = `
+            <div class="event-card" id="event-coming-soon">
+                <div class="event-image">
+                    <img src="${getFallbackEventImage('waterloo')}" alt="Coming Soon">
+                    <div class="event-overlay">
+                        <div class="event-content">
+                            <h3>📅 ${comingSoonText}</h3>
+                            <p>${escapeHtml(subText)}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        if (viewAllEventsBtn) {
+            viewAllEventsBtn.style.display = 'none';
+        }
+
+        return;
+    }
+
+    eventsGrid.innerHTML = slugs.map((slug, index) => {
+        const event = eventData[slug];
+        const icon = getEventIcon(slug);
+        const title = event.title?.[lang] || event.title?.en || slug;
+        const description = event.description?.[lang] || event.description?.en || '';
+        const imageUrl = getEventImageUrl(event.image || event.imageUrl, slug);
+        const fallbackImage = getFallbackEventImage(slug);
+        const dateParts = getEventDateParts(event);
+        const hiddenClass = !eventsExpanded && index >= 3 ? ' hidden' : '';
+        const eventIdentifier = event.id || event.slug || slug;
+        const safeTitle = escapeHtml(title);
+        const safeDescription = escapeHtml(description);
+
+        return `
+            <div class="event-card${hiddenClass}" id="event-${index + 1}">
+                <div class="event-image">
+                    <img src="${fallbackImage}" data-api-src="${escapeHtml(imageUrl)}" data-slug="${escapeHtml(slug)}" data-fallback-src="${fallbackImage}" alt="${safeTitle}" onerror="this.onerror=null;this.src=this.dataset.fallbackSrc;">
+                    <div class="event-overlay">
+                        <div class="event-date" data-start="${dateParts.startValue}" data-end="${dateParts.endValue}">
+                            <span class="day-name">${escapeHtml(dateParts.dayName)}</span>
+                            <span class="day">${escapeHtml(dateParts.day)}</span>
+                            <span class="month">${escapeHtml(dateParts.month)}</span>
+                        </div>
+                        <div class="event-content">
+                            <h3>${icon} ${safeTitle}</h3>
+                            <p>${safeDescription}</p>
+                            <button class="btn btn-secondary event-modal-btn" data-event="${escapeHtml(String(eventIdentifier))}" type="button">${lang === 'th' ? 'ดูรายละเอียด' : 'View Details'}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    if (viewAllEventsBtn) {
+        const hasMoreThanThree = slugs.length > 3;
+        viewAllEventsBtn.style.display = hasMoreThanThree ? 'inline-flex' : 'none';
+        viewAllEventsBtn.setAttribute('data-en', eventsExpanded ? 'Show Less' : 'View All Events');
+        viewAllEventsBtn.setAttribute('data-th', eventsExpanded ? 'แสดงน้อยลง' : 'ดูกิจกรรมทั้งหมด');
+        viewAllEventsBtn.textContent = lang === 'th'
+            ? (eventsExpanded ? 'แสดงน้อยลง' : 'ดูกิจกรรมทั้งหมด')
+            : (eventsExpanded ? 'Show Less' : 'View All Events');
+    }
+
+    hydrateEventCardImages();
+}
+
+function populateEventSelectOptions() {
+    const eventSelect = document.getElementById('selectedEvent');
+    if (!eventSelect) return;
+
+    const currentValue = eventSelect.value;
+    const lang = currentLanguage || 'en';
+    const placeholderText = lang === 'th' ? '-- เลือกอีเวนต์ --' : '-- Select Event --';
+    const otherText = lang === 'th' ? 'Other (โปรดระบุในความคิดเห็น)' : 'Other (Please specify in comments)';
+
+    const options = [`<option value="">${placeholderText}</option>`];
+
+    Object.keys(eventData).forEach(slug => {
+        const event = eventData[slug];
+        const title = event.title?.[lang] || event.title?.en || slug;
+        options.push(`<option value="${slug}">${getEventIcon(slug)} ${escapeHtml(title)}</option>`);
+    });
+
+    options.push(`<option value="other">${otherText}</option>`);
+    eventSelect.innerHTML = options.join('');
+
+    if ([...eventSelect.options].some(option => option.value === currentValue)) {
+        eventSelect.value = currentValue;
+    }
+}
+
+async function loadEventsFromAPI(queryOverrides = {}) {
+    try {
+        const requestDate = queryOverrides.date || getTodayIsoDate();
+        eventsQueryDate = requestDate;
+        const queryString = buildEventsQuery({ ...queryOverrides, date: requestDate });
+        const endpoint = queryString ? `${API_BASE_URL}/api/events?${queryString}` : `${API_BASE_URL}/api/events`;
+
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: { Accept: 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Events API returned ${response.status}`);
+        }
+
+        const result = await response.json();
+        const events = Array.isArray(result?.data)
+            ? result.data
+            : Array.isArray(result)
+                ? result
+                : [];
+
+        if (events.length > 0) {
+            // Use only events from API (fallback fields are still applied per-event in normalizeEventRecord)
+            const apiEvents = {};
+            events.forEach(event => {
+                const normalizedEvent = normalizeEventRecord(event);
+                if (normalizedEvent?.slug) {
+                    apiEvents[normalizedEvent.slug] = normalizedEvent;
+                }
+            });
+            eventData = apiEvents;
+        } else {
+            // No events found for the current date query
+            eventData = {};
+        }
+    } catch (error) {
+        console.warn('Unable to load events from API:', error.message);
+        eventData = {};
+    }
+
+    renderEventsSection();
+    populateEventSelectOptions();
+}
+
 // Event Modal Management
 const eventModal = document.getElementById('eventModal');
 const eventModalClose = document.getElementById('eventModalClose');
 const eventModalCloseBtn = document.getElementById('eventModalCloseBtn');
-const eventModalBtns = document.querySelectorAll('.event-modal-btn');
+document.addEventListener('click', (e) => {
+    const eventBtn = e.target.closest('.event-modal-btn');
+    if (!eventBtn) return;
 
-// Open Event Modal
-eventModalBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const eventType = btn.getAttribute('data-event');
+    e.preventDefault();
+    const eventType = eventBtn.getAttribute('data-event');
+    if (eventType) {
         openEventModal(eventType);
-    });
+    }
 });
 
 let currentEventType = null; // Store current event type
 let currentEventDates = { start: null, end: null }; // Store event dates
 
-function openEventModal(eventType) {
-    const data = eventData[eventType];
+async function openEventModal(eventType) {
+    const localEvent = findEventByIdentifier(eventType);
+    let eventKey = localEvent?.key || String(eventType);
+    let data = localEvent?.event || null;
+
+    try {
+        const liveEvent = await fetchEventByIdOrSlug(eventType, eventKey);
+        if (liveEvent) {
+            data = liveEvent;
+            eventKey = liveEvent.slug;
+        }
+    } catch (error) {
+        console.warn('Failed to load event detail from API, using cached data:', error.message);
+    }
+
     if (!data) return;
 
-    const lang = currentLanguage;
-    currentEventType = eventType; // Store for later use
+    const lang = currentLanguage || 'en';
+    currentEventType = eventKey; // Store for later use
     
     // Get dates from the event card
-    const eventCard = document.querySelector(`[data-event="${eventType}"]`);
+    const eventCard = document.querySelector(`[data-event="${String(eventType)}"]`);
     if (eventCard) {
         const eventDateDiv = eventCard.closest('.event-card').querySelector('.event-date');
         if (eventDateDiv) {
@@ -646,26 +1095,33 @@ function openEventModal(eventType) {
     
     // Update modal image
     const modalImage = document.getElementById('eventModalImage');
-    if (modalImage && data.image) {
-        modalImage.src = data.image;
-        modalImage.alt = data.title[lang];
+    if (modalImage && (data.image || data.imageUrl)) {
+        const resolvedModalImage = await resolveEventImageForDisplay(data.image || data.imageUrl, eventKey);
+        modalImage.src = resolvedModalImage;
+        modalImage.onerror = function () {
+            this.onerror = null;
+            this.src = getFallbackEventImage(eventKey);
+        };
+        modalImage.alt = data.title?.[lang] || data.title?.en || '';
     }
+
+    const modalDate = data.date?.[lang] || data.date?.en || getEventDateParts(data).day;
     
     // Update modal content
-    document.getElementById('eventModalTitle').textContent = data.title[lang];
-    document.getElementById('eventModalDate').textContent = data.date[lang];
-    document.getElementById('eventModalDuration').textContent = data.duration[lang];
-    document.getElementById('eventModalPlayers').textContent = data.players[lang];
-    document.getElementById('eventModalDescription').textContent = data.description[lang];
-    document.getElementById('eventModalHistory').textContent = data.history[lang];
-    document.getElementById('eventModalRules').textContent = data.rules[lang];
+    document.getElementById('eventModalTitle').textContent = data.title?.[lang] || data.title?.en || '';
+    document.getElementById('eventModalDate').textContent = modalDate;
+    document.getElementById('eventModalDuration').textContent = data.duration?.[lang] || data.duration?.en || '-';
+    document.getElementById('eventModalPlayers').textContent = data.players?.[lang] || data.players?.en || '-';
+    document.getElementById('eventModalDescription').textContent = data.description?.[lang] || data.description?.en || '-';
+    document.getElementById('eventModalHistory').textContent = data.history?.[lang] || data.history?.en || '-';
+    document.getElementById('eventModalRules').textContent = data.rules?.[lang] || data.rules?.en || '-';
     
     // Update includes list (highlights in sidebar)
     const includesList = document.getElementById('eventModalIncludes');
     includesList.innerHTML = '';
-    data.includes.forEach(item => {
+    (data.includes || []).forEach(item => {
         const li = document.createElement('li');
-        li.textContent = item[lang];
+        li.textContent = typeof item === 'string' ? item : (item?.[lang] || item?.en || '');
         includesList.appendChild(li);
     });
     
@@ -2179,6 +2635,8 @@ async function handleBookingSubmit(e) {
     let eventFullName = eventValue;
     if (eventValue && eventData[eventValue]) {
         eventFullName = eventData[eventValue].title[currentLanguage] || eventData[eventValue].title.en;
+    } else if (eventValue === 'other') {
+        eventFullName = currentLanguage === 'th' ? 'อื่นๆ' : 'Other';
     }
     
     // Calculate price estimate
