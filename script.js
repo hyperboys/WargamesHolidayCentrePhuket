@@ -2650,9 +2650,9 @@ async function handleBookingSubmit(e) {
     let playerPricePerNight, companionPricePerNight, playersTotal, companionsTotal, totalPrice;
     
     if (currency === 'THB') {
-        // THB: 3,500 per night, 1,750 for first/last day
-        const regularPricePerNight = 3500; // Regular nights
-        const firstLastDayPrice = 1750;   // First and last days
+        // THB: 4,200 per night, 2,100 for first/last day
+        const regularPricePerNight = 4200; // Regular nights
+        const firstLastDayPrice = 2100;   // First and last days
         
         // Calculate player price
         if (nights <= 1) {
@@ -2667,8 +2667,8 @@ async function handleBookingSubmit(e) {
         }
         
         // Same calculation for companions (same as players)
-        const companionRegularPrice = 3500;
-        const companionFirstLastPrice = 1750;
+        const companionRegularPrice = 4200;
+        const companionFirstLastPrice = 2100;
         
         if (nights <= 1) {
             companionPricePerNight = companionFirstLastPrice;
@@ -2682,9 +2682,9 @@ async function handleBookingSubmit(e) {
         
         totalPrice = playersTotal + companionsTotal;
     } else {
-        // USD: 100 per night, 50 for first/last day
-        const regularPricePerNight = 100; // Regular nights
-        const firstLastDayPrice = 50;     // First and last days
+        // USD: 120 per night, 60 for first/last day
+        const regularPricePerNight = 120; // Regular nights
+        const firstLastDayPrice = 60;     // First and last days
         
         // Calculate player price
         if (nights <= 1) {
@@ -3100,9 +3100,9 @@ function updatePriceEstimate() {
     // If no players yet (during initialization), assume at least 1 for display
     const displayPlayerCount = playerCount > 0 ? playerCount : 1;
     
-    // New pricing structure: 3,500 THB regular days, 1,750 THB first/last days
-    const regularPricePerNightTHB = 3500;
-    const firstLastDayPriceTHB = 1750;
+    // New pricing structure: 4,200 THB regular days, 2,100 THB first/last days
+    const regularPricePerNightTHB = 4200;
+    const firstLastDayPriceTHB = 2100;
     
     let playersTotal;
     if (nights <= 1) {
@@ -3114,8 +3114,8 @@ function updatePriceEstimate() {
     }
     
     // Calculate adult companions total 
-    // For booking data: use THB (3500 regular, 1750 first/last converted to USD price 60/30)
-    // THB: 3500 = ~100 USD, 1750 = ~50 USD equivalent, but companions pay 60/30 USD
+    // For booking data: use THB (4200 regular, 2100 first/last converted to USD price 60/30)
+    // THB: 4200 = ~120 USD, 2100 = ~60 USD equivalent, while companions pay 60/30 USD
     // So in THB: 60 USD = 2100 THB, 30 USD = 1050 THB
     const companionRegularPriceTHB = 2100;
     const companionFirstLastPriceTHB = 1050;
@@ -3269,9 +3269,9 @@ function updatePriceEstimate() {
         // Players breakdown - always show
         let playerBreakdownText;
         if (nights <= 1) {
-            playerBreakdownText = displayPlayerCount + ' × $' + (50).toFixed(2) + ' (first/last day) = <strong>$' + playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
+            playerBreakdownText = displayPlayerCount + ' × $' + (60).toFixed(2) + ' (first/last day) = <strong>$' + playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
         } else {
-            playerBreakdownText = displayPlayerCount + ' × [(' + (nights - 2) + ' nights × $100) + (2 days × $50)] = <strong>$' + playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
+            playerBreakdownText = displayPlayerCount + ' × [(' + (nights - 2) + ' nights × $120) + (2 days × $60)] = <strong>$' + playersTotalUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '</strong>';
         }
         
         priceBreakdown += '<div style="margin-bottom: 6px; color: #2d3748;">' +
